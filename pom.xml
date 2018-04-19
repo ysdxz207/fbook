@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.puyixiaowo</groupId>
+    <artifactId>fbook</artifactId>
+    <version>1.0</version>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <!--打包替换redis密码-->
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <redis.pass>123456</redis.pass>
+            </properties>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <redis.pass>K31f65ds095f1GDaakf0387</redis.pass>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.html</include>
+                    <include>**/*.js</include>
+                    <include>**/*.css</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.yaml</include>
+                    <include>**/*.sql</include>
+                    <include>**/*.map</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.woff</exclude>
+                    <exclude>**/*.ttf</exclude>
+                    <exclude>**/*.woff2</exclude>
+                    <exclude>**/*.otf</exclude>
+                    <exclude>**/*.eot</exclude>
+                    <exclude>**/*.svg</exclude>
+                </excludes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.woff</include>
+                    <include>**/*.ttf</include>
+                    <include>**/*.woff2</include>
+                    <include>**/*.otf</include>
+                    <include>**/*.eot</include>
+                    <include>**/*.svg</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <compilerArguments>
+                        <d>${project.build.directory}/classes</d>
+                    </compilerArguments>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.puyixiaowo.fbook.main.Main</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>.</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <type>jar</type>
+                            <includeTypes>jar</includeTypes>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.10</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <complianceLevel>1.8</complianceLevel>
+                </configuration>
+                <executions>
+                    <execution>
+                        <!-- Compile and weave aspects after all classes compiled by javac -->
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <source>${maven.compiler.target}</source>
+                            <target>${maven.compiler.target}</target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.samaxes.maven</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>1.7.6</version>
+                <executions>
+                    <execution>
+                        <id>default-minify</id>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <charset>UTF-8</charset>
+                            <skipMerge>true</skipMerge> <!-- do not create one big file -->
+                            <nosuffix>true</nosuffix> <!-- do not use suffix like 'min' -->
+
+                            <!--资源根目录-->
+                            <webappSourceDir>${basedir}/src/main/resources</webappSourceDir>
+                            <!--覆盖未压缩的文件-->
+                            <webappTargetDir>${project.build.directory}/classes</webappTargetDir>
+                            <cssSourceDir>/static_resources</cssSourceDir>
+                            <cssSourceIncludes>
+                                <cssSourceInclude>**/*.css</cssSourceInclude>
+                            </cssSourceIncludes>
+                            <cssSourceExcludes>
+                                <cssSourceExclude>**/*.min.css</cssSourceExclude>
+                            </cssSourceExcludes>
+
+                            <!--js-->
+                            <jsSourceDir>/static_resources</jsSourceDir>
+                            <jsSourceIncludes>
+                                <jsSourceInclude>**/*.js</jsSourceInclude>
+                            </jsSourceIncludes>
+                            <jsSourceExcludes>
+                                <jsSourceExclude>**/*.min.js</jsSourceExclude>
+                            </jsSourceExcludes>
+
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-core</artifactId>
+            <version>2.7.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-template-mustache</artifactId>
+            <version>2.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.1</version>
+        </dependency>
+
+        <!--encoder and decoder using by qrcode parser-->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.35</version>
+        </dependency>
+
+        <!--orm-->
+        <dependency>
+            <groupId>org.sql2o</groupId>
+            <artifactId>sql2o</artifactId>
+            <version>1.6.0-RC3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--sqlite driver-->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.20.0</version>
+        </dependency>
+
+        <!--logger-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+
+
+
+        <!--yaml parser-->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.18</version>
+        </dependency>
+
+        <!--qrcode parser-->
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
+        <!--lucene-->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>6.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-queryparser</artifactId>
+            <version>6.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-common</artifactId>
+            <version>6.6.1</version>
+        </dependency>
+        <!--lucene分词器-->
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>jcseg-core</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>jcseg-analyzer</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+
+        <!--aop-->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.8.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.10</version>
+        </dependency>
+        <!-- kaptcha start -->
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <!-- kaptcha end -->
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1-rc1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
+            <version>1.20</version>
+        </dependency>
+
+        <!-- email dependency -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>1.5</version>
+        </dependency>
+
+    </dependencies>
+</project>

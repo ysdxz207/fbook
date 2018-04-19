@@ -1,0 +1,50 @@
+[
+  {
+    "id": "tianwen",
+    "name": "天文",
+    "apiChannels": [
+      {
+        "name": "科普最新",
+        "id": "5572a10bb3cdc86cf39001f7"
+      },
+      {
+        "name": "科技焦点",
+        "id": "5572a108b3cdc86cf39001d9"
+      },
+      {
+        "name": "科技最新",
+        "id": "5572a10ab3cdc86cf39001f4"
+      }
+    ]
+  },
+  {
+    "id": "shehui",
+    "name": "社会",
+    "apiChannels": [
+      {
+        "name": "社会最新",
+        "id": "5572a10bb3cdc86cf39001f8"
+      }
+    ]
+  },
+  {
+    "id": "fangchan",
+    "name": "房产",
+    "apiChannels": [
+      {
+        "name": "房产最新",
+        "id": "5572a109b3cdc86cf39001e4"
+      }
+    ]
+  },
+  {
+    "id": "keji",
+    "name": "科技",
+    "apiChannels": [
+      {
+        "name": "科技焦点",
+        "id": "5572a108b3cdc86cf39001d9"
+      }
+    ]
+  }
+]

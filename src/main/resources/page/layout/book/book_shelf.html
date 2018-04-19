@@ -1,0 +1,55 @@
+<style>
+    .book-shelf-content {
+        text-align: center;
+        width: 300px;
+        margin: 0 auto;
+    }
+    .book-shelf-books {
+        width: 80px;
+        height: 130px;
+        line-height: 240px;
+        overflow: hidden;
+        float: left;
+        margin: 20px 10px;
+        position: relative;
+    }
+    .book-shelf-books p {
+        color: #888;
+        font-weight: 400;
+        overflow: hidden;
+    }
+    .book-shelf-face-pic {
+        width: 80px;
+        height: 110px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border: 1px solid #DDD;
+    }
+</style>
+<div class="book-shelf-content">
+    <#if (((pageBean.list)??) && (((pageBean.list)?size) > 0))>
+        <#list pageBean.list as book>
+                <div class="book-shelf-books loading" data-aid="${(book.aId)!}" data-bookid="${(book.id)?c}">
+                    <#if book.faceUrl ??>
+                        <img src="${(book.faceUrl)!}" class="book-shelf-face-pic">
+                    <#else>
+                        <img src="/images/face_pic.png" class="book-shelf-face-pic">
+                    </#if>
+                        <p>${(book.name)!}</p>
+                </div>
+        </#list>
+    </#if>
+</div>
+
+<script>
+    $(function () {
+        $('.book-shelf-books').on('click', function () {
+            var bookId = $(this).data('bookid');
+            var aId = $(this).data('aid');
+            var url = "/book/detail?id=" + bookId + "&aId=" + aId;
+
+            location.href = url;
+        });
+    });
+</script>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>章节内容</title>
+    <#include "/public/public.html" />
+
+    <style>
+
+        .book-detail-main {
+            padding-top: 10px;
+            margin-top: 44px;
+        }
+
+        .btn-add-book,.btn-add-book.focus,.btn-add-book:focus,.btn-add-book:hover {
+            background-color: #f9943b;
+            color: #DDDDDD;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-del-book,.btn-del-book.focus,.btn-del-book:focus,.btn-del-book:hover {
+            background-color: #FF634B;
+            color: white;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-book-detail-disabled,.btn-book-detail-disabled.focus,.btn-book-detail-disabled:focus,.btn-book-detail-disabled:hover  {
+            background-color: #DDDDDD;
+            color: white;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-read-book {
+            background-color: black;
+            color: #DDDDDD;
+        }
+        .book-detail-content-right {
+            margin-left: 0px;
+            padding-left: 6px;
+            line-height: 22px;
+        }
+        .book-detail-content-right .date {
+            font-size: 12px;
+        }
+        .book-detail-content-right .author {
+            font-size: 13px;
+        }
+        .book-detail-content-right .chapter {
+            font-size: 13px;
+        }
+        .book-detail-description {
+            padding: 20px 14px;
+            line-height: 26px;
+        }
+    </style>
+
+</head>
+<body>
+
+<input type="hidden" id="hidden_book_detail_book_id" value="${(book.id)?c}"/>
+<input type="hidden" id="hidden_book_detail_book_aid" value="${(book.aId)!}"/>
+
+<#include "/layout/book/book_common_header.html"/>
+
+<div class="book-detail-main">
+    <div class="col-xs-12">
+        <div class="col-xs-4">
+            <img src="${(book.faceUrl)!}" height="100"/>
+        </div>
+        <div class="col-xs-8 book-detail-content-right">
+            <div><strong>${(book.name)!}</strong></div>
+            <div class="author"><strong>${(book.author)!}</strong>|${(book.bookInfo.category)!}</div>
+            <div class="date">更新：${(book.bookInfo.updated)!}</div>
+            <div class="chapter">最新章：${(book.lastUpdateChapter)!}</div>
+        </div>
+        <div class="col-xs-12 text-left">
+            <!--<h5>${(book.bookInfo.rating)!}</h5>-->
+            <h4>读者留存率：${(book.bookInfo.retentionRatio)!}%</h4>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-6">
+            <#if book.onShelf>
+                <#assign classBtn = "btn-del-book"/>
+                <#assign btnText = "- 不追了"/>
+            <#else>
+                <#assign classBtn = "btn-add-book"/>
+                <#assign btnText = "+ 追书"/>
+            </#if>
+
+            <button class="col-xs-12 btn ${classBtn} btn-book-detail-add-del" type="button">${btnText}</button>
+
+        </div>
+        <div class="col-xs-6">
+            <button class="col-xs-12 btn btn-read-book loading" type="button">开始阅读</button>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="book-detail-description">
+            <p>${(book.bookInfo.description)!}..</p>
+        </div>
+    </div>
+
+</div>
+</body>
+<script type="text/javascript" src="/public_static/js/book/book_detail.js"></script>
+</html>

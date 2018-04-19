@@ -1,0 +1,33 @@
+{
+	"version":"1.0.0",
+	"model":"dog.moc",
+	"textures":[
+		"texture/texture_00.png"
+	],
+	"hit_areas":[
+		{"name":"body","id":"D_REF.PT_SOBA_01"}
+	],
+	"layout":{
+		"center_x":0,
+		"y":2.8,
+		"width":1.5
+	},
+	"motions":{
+		"idle":[
+			{"file":"mtn/idle_01.mtn","fade_in":500,"fade_out":200},
+			{"file":"mtn/idle_02.mtn","fade_in":500,"fade_out":200},
+			{"file":"mtn/idle_03.mtn","fade_in":500,"fade_out":200},
+			{"file":"mtn/idle_04.mtn","fade_in":500,"fade_out":200}
+		],
+		"shake":[
+			{"file":"mtn/shake_01.mtn","fade_in":500,"fade_out":0},
+			{"file":"mtn/shake_02.mtn","fade_in":500,"fade_out":0}
+		],
+		"tap_body":[
+			{"file":"mtn/touch_01.mtn","fade_in":500,"fade_out":0},
+			{"file":"mtn/touch_02.mtn","fade_in":500,"fade_out":0},
+			{"file":"mtn/touch_03.mtn","fade_in":500,"fade_out":0}
+		]
+	},
+	"name":"dog"
+}

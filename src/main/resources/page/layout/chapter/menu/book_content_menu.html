@@ -1,0 +1,114 @@
+<style>
+
+    .book-menu-header a {
+        color: #DDDDDD;
+        height: 40px;
+        line-height: 40px;
+        text-decoration: none;
+    }
+
+    .book-menu-footer {
+        background-color: black;
+        color: #DDDDDD;
+        z-index: 99;
+        position: fixed;
+        height: 100px;
+        bottom: 0;
+        width: 100%;
+        font-size: 20px;
+        line-height: 40px;
+        height: 40px;
+        left:0;
+    }
+
+    #book_menu {
+        display: none;
+    }
+
+    .book-menu-footer-font-setup {
+        width: 100%;
+        height: 154px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background-color: #000000;
+        z-index: 100;
+        display: none;
+    }
+
+    .btn-color-group button{
+        border-radius: 14px;
+        height:  28px;
+        width: 28px;
+        margin-bottom: 4px;
+    }
+
+    .btn-color-group .btn-color-1 {
+        background-color: #817f79;
+    }
+    .btn-color-group .btn-color-2 {
+        background-color: #7d7567;
+    }
+    .btn-color-group .btn-color-3 {
+        background-color: #7a7f6f;
+    }
+    .btn-color-group .btn-color-4 {
+        background-color: #6d816f;
+    }
+    .btn-color-group .btn-color-5 {
+        background-color: #1d2c29;
+    }
+
+    .btn-color-group .btn-color-6 {
+        background-color: #16211c;
+    }
+
+    .btn-color-group .btn-color-7 {
+        background-color: #161c27;
+    }
+
+    .btn-color-group .btn-color-8 {
+        background-color: #322319;
+    }
+
+</style>
+<div id="book_menu">
+    <#include '/layout/book/book_common_header.html'/>
+    <div class="book-menu-footer">
+        <div class="col-xs-3" id="btn_book_menu_font_setup">
+            <i class="fa fa-font"></i>
+        </div>
+        <div class="col-xs-3 pull-right text-right" id="btn_book_menu_font_chapters">
+            <i class="fa fa-list-ul"></i>
+        </div>
+    </div>
+
+    <div class="book-menu-footer-font-setup">
+        <br>
+        <div class="col-xs-12">
+            <p class="col-xs-6">
+                <button class="btn btn-warning btn-font-small btn-xs">小字体</button>
+                <button class="btn btn-success btn-font-big btn-xs pull-right">大字体</button>
+            </p>
+            <p class="col-xs-6">
+                <button class="btn btn-warning btn-line-height-small btn-xs">行距 -</button>
+                <button class="btn btn-success btn-line-height-big btn-xs pull-right">行距 +</button>
+            </p>
+        </div>
+        <div class="col-xs-12">
+            <p class="col-xs-7 btn-color-group">
+                <button class="btn btn-color-1"></button>
+                <button class="btn btn-color-2"></button>
+                <button class="btn btn-color-3"></button>
+                <button class="btn btn-color-4"></button>
+                <button class="btn btn-color-5"></button>
+                <button class="btn btn-color-6"></button>
+                <button class="btn btn-color-7"></button>
+                <button class="btn btn-color-8"></button>
+            </p>
+            <p class="col-xs-5">
+                <input type="checkbox" id="check_page_method" value="${(bookReadSetting.pageMethod)!1}">
+            </p>
+        </div>
+    </div>
+</div>
