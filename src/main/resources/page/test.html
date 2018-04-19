@@ -7,5 +7,23 @@
 </head>
 <body>
 
+<ul>
+    <li v-for="item in items">
+        {{item}}
+    </li>
+</ul>
 </body>
+
+<script>
+    new Vue({
+        el: "ul",
+        data: {
+            items: [
+                "11111",
+            "222222",
+            "333333"
+                ]
+        }
+    })
+</script>
 </html>
