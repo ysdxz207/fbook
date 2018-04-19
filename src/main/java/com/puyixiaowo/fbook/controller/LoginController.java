@@ -2,9 +2,12 @@ package com.puyixiaowo.fbook.controller;
 
 import com.google.code.kaptcha.Producer;
 import com.puyixiaowo.fbook.bean.UserBean;
+import com.puyixiaowo.fbook.bean.book.BookReadSettingBean;
 import com.puyixiaowo.fbook.bean.sys.ResponseBean;
 import com.puyixiaowo.fbook.constants.Constants;
+import com.puyixiaowo.fbook.exception.DBObjectExistsException;
 import com.puyixiaowo.fbook.service.LoginService;
+import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.DesUtils;
 import com.puyixiaowo.fbook.utils.Md5Utils;
 import com.puyixiaowo.fbook.utils.StringUtils;
@@ -43,6 +46,19 @@ public class LoginController extends BaseController {
 
         return new MustacheTemplateEngine()
                 .render(new ModelAndView(null, "login.html"));
+    }
+
+    /**
+     * 注册页面
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    public static Object registerPage(Request request, Response response) {
+
+        return new MustacheTemplateEngine()
+                .render(new ModelAndView(null, "register.html"));
     }
 
 
@@ -242,4 +258,29 @@ public class LoginController extends BaseController {
             return;
         }
     }
+
+    public static ResponseBean register(Request request,
+                                        Response response) {
+        ResponseBean responseBean = new ResponseBean();
+
+        try {
+            UserBean userBean = getParamsEntity(request, UserBean.class, true);
+
+            DBUtils.insertOrUpdate(userBean, false);
+            //创建用户信息
+            BookReadSettingBean bookReadSettingBean = new BookReadSettingBean();
+            bookReadSettingBean.setUserId(userBean.getId());
+            DBUtils.insertOrUpdate(bookReadSettingBean, false);
+            //注册完直接登录
+            request.session().attribute(Constants.SESSION_USER_KEY, userBean);
+        } catch (DBObjectExistsException e) {
+            responseBean.errorMessage("用户名或昵称已存在");
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+
+        return responseBean;
+    }
+
+
 }

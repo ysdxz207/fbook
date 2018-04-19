@@ -4,9 +4,9 @@
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id`        INTEGER(20)  NOT NULL UNIQUE,
-  `loginname`      VARCHAR(64) NOT NULL,
+  `loginname`      VARCHAR(64) NOT NULL UNIQUE,
   `password`      VARCHAR(128) NOT NULL,
-  `nickname`      VARCHAR(128) NOT NULL,
+  `nickname`      VARCHAR(128) NOT NULL UNIQUE,
   `face_url`      TEXT           DEFAULT NULL,
   `create_time`     INTEGER(13) DEFAULT '0',
   `status`     INTEGER(2) DEFAULT '1',
