@@ -32,7 +32,7 @@ public class Constants {
 
 
     /*
-     * 密码des密钥,值由ConfigUtils初始化从admin_auth.yaml中取
+     * des密钥
      */
     public static String PASS_DES_KEY = "20151106";
 }

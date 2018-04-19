@@ -6,6 +6,7 @@ import com.puyixiaowo.fbook.bean.sys.ResponseBean;
 import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.service.LoginService;
 import com.puyixiaowo.fbook.utils.DesUtils;
+import com.puyixiaowo.fbook.utils.Md5Utils;
 import com.puyixiaowo.fbook.utils.StringUtils;
 import com.puyixiaowo.fbook.utils.captcha.CaptchaProducer;
 import spark.ModelAndView;
@@ -75,7 +76,7 @@ public class LoginController extends BaseController {
             return responseBean;
         }
         return doLogin(Constants.COOKIE_LOGIN_KEY_BOOK,
-                uname, DesUtils.encrypt(upass), request, response);
+                uname, Md5Utils.md5Password(upass), request, response);
     }
 
     private static ResponseBean doLogin(String cookieKey,
