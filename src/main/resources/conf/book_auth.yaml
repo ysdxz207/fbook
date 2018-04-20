@@ -2,6 +2,6 @@
 
 # BookAuthFilter过滤器忽略路径列表[无需登录路径列表]
 ignore_list:
-  - /book/loginPage
-  - /book/login
-  - /book/captcha.jpg
+  - /login
+  - /error/error404
+  - /error/error500

@@ -33,8 +33,6 @@ public class BookController extends BaseController {
 
 
     public static Object userBooks(Request request, Response response) {
-        Map<String, Object> model = new HashMap<>();
-
         PageBean pageBean = getPageBean(request);
 
         try {
@@ -45,12 +43,7 @@ public class BookController extends BaseController {
             pageBean.error(e);
         }
 
-        UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
-
-        model.put("userBean", userBean);
-        model.put("pageBean", pageBean);
-        return new MustacheTemplateEngine()
-                .render(new ModelAndView(model, "book_index.html"));
+        return pageBean;
     }
 
     public static Object bookDetail(Request request, Response response) {

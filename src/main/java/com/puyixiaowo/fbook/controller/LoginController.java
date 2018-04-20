@@ -35,18 +35,6 @@ public class LoginController extends BaseController {
 
     private static Producer producer= new CaptchaProducer();
 
-    /**
-     * 登录页面
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    public static Object loginPage(Request request, Response response) {
-
-        return new MustacheTemplateEngine()
-                .render(new ModelAndView(null, "login.html"));
-    }
 
     /**
      * 注册页面
@@ -238,7 +226,7 @@ public class LoginController extends BaseController {
                                        Response response) {
 
         String redirectPage = "/";
-        String loginPage = "/loginPage";
+        String loginPage = "/#login";
 
         UserBean userBean = rememberMe(cookieKey,
                 request, response, null);
