@@ -42,14 +42,15 @@ public class BaseController {
     @SuppressWarnings("unchecked")
     public static <T extends Validatable> T getParamsEntity(Request request,
                                                             Class<T> clazz,
-                                                            boolean validate) throws ValidationException, ClassNotFoundException, InvocationTargetException, IllegalAccessException, InstantiationException {
+                                                            boolean validate,
+                                                            boolean showAllError) throws ValidationException, ClassNotFoundException, InvocationTargetException, IllegalAccessException, InstantiationException {
         Map<String, String[]> map = request.queryMap().toMap();
 
         T obj = (T) Class.forName(clazz.getName()).newInstance();
         BeanUtilsBean.getInstance().getConvertUtils().register(false, false, 0);
         BeanUtils.populate(obj, map);
         if (validate) {
-            obj.validate();
+            obj.validate(showAllError);
         }
 
         Object id = ReflectionUtils.getFieldValue(obj, "id");

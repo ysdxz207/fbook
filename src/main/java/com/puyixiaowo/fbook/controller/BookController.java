@@ -32,7 +32,7 @@ public class BookController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(BookController.class);
 
 
-    public static Object userBooks(Request request, Response response) {
+    public static Object bookShelf(Request request, Response response) {
         PageBean pageBean = getPageBean(request);
 
         try {
@@ -46,13 +46,12 @@ public class BookController extends BaseController {
         return pageBean;
     }
 
-    public static Object bookDetail(Request request, Response response) {
-        Map<String, Object> model = new HashMap<>();
-
+    public static ResponseBean bookDetail(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
         BookBean bookBean = null;
         try {
 
-            bookBean = getParamsEntity(request, BookBean.class, true);
+            bookBean = getParamsEntity(request, BookBean.class, true, false);
             bookBean = BookService.requestBookDetail(bookBean);
 
             //是否在书架里
@@ -64,14 +63,12 @@ public class BookController extends BaseController {
                 bookBean.setId(bookBeanDB.getId());
             }
             DBUtils.insertOrUpdate(bookBean, false);
+            responseBean.setData(bookBean);
         } catch (Exception e) {
             logger.error("[书]获取章节列表异常：" + e.getMessage());
+            responseBean.error(e);
         }
-
-        model.put("book", bookBean);
-
-        return new MustacheTemplateEngine()
-                .render(new ModelAndView(model, "book_detail.html"));
+        return  responseBean;
     }
 
     public static Object chapterContent(Request request, Response response) {
@@ -171,7 +168,7 @@ public class BookController extends BaseController {
 
         try {
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
-            BookReadSettingBean bookReadSettingBean = getParamsEntity(request, BookReadSettingBean.class, false);
+            BookReadSettingBean bookReadSettingBean = getParamsEntity(request, BookReadSettingBean.class, false, false);
 
             //读取读书配置
             BookReadSettingBean bookReadSettingBeanDB = BookReadSettingService.getUserReadSetting(userBean.getId());
@@ -204,20 +201,20 @@ public class BookController extends BaseController {
                 .render(new ModelAndView(null, "book_search.html"));
     }
 
-    public static Object search(Request request, Response response) {
+    public static PageBean search(Request request, Response response) {
 
         PageBean pageBean = getPageBean(request);
         try {
-            String name = request.queryParams("name");
+            String keywords = request.queryParams("keywords");
 
             RowBounds rowBounds = pageBean.getRowBounds();
             rowBounds.setLimit(100);
             pageBean.setRowBounds(rowBounds);
-            pageBean = BookService.requestSearchBook(name, pageBean);
+            pageBean = BookService.requestSearchBook(keywords, pageBean);
         } catch (Exception e) {
             pageBean.error(e);
         }
-        return pageBean.serialize();
+        return pageBean;
     }
 
     public static Object chapters(Request request, Response response) {
@@ -247,7 +244,7 @@ public class BookController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
 
         try {
-            BookBean bookBean = getParamsEntity(request, BookBean.class, true);
+            BookBean bookBean = getParamsEntity(request, BookBean.class, true, false);
             BookBean bookBeanDB = BookService.selectBookBeanByAId(bookBean.getaId());
 
             if (bookBeanDB != null) {

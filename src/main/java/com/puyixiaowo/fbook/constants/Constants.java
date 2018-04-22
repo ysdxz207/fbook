@@ -1,5 +1,7 @@
 package com.puyixiaowo.fbook.constants;
 
+import com.puyixiaowo.fbook.utils.ResourceUtils;
+
 public class Constants {
 
     public static final String ENCODING = "UTF-8";
@@ -35,4 +37,9 @@ public class Constants {
      * des密钥
      */
     public static String PASS_DES_KEY = "20151106";
+
+    /**
+     * 跨域允许
+     */
+    public static String ACCESS_CONTROL_ALLOW_ORIGIN = ResourceUtils.load("conf/common.properties").getProperty("origin.access.allow.url");
 }

@@ -14,7 +14,7 @@ import java.util.LinkedHashMap;
  */
 public abstract class Validatable {
 
-    public void validate() throws ValidationException {
+    public void validate(boolean showAllError) throws ValidationException {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
 
         Field [] fields = this.getClass().getDeclaredFields();
@@ -24,19 +24,29 @@ public abstract class Validatable {
             if (notnull == null) {
                 continue;
             }
+
+            Object fieldValue = null;
+            try {
+                fieldValue = field.get(this);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            if (!StringUtils.isBlank(fieldValue)) {
+                continue;
+            }
             String message = notnull.message();
 
             if (StringUtils.isBlank(message)) {
                 message = field.getName() + "不能为空";
             }
 
-            try {
-                if (StringUtils.isBlank(field.get(this))) {
-                    map.put(field.getName(), message);
-                }
-            } catch (IllegalAccessException e) {
+            if (!showAllError
+                    && StringUtils.isBlank(fieldValue)) {
+                throw new ValidationException(message);
+            }
 
-
+            if (StringUtils.isBlank(fieldValue)) {
+                map.put(field.getName(), message);
             }
 
         }

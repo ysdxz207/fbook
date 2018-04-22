@@ -1,12 +1,12 @@
 package com.puyixiaowo.fbook.error;
 
-import com.puyixiaowo.fbook.exception.NoPermissionsException;
-import com.puyixiaowo.fbook.utils.ExceptionEmailUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.*;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import static spark.Spark.exception;
 import static spark.Spark.notFound;
@@ -32,14 +32,13 @@ public class ErrorHandler {
 
         handle404();
         handle500();
-        handleNoPermissions();
     }
 
     private static void handle404(){
 
         notFound((request, response) -> {
-            response.redirect("/error/error404");
-            return null;
+//            response.redirect("/error/error404");
+            return "404";
         });
     }
 
@@ -55,7 +54,7 @@ public class ErrorHandler {
 
                 //发送邮件
                 try {
-                    ExceptionEmailUtils.sendException("飞鸿博客异常", exception);
+//                    ExceptionEmailUtils.sendException("飞鸿博客异常", exception);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -65,13 +64,6 @@ public class ErrorHandler {
 
             exec.submit(futureTask);
             exec.shutdown();
-            response.redirect("/error/error500");
-        });
-    }
-
-    private static void handleNoPermissions(){
-        exception(NoPermissionsException.class, (e, request, response) -> {
-            response.body("您没有访问权限！");
         });
     }
 

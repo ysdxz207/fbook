@@ -21,12 +21,14 @@
             <id>dev</id>
             <properties>
                 <redis.pass>123456</redis.pass>
+                <origin.access.allow.url>http://192.168.3.2:1234</origin.access.allow.url>
             </properties>
         </profile>
         <profile>
             <id>production</id>
             <properties>
                 <redis.pass>K31f65ds095f1GDaakf0387</redis.pass>
+                <origin.access.allow.url>http://book.puyixiaowo.win</origin.access.allow.url>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>

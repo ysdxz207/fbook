@@ -23,6 +23,12 @@ public class BookAuthFilter {
     public static void init() {
         //书
         before("/*", (request, response) -> {
+            response.header("Access-Control-Allow-Origin", Constants.ACCESS_CONTROL_ALLOW_ORIGIN);
+            response.header("Access-Control-Allow-Methods", "*");
+            response.header("Access-Control-Allow-Headers", "*");
+            response.header("Access-Control-Allow-Credentials", "true");
+
+
             String uri = request.uri();
             if (!isIgnorePath(uri)
                     && (request.session().attribute(Constants.SESSION_USER_KEY) == null)) {

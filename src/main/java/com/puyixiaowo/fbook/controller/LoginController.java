@@ -3,6 +3,8 @@ package com.puyixiaowo.fbook.controller;
 import com.google.code.kaptcha.Producer;
 import com.puyixiaowo.fbook.bean.UserBean;
 import com.puyixiaowo.fbook.bean.book.BookReadSettingBean;
+import com.puyixiaowo.fbook.bean.book.BookshelfBean;
+import com.puyixiaowo.fbook.bean.error.LoginError;
 import com.puyixiaowo.fbook.bean.sys.ResponseBean;
 import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.exception.DBObjectExistsException;
@@ -25,6 +27,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static spark.Spark.halt;
 
 /**
  * @author Moses
@@ -55,30 +59,33 @@ public class LoginController extends BaseController {
 
         ResponseBean responseBean = new ResponseBean();
 
+        String uname = request.queryParams("uname");
+        String upass = request.queryParams("upass");
         String captcha = request.queryParams("captcha");
+
+        if (StringUtils.isBlank(uname)) {
+            responseBean.error(LoginError.LOGIN_NO_USERNAME);
+            return responseBean;
+        }
+        if (StringUtils.isBlank(upass)) {
+            responseBean.error(LoginError.LOGIN_NO_PASSWORD);
+            return responseBean;
+        }
+
         if (StringUtils.isBlank(captcha)) {
-            responseBean.errorMessage("请输入验证码");
+            responseBean.error(LoginError.LOGIN_NO_CAPTCHA);
             return responseBean;
         }
 
 
         String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
+
         if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
-            responseBean.errorMessage("验证码错误");
+            responseBean.error(LoginError.LOGIN_WRONG_CAPTCHA);
             return responseBean;
         }
 
-        String uname = request.queryParams("uname");
-        String upass = request.queryParams("upass");
 
-        if (StringUtils.isBlank(uname)) {
-            responseBean.errorMessage("用户名为空");
-            return responseBean;
-        }
-        if (StringUtils.isBlank(upass)) {
-            responseBean.errorMessage("密码为空");
-            return responseBean;
-        }
         return doLogin(Constants.COOKIE_LOGIN_KEY_BOOK,
                 uname, Md5Utils.md5Password(upass), request, response);
     }
@@ -99,12 +106,14 @@ public class LoginController extends BaseController {
         try {
             UserBean userBean = LoginService.login(params);
             if (userBean == null) {
-                responseBean.errorMessage("用户名或密码不正确");
+                responseBean.error(LoginError.LOGIN_WRONG_PASSWORD);
                 return responseBean;
             } else {
                 //登录成功
-                request.session().attribute(Constants.SESSION_USER_KEY, userBean);
                 rememberMe(cookieKey, request, response, userBean);
+                userBean.setPassword(null);
+                request.session().attribute(Constants.SESSION_USER_KEY, userBean);
+                responseBean.setData(userBean);
                 return responseBean;
             }
         } catch (Exception e) {
@@ -172,7 +181,6 @@ public class LoginController extends BaseController {
     public static Object captcha(Request request,
                         Response response) {
 
-        String type = request.queryParamOrDefault("type", "admin");
 
         HttpSession session = request.session().raw();
         HttpServletResponse res = response.raw();
@@ -225,25 +233,24 @@ public class LoginController extends BaseController {
                                        Request request,
                                        Response response) {
 
-        String redirectPage = "/";
-        String loginPage = "/#login";
+
+        ResponseBean responseBean = new ResponseBean();
 
         UserBean userBean = rememberMe(cookieKey,
                 request, response, null);
 
         if (userBean == null) {
-            response.redirect(loginPage);
-            return;
+            responseBean.errorMessage("请先登录");
+            responseBean.setStatusCode(401);
+            halt(responseBean.serialize());
         }
 
-        ResponseBean responseBean = doLogin(cookieKey,
+        responseBean = doLogin(cookieKey,
                 userBean.getLoginname(), userBean.getPassword(), request, response);
-
-        if (responseBean.getStatusCode() == Constants.RESPONSE_STATUS_CODE_SUCCESS) {
-            response.redirect(redirectPage);
-        } else {
-            response.redirect(loginPage);
-            return;
+        if (responseBean.getStatusCode() != 200) {
+            //移除cookie
+            logout(request, response);
+            halt(401, responseBean.serialize());
         }
     }
 
@@ -252,9 +259,18 @@ public class LoginController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
 
         try {
-            UserBean userBean = getParamsEntity(request, UserBean.class, true);
+            UserBean userBean = getParamsEntity(request, UserBean.class, true, false);
 
+            if (StringUtils.isBlank(userBean.getNickname())) {
+                userBean.setNickname("大帅比");
+            }
+            userBean.setPassword(Md5Utils.md5Password(userBean.getPassword()));
             DBUtils.insertOrUpdate(userBean, false);
+            //创建书架
+            BookshelfBean bookshelfBean = new BookshelfBean();
+            bookshelfBean.setCreateTime(System.currentTimeMillis());
+            bookshelfBean.setUserId(userBean.getId());
+            DBUtils.insertOrUpdate(bookshelfBean, false);
             //创建用户信息
             BookReadSettingBean bookReadSettingBean = new BookReadSettingBean();
             bookReadSettingBean.setUserId(userBean.getId());

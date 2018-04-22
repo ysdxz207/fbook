@@ -15,27 +15,32 @@ public class Routes {
 
         //book
         path("/", () -> {
+            get("/", ((request, response) ->
+                    BookController.bookShelf(request, response)));
+            post("/", ((request, response) ->
+                    BookController.bookShelf(request, response)));
             get("/captcha.jpg", ((request, response) ->
                     LoginController.captcha(request, response)));
             post("/login", ((request, response) ->
                     LoginController.login(request, response)));
+            post("/logout", ((request, response) ->
+                    LoginController.logout(request, response)));
+            post("/register", ((request, response) ->
+                    LoginController.register(request, response)));
 
-            get("/", ((request, response) ->
-                    BookController.userBooks(request, response)));
-
-            get("/detail", ((request, response) ->
+            post("/detail", ((request, response) ->
                     BookController.bookDetail(request, response)));
 
-            get("/chapter", ((request, response) ->
+            post("/chapter", ((request, response) ->
                     BookController.chapterContent(request, response)));
 
             post("/saveReadingSetting", ((request, response) ->
                     BookController.saveBookReadSetting(request, response)));
 
-            get("/searchPage", ((request, response) ->
+            post("/searchPage", ((request, response) ->
                     BookController.searchPage(request, response)));
 
-            get("/search", ((request, response) ->
+            post("/search", ((request, response) ->
                     BookController.search(request, response)));
             post("/chapters", ((request, response) ->
                     BookController.chapters(request, response)));
@@ -43,7 +48,7 @@ public class Routes {
             post("/addOrDel", ((request, response) ->
                     BookController.addOrDelBook(request, response)));
 
-            get("/source", ((request, response) ->
+            post("/source", ((request, response) ->
                     BookController.bookSource(request, response)));
 
             post("/source/change", ((request, response) ->
