@@ -33,6 +33,7 @@ public class BookController extends BaseController {
 
 
     public static Object bookShelf(Request request, Response response) {
+
         PageBean pageBean = getPageBean(request);
 
         try {

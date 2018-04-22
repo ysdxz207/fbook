@@ -242,7 +242,8 @@ public class LoginController extends BaseController {
         if (userBean == null) {
             responseBean.errorMessage("请先登录");
             responseBean.setStatusCode(401);
-            halt(responseBean.serialize());
+            return;
+//            halt(responseBean.serialize());
         }
 
         responseBean = doLogin(cookieKey,
@@ -250,7 +251,8 @@ public class LoginController extends BaseController {
         if (responseBean.getStatusCode() != 200) {
             //移除cookie
             logout(request, response);
-            halt(401, responseBean.serialize());
+            return;
+//            halt(401, responseBean.serialize());
         }
     }
 
