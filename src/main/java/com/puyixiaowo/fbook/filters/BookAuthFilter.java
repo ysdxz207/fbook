@@ -4,7 +4,10 @@ import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.controller.LoginController;
 import com.puyixiaowo.fbook.enums.EnumsRedisKey;
 import com.puyixiaowo.fbook.utils.RedisUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static spark.Spark.before;
@@ -18,12 +21,16 @@ import static spark.Spark.halt;
  */
 public class BookAuthFilter {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(BookAuthFilter.class);
 
     public static void init() {
         //书
         before("/*", (request, response) -> {
-            response.header("Access-Control-Allow-Origin", Constants.ACCESS_CONTROL_ALLOW_ORIGIN);
+
+            String origin = request.headers("Origin");
+            String originAllowed = Arrays.asList(Constants.ALLOWED_ORIGINS).contains(origin) ? origin : "";
+            logger.info("[" + origin + "][" + originAllowed + "]");
+            response.header("Access-Control-Allow-Origin", originAllowed);
             response.header("Access-Control-Allow-Methods", "*");
             response.header("Access-Control-Allow-Headers", "*");
             response.header("Access-Control-Allow-Credentials", "true");

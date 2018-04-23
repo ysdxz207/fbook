@@ -9,11 +9,10 @@ import com.puyixiaowo.fbook.bean.sys.ResponseBean;
 import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.exception.DBObjectExistsException;
 import com.puyixiaowo.fbook.service.LoginService;
-import com.puyixiaowo.fbook.utils.DBUtils;
-import com.puyixiaowo.fbook.utils.DesUtils;
-import com.puyixiaowo.fbook.utils.Md5Utils;
-import com.puyixiaowo.fbook.utils.StringUtils;
+import com.puyixiaowo.fbook.utils.*;
 import com.puyixiaowo.fbook.utils.captcha.CaptchaProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -36,6 +35,9 @@ import static spark.Spark.halt;
  * 登录
  */
 public class LoginController extends BaseController {
+
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
 
     private static Producer producer= new CaptchaProducer();
 
@@ -67,6 +69,7 @@ public class LoginController extends BaseController {
             responseBean.error(LoginError.LOGIN_NO_USERNAME);
             return responseBean;
         }
+
         if (StringUtils.isBlank(upass)) {
             responseBean.error(LoginError.LOGIN_NO_PASSWORD);
             return responseBean;
@@ -233,7 +236,6 @@ public class LoginController extends BaseController {
                                        Request request,
                                        Response response) {
 
-
         ResponseBean responseBean = new ResponseBean();
 
         UserBean userBean = rememberMe(cookieKey,
@@ -242,8 +244,8 @@ public class LoginController extends BaseController {
         if (userBean == null) {
             responseBean.errorMessage("请先登录");
             responseBean.setStatusCode(401);
+            halt(responseBean.serialize());
             return;
-//            halt(responseBean.serialize());
         }
 
         responseBean = doLogin(cookieKey,
@@ -251,8 +253,8 @@ public class LoginController extends BaseController {
         if (responseBean.getStatusCode() != 200) {
             //移除cookie
             logout(request, response);
+            halt(responseBean.serialize());
             return;
-//            halt(401, responseBean.serialize());
         }
     }
 
