@@ -28,7 +28,16 @@ public class BookAuthFilter {
         //书
         before("/*", (request, response) -> {
 
+            String origin = request.headers("Origin");
+            if (StringUtils.isNotBlank(origin)) {
+                String originAllowed = Arrays.asList(Constants.ALLOWED_ORIGINS).contains(origin) ? origin : "";
+                logger.info("[" + origin + "][" + originAllowed + "]");
+                response.header("Access-Control-Allow-Origin", originAllowed);
+                response.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+                response.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
+                response.header("Access-Control-Allow-Credentials", "true");
 
+            }
 
 
             String uri = request.uri();
