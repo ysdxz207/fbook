@@ -9,7 +9,10 @@ import com.puyixiaowo.fbook.bean.sys.ResponseBean;
 import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.exception.DBObjectExistsException;
 import com.puyixiaowo.fbook.service.LoginService;
-import com.puyixiaowo.fbook.utils.*;
+import com.puyixiaowo.fbook.utils.DBUtils;
+import com.puyixiaowo.fbook.utils.DesUtils;
+import com.puyixiaowo.fbook.utils.Md5Utils;
+import com.puyixiaowo.fbook.utils.StringUtils;
 import com.puyixiaowo.fbook.utils.captcha.CaptchaProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +85,8 @@ public class LoginController extends BaseController {
 
 
         String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
+
+        logger.info("验证码是：[" + sessionCaptcha + "]");
 
         if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
             responseBean.error(LoginError.LOGIN_WRONG_CAPTCHA);
@@ -235,6 +240,8 @@ public class LoginController extends BaseController {
     public static void rememberMeLogin(String cookieKey,
                                        Request request,
                                        Response response) {
+
+
 
         ResponseBean responseBean = new ResponseBean();
 

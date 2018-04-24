@@ -4,6 +4,7 @@ import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.controller.LoginController;
 import com.puyixiaowo.fbook.enums.EnumsRedisKey;
 import com.puyixiaowo.fbook.utils.RedisUtils;
+import com.puyixiaowo.fbook.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,13 +28,7 @@ public class BookAuthFilter {
         //书
         before("/*", (request, response) -> {
 
-            String origin = request.headers("Origin");
-            String originAllowed = Arrays.asList(Constants.ALLOWED_ORIGINS).contains(origin) ? origin : "";
-            logger.info("[" + origin + "][" + originAllowed + "]");
-            response.header("Access-Control-Allow-Origin", originAllowed);
-            response.header("Access-Control-Allow-Methods", "*");
-            response.header("Access-Control-Allow-Headers", "*");
-            response.header("Access-Control-Allow-Credentials", "true");
+
 
 
             String uri = request.uri();

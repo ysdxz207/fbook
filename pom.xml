@@ -28,7 +28,7 @@
             <id>production</id>
             <properties>
                 <redis.pass>K31f65ds095f1GDaakf0387</redis.pass>
-                <origin.access.allow.url>http://book.puyixiaowo.win,http://localhost</origin.access.allow.url>
+                <origin.access.allow.url>http://book.puyixiaowo.win,http://localhost:1234,http://localhost</origin.access.allow.url>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>

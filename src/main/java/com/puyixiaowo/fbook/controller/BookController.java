@@ -32,7 +32,7 @@ public class BookController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(BookController.class);
 
 
-    public static Object bookShelf(Request request, Response response) {
+    public static PageBean bookShelf(Request request, Response response) {
         PageBean pageBean = getPageBean(request);
 
         try {
