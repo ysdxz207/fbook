@@ -1,9 +1,11 @@
 package com.puyixiaowo.fbook.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.core.entity.RowBounds;
 import com.puyixiaowo.fbook.bean.UserBean;
 import com.puyixiaowo.fbook.bean.book.*;
+import com.puyixiaowo.fbook.bean.error.ReadError;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.bean.sys.ResponseBean;
 import com.puyixiaowo.fbook.constants.Constants;
@@ -71,7 +73,8 @@ public class BookController extends BaseController {
         return  responseBean;
     }
 
-    public static Object chapterContent(Request request, Response response) {
+    public static ResponseBean chapterContent(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
         //必传,书籍详情页面看书只有bookId
         String bookIdStr = request.queryParams("bookId");
         //仅用于接口获取到章节名为.时显示
@@ -81,12 +84,12 @@ public class BookController extends BaseController {
                 Integer.valueOf(request.queryParams("chapter")) : null;
 
         if (StringUtils.isBlank(bookIdStr)) {
-            return "bookId不可为空";
+            return responseBean.errorMessage("bookId不可为空");
         }
 
 
         Long bookId = Long.valueOf(bookIdStr);
-        Map<String, Object> model = new HashMap<>();
+        JSONObject model = new JSONObject();
 
         try {
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
@@ -96,7 +99,7 @@ public class BookController extends BaseController {
             BookBean bookBean = BookService.selectBookBeanById(bookId);
 
             if (bookBean == null) {
-                return null;
+                return responseBean.errorMessage("书不存在");
             }
             //章节列表
             List<BookChapterBean> chapterBeanList = BookChapterService
@@ -113,17 +116,15 @@ public class BookController extends BaseController {
             //最后一章
             if (chapter > chapterBeanList.size()) {
                 response.redirect("/detail?id=" + bookIdStr + "&aId=" + bookBean.getaId());
-                return null;
+                return responseBean.error(ReadError.READ_LAST_CHAPTER_ERROR);
             }
 
             BookChapterBean bookChapterBean = BookChapterService.getChapter(chapterBeanList,
                         chapter);
             if (bookChapterBean == null) {
 
-                String HTML_CHANGE_SOURCE = "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no\">\n<div style='color: #DDD;text-align:center;height:400px;line-height:400px'>无法获取书籍，请<a href='/book/source?aId=" +
-                        bookBean.getaId() + "'>切换书源</a></div>";
                 //提示切换书源
-                return HTML_CHANGE_SOURCE;
+                return responseBean.error(ReadError.READ_SOURCE_ERROR);
             }
 
             //保存读书配置
@@ -146,20 +147,19 @@ public class BookController extends BaseController {
             if (bookReadSettingBean.getSort() == EnumSort.SORT_REVERSE.sort) {
                 Collections.reverse(chapterBeanList);
             }
-            model.put("model", bookChapterBean);
+            model.put("chapter", bookChapterBean);
             model.put("book", bookBean);
             model.put("bookRead", bookReadBean);
             model.put("bookReadSetting", bookReadSettingBean);
             model.put("bookChapters", chapterBeanList);
-
+            responseBean.setData(model);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("[书]获取章节内容异常：" + e.getMessage() == null ? JSON.toJSONString(e.getMessage()) : e.getMessage());
+            responseBean.error(e);
         }
 
-
-        return new MustacheTemplateEngine()
-                .render(new ModelAndView(model, "book_chapter_content.html"));
+        return responseBean;
     }
 
     public static Object saveBookReadSetting(Request request,
