@@ -6,6 +6,7 @@ import com.puyixiaowo.core.entity.RowBounds;
 import com.puyixiaowo.fbook.bean.UserBean;
 import com.puyixiaowo.fbook.bean.book.*;
 import com.puyixiaowo.fbook.bean.error.ReadError;
+import com.puyixiaowo.fbook.bean.error.SystemError;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.bean.sys.ResponseBean;
 import com.puyixiaowo.fbook.constants.Constants;
@@ -15,15 +16,11 @@ import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
-import spark.template.mustache.MustacheTemplateEngine;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Moses
@@ -193,14 +190,6 @@ public class BookController extends BaseController {
         return responseBean.serialize();
     }
 
-
-
-    public static Object searchPage(Request request, Response response) {
-
-        return new MustacheTemplateEngine()
-                .render(new ModelAndView(null, "book_search.html"));
-    }
-
     public static PageBean search(Request request, Response response) {
 
         PageBean pageBean = getPageBean(request);
@@ -269,12 +258,13 @@ public class BookController extends BaseController {
         return responseBean.serialize();
     }
 
-    public static Object bookSource(Request request, Response response) {
+    public static ResponseBean bookSource(Request request, Response response) {
 
+        ResponseBean responseBean = new ResponseBean();
         String aId = request.queryParams("aId");
         String title = request.queryParams("title");
         if (StringUtils.isBlank(aId)) {
-            return "aId不可为空";
+            return responseBean.error(SystemError.PARAMS_ERROR);
         }
 
         UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
@@ -292,15 +282,15 @@ public class BookController extends BaseController {
                 }
             }
         }
-        Map<String, Object> model = new HashMap<>();
+        JSONObject model = new JSONObject();
         model.put("list", list);
 
         model.put("aId", aId);
         model.put("bookId", bookBean.getId());
         model.put("title", title);
 
-        return new MustacheTemplateEngine()
-                .render(new ModelAndView(model, "book_source.html"));
+        responseBean.setData(model);
+        return responseBean;
     }
 
     public static Object changeBookSource(Request request, Response response) {
