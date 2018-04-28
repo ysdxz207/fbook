@@ -37,7 +37,7 @@ DROP TABLE IF EXISTS `bookshelf`;
 CREATE TABLE `bookshelf` (
   `id`        INTEGER(20)  NOT NULL UNIQUE,
   `user_id`      INTEGER(20) NOT NULL UNIQUE,
-  `book_ids`      VARCHAR(128) DEFAULT '',
+  `book_id`      INTEGER(128) NOT NULL,
   `create_time`     INTEGER(13) DEFAULT '0',
 
   PRIMARY KEY (`id`)

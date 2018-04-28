@@ -58,13 +58,11 @@ public class BookService {
     }
 
     public static List<BookBean> getUserBookList(Long userId) {
-        BookshelfBean bookshelfBean = BookshelfService.getUserShelf(userId);
         Map<String, Object> params = new HashMap<>();
-//        params.put("bookIds", bookshelfBean.getBookIds());
+        params.put("userId", userId);
 
         List<BookBean> bookBeanList = DBUtils.selectList(BookBean.class,
-                "select * from book where " +
-                        "id in (" + bookshelfBean.getBookIds() + ")", params);
+                "select * from book b left join bookshelf bs on b.id = bs.book_id and bs.user_id=:userId", params);
         return bookBeanList;
     }
 
@@ -177,17 +175,19 @@ public class BookService {
             ok = true;
         }
 
-        if (json == null && !ok) {
+        if (json == null || !ok) {
             return null;
         }
 
         String description = json.getString("longIntro");
         String cover = json.getString("cover");
-        try {
-            cover = URLDecoder.decode(cover, Constants.ENCODING);
-            cover = cover.replace("/agent/", "");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if (StringUtils.isNotBlank(cover)) {
+            try {
+                cover = URLDecoder.decode(cover, Constants.ENCODING);
+                cover = cover.replace("/agent/", "");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
         String rating = json.getString("rating");
         String retentionRatio = json.getString("retentionRatio");//读着留存率
@@ -251,5 +251,12 @@ public class BookService {
         }
 
         return Collections.max(bookSourceList);
+    }
+
+    public static BookBean getBookByAId(String aId) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("aId", aId);
+        return DBUtils.selectOne(BookBean.class, "select * from book where a_id=:aId", params);
     }
 }

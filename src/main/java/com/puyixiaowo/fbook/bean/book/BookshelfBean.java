@@ -10,7 +10,7 @@ public class BookshelfBean implements Serializable {
 
 	private Long id;
 	private Long userId;
-	private String bookIds;
+	private Long bookId;
 	private Long createTime;
 	private Integer pageMethod;
 
@@ -32,12 +32,12 @@ public class BookshelfBean implements Serializable {
 		this.userId = userId;
 	}
 
-	public String getBookIds (){
-		return bookIds;
+	public Long getBookId(){
+		return bookId;
 	}
 
-	public void setBookIds (String bookIds){
-		this.bookIds = bookIds;
+	public void setBookId(Long bookId){
+		this.bookId = bookId;
 	}
 
 	public Long getCreateTime (){

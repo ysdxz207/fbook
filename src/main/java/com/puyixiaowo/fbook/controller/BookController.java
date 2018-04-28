@@ -55,7 +55,7 @@ public class BookController extends BaseController {
 
             //是否在书架里
             bookBean.setOnShelf(BookshelfService.isBookOnShelf(request.session().attribute(Constants.SESSION_USER_KEY),
-                    bookBean));
+                    bookBean.getId()));
             //保存或更新书籍信息
             BookBean bookBeanDB = BookService.selectBookBeanByAId(bookBean.getaId());
             if (bookBeanDB != null) {
@@ -242,13 +242,17 @@ public class BookController extends BaseController {
 
             bookBean = BookService.requestBookDetail(bookBean);
 
+            if (bookBean == null) {
+                return responseBean.errorMessage("书籍不存在");
+            }
+
             //添加或更新书籍信息
             DBUtils.insertOrUpdate(bookBean, false);
 
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
 
             //增加到书架或删除书籍
-            boolean isOnBookshelf = BookshelfService.addOrDelBookFromBookshelf(userBean, bookBean.getId());
+            boolean isOnBookshelf = BookshelfService.addOrDelBookFromBookshelf(userBean, bookBean.getaId());
 
             responseBean.setData(isOnBookshelf);
         } catch (Exception e) {

@@ -19,12 +19,6 @@ import java.util.List;
  */
 public class BookshelfService {
 
-    public static BookshelfBean getBookshelfById(Long id) {
-        BookshelfBean bookshelfBean = new BookshelfBean();
-        bookshelfBean.setId(id);
-        return DBUtils.selectOne("select * from bookshelf where id=:id", bookshelfBean);
-    }
-
     public static String getSelectSql(BookshelfBean bookshelfBean,
                                                       PageBean pageBean) {
 
@@ -45,72 +39,51 @@ public class BookshelfService {
                                                BookshelfBean bookshelfBean) {
     }
 
-    public static BookshelfBean getUserShelf(Long userId) {
-        BookshelfBean bookshelfBean = new BookshelfBean();
-        bookshelfBean.setUserId(userId);
-        return DBUtils.selectOne("select * from bookshelf where user_id = :userId", bookshelfBean);
-    }
-
     public static boolean isBookOnShelf(UserBean userBean,
-                                        BookBean bookBean) {
-        if (bookBean == null
-                || bookBean.getaId() == null) {
+                                        Long bookId) {
+        if (userBean == null
+                || bookId == null) {
             return false;
         }
 
-        BookshelfBean bookshelfBean = getUserShelf(userBean.getId());
-        if (bookshelfBean == null
-                || bookshelfBean.getBookIds() == null) {
-            return false;
-        }
 
-        Long bookId = bookBean.getId();
-
-
-        if (bookId == null) {
-            BookBean bookBeanDB = BookService.selectBookBeanByAId(bookBean.getaId());
-            if (bookBeanDB == null) {
-                return false;
-            }
-            bookId = bookBeanDB.getId();
-        }
-        return bookshelfBean.getBookIds().indexOf("" + bookId) != -1;
+        BookshelfBean bookShelfBean = new BookshelfBean();
+        bookShelfBean.setUserId(userBean.getId());
+        bookShelfBean.setBookId(bookId);
+        int count = DBUtils.count("select * from bookshelf where user_id=:userId and book_id=:bookId", bookShelfBean);
+        return count != 0;
     }
 
-    public static boolean addOrDelBookFromBookshelf(UserBean userBean, Long bookId) {
-        BookshelfBean bookshelfBean = getUserShelf(userBean.getId());
-        if (bookshelfBean == null) {
-            //创建书架并添加书籍
-            bookshelfBean = new BookshelfBean();
-            bookshelfBean.setCreateTime(System.currentTimeMillis());
-            bookshelfBean.setUserId(userBean.getId());
-        }
-        String [] bookIds = new String[0];
-        boolean isOnBookshelf = false;
-        if (StringUtils.isNotBlank(bookshelfBean.getBookIds())) {
-            bookIds = bookshelfBean.getBookIds().split(",");
-            isOnBookshelf = bookshelfBean.getBookIds().indexOf("" + bookId) != -1;
-        }
+    public static boolean addOrDelBookFromBookshelf(UserBean userBean,
+                                                    String aId) {
+        boolean isOnBookShelf;
+        //首先根据aId获取bookId
+        BookBean bookBean = BookService.getBookByAId(aId);
 
-        List<String> bookIdList = new ArrayList(Arrays.asList(bookIds));
-
-        Iterator it = bookIdList.iterator();
-        if (isOnBookshelf) {
-            while (it.hasNext()) {
-                if (it.next().equals(bookId + "")) {
-                    it.remove();
-                    //删除读书配置
-                    BookReadService.deleteByBookId(bookId);
-                }
-            }
+        if (bookBean == null) {
+            isOnBookShelf = false;
         } else {
-            bookIdList.add(bookId + "");
+            isOnBookShelf = isBookOnShelf(userBean, bookBean.getId());
         }
 
-        bookshelfBean.setBookIds(StringUtils.join(bookIdList.toArray(), ","));
 
-        DBUtils.insertOrUpdate(bookshelfBean, false);
+        BookshelfBean bookshelfBean = new BookshelfBean();
+        bookshelfBean.setUserId(userBean.getId());
+        bookshelfBean.setBookId(bookBean.getId());
 
-        return !isOnBookshelf;
+        if (isOnBookShelf) {
+            //从书架上移除
+            DBUtils.executeSql("delete from bookshelf where user_id=:userId and book_id=:bookId", bookshelfBean);
+            //删除读书配置
+            BookReadService.deleteByBookId(bookBean.getId());
+
+        } else {
+            //创建书架并添加书籍
+            bookshelfBean.setCreateTime(System.currentTimeMillis());
+            DBUtils.insertOrUpdate(bookshelfBean, false);
+        }
+
+
+        return !isOnBookShelf;
     }
 }
