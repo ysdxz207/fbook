@@ -50,7 +50,6 @@ public class Routes {
 
             post("/source/change", ((request, response) ->
                     BookController.changeBookSource(request, response)));
-
         });
     }
 }
