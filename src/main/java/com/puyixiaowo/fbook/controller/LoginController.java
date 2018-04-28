@@ -261,11 +261,6 @@ public class LoginController extends BaseController {
             }
             userBean.setPassword(Md5Utils.md5Password(userBean.getPassword()));
             DBUtils.insertOrUpdate(userBean, false);
-            //创建书架
-            BookshelfBean bookshelfBean = new BookshelfBean();
-            bookshelfBean.setCreateTime(System.currentTimeMillis());
-            bookshelfBean.setUserId(userBean.getId());
-            DBUtils.insertOrUpdate(bookshelfBean, false);
             //创建用户信息
             BookReadSettingBean bookReadSettingBean = new BookReadSettingBean();
             bookReadSettingBean.setUserId(userBean.getId());
