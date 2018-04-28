@@ -37,9 +37,6 @@ public class Routes {
             post("/saveReadingSetting", ((request, response) ->
                     BookController.saveBookReadSetting(request, response)));
 
-            post("/searchPage", ((request, response) ->
-                    BookController.searchPage(request, response)));
-
             post("/search", ((request, response) ->
                     BookController.search(request, response)));
             post("/chapters", ((request, response) ->
