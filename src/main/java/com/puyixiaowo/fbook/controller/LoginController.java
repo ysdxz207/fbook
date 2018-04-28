@@ -16,10 +16,8 @@ import com.puyixiaowo.fbook.utils.StringUtils;
 import com.puyixiaowo.fbook.utils.captcha.CaptchaProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
-import spark.template.mustache.MustacheTemplateEngine;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -43,20 +41,6 @@ public class LoginController extends BaseController {
 
 
     private static Producer producer= new CaptchaProducer();
-
-
-    /**
-     * 注册页面
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    public static Object registerPage(Request request, Response response) {
-
-        return new MustacheTemplateEngine()
-                .render(new ModelAndView(null, "register.html"));
-    }
 
 
     public static ResponseBean login(Request request,
