@@ -62,7 +62,7 @@ public class BookService {
         params.put("userId", userId);
 
         List<BookBean> bookBeanList = DBUtils.selectList(BookBean.class,
-                "select * from book b left join bookshelf bs on b.id = bs.book_id and bs.user_id=:userId", params);
+                "select b.* from bookshelf bs left join book b on b.id = bs.book_id and bs.user_id=:userId", params);
         return bookBeanList;
     }
 

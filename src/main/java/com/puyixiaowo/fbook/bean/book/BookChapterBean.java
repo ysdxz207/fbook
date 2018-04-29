@@ -19,6 +19,9 @@ public class BookChapterBean extends Validatable implements Serializable {
     private String source;
     @Transient
     private Boolean hasRead = false;
+    @Transient
+    private Integer chapterNum;
+
 
 
     public String getId() {
@@ -75,5 +78,13 @@ public class BookChapterBean extends Validatable implements Serializable {
 
     public void setHasRead(Boolean hasRead) {
         this.hasRead = hasRead;
+    }
+
+    public Integer getChapterNum() {
+        return chapterNum;
+    }
+
+    public void setChapterNum(Integer chapterNum) {
+        this.chapterNum = chapterNum;
     }
 }

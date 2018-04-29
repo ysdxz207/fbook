@@ -257,7 +257,7 @@ public class LoginController extends BaseController {
             UserBean userBean = getParamsEntity(request, UserBean.class, true, false);
 
             if (StringUtils.isBlank(userBean.getNickname())) {
-                userBean.setNickname("大帅比");
+                userBean.setNickname("大帅比" + (System.currentTimeMillis() + "").substring(4));
             }
             userBean.setPassword(Md5Utils.md5Password(userBean.getPassword()));
             DBUtils.insertOrUpdate(userBean, false);
@@ -267,6 +267,7 @@ public class LoginController extends BaseController {
             DBUtils.insertOrUpdate(bookReadSettingBean, false);
             //注册完直接登录
             request.session().attribute(Constants.SESSION_USER_KEY, userBean);
+            responseBean.setData(userBean);
         } catch (DBObjectExistsException e) {
             responseBean.errorMessage("用户名或昵称已存在");
         } catch (Exception e) {

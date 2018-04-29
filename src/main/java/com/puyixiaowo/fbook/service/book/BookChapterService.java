@@ -76,6 +76,7 @@ public class BookChapterService {
 
 
         try {
+            int chapterNum = 1;
             for (Object obj :
                     chapters) {
                 JSONObject json = (JSONObject) obj;
@@ -85,7 +86,9 @@ public class BookChapterService {
                 bookChapterBean.setLink(URLEncoder.encode(json.getString("link"), Constants.ENCODING));
                 list.add(bookChapterBean);
                 bookChapterBean.setSource(source);
+                bookChapterBean.setChapterNum(chapterNum);
 
+                chapterNum ++;
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

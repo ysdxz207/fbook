@@ -53,42 +53,46 @@ public class BookController extends BaseController {
             bookBean = getParamsEntity(request, BookBean.class, true, false);
             bookBean = BookService.requestBookDetail(bookBean);
 
-            //是否在书架里
-            bookBean.setOnShelf(BookshelfService.isBookOnShelf(request.session().attribute(Constants.SESSION_USER_KEY),
-                    bookBean.getId()));
+
             //保存或更新书籍信息
             BookBean bookBeanDB = BookService.selectBookBeanByAId(bookBean.getaId());
             if (bookBeanDB != null) {
                 bookBean.setId(bookBeanDB.getId());
             }
             DBUtils.insertOrUpdate(bookBean, false);
+
+            //是否在书架里
+            bookBean.setOnShelf(BookshelfService.isBookOnShelf(request.session().attribute(Constants.SESSION_USER_KEY),
+                    bookBean.getId()));
+
             responseBean.setData(bookBean);
         } catch (Exception e) {
             logger.error("[书]获取章节列表异常：" + e.getMessage());
             responseBean.error(e);
         }
-        return  responseBean;
+        return responseBean;
     }
 
     public static ResponseBean chapterContent(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
-        //必传,书籍详情页面看书只有bookId
-        String bookIdStr = request.queryParams("bookId");
-        //仅用于接口获取到章节名为.时显示
-        String chapterName = request.queryParams("chapterName");
-        //章节号
-        Integer chapter = request.queryParams("chapter") != null ?
-                Integer.valueOf(request.queryParams("chapter")) : null;
-
-        if (StringUtils.isBlank(bookIdStr)) {
-            return responseBean.errorMessage("bookId不可为空");
-        }
-
-
-        Long bookId = Long.valueOf(bookIdStr);
-        JSONObject model = new JSONObject();
-
         try {
+
+            //必传,书籍详情页面看书只有bookId
+            String bookIdStr = request.queryParams("bookId");
+            //仅用于接口获取到章节名为.时显示
+            String chapterName = request.queryParams("chapterName");
+            //章节号
+            Integer chapter = request.queryParams("chapter") != null ?
+                    Integer.valueOf(request.queryParams("chapter")) : null;
+
+            if (StringUtils.isBlank(bookIdStr)) {
+                return responseBean.errorMessage("bookId不可为空");
+            }
+
+
+            Long bookId = Long.valueOf(bookIdStr);
+            JSONObject model = new JSONObject();
+
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
             //读取读书配置
             BookReadBean bookReadBean = BookReadService.getUserBookRead(userBean.getId(), bookId);
@@ -117,7 +121,7 @@ public class BookController extends BaseController {
             }
 
             BookChapterBean bookChapterBean = BookChapterService.getChapter(chapterBeanList,
-                        chapter);
+                    chapter);
             if (bookChapterBean == null) {
 
                 //提示切换书源
@@ -160,7 +164,7 @@ public class BookController extends BaseController {
     }
 
     public static Object saveBookReadSetting(Request request,
-                                            Response response) {
+                                             Response response) {
         ResponseBean responseBean = new ResponseBean();
 
         try {
@@ -206,7 +210,7 @@ public class BookController extends BaseController {
         return pageBean;
     }
 
-    public static Object chapters(Request request, Response response) {
+    public static ResponseBean chapterList(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
 
         try {
@@ -214,7 +218,7 @@ public class BookController extends BaseController {
 
             if (StringUtils.isBlank(bookIdStr)) {
                 responseBean.errorMessage("bookId不可为空");
-                return responseBean.serialize();
+                return responseBean;
             }
             Long bookId = Long.valueOf(bookIdStr);
 
@@ -226,10 +230,10 @@ public class BookController extends BaseController {
             responseBean.error(e);
         }
 
-        return responseBean.serialize();
+        return responseBean;
     }
 
-    public static Object addOrDelBook(Request request, Response response) {
+    public static ResponseBean addOrDelBook(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
 
         try {
@@ -259,7 +263,7 @@ public class BookController extends BaseController {
             responseBean.error(e);
             return responseBean;
         }
-        return responseBean.serialize();
+        return responseBean;
     }
 
     public static ResponseBean bookSource(Request request, Response response) {

@@ -39,8 +39,8 @@ public class Routes {
 
             post("/search", ((request, response) ->
                     BookController.search(request, response)));
-            post("/chapters", ((request, response) ->
-                    BookController.chapters(request, response)));
+            post("/chapterList", ((request, response) ->
+                    BookController.chapterList(request, response)));
 
             post("/addOrDel", ((request, response) ->
                     BookController.addOrDelBook(request, response)));
