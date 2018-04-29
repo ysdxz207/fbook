@@ -114,6 +114,11 @@ public class BookController extends BaseController {
                 chapter = bookReadBean.getLastReadingChapterNum();
             }
 
+
+            if (chapter == null) {
+                return responseBean.errorMessage("章节号为空");
+            }
+
             //最后一章
             if (chapter > chapterBeanList.size()) {
                 response.redirect("/detail?id=" + bookIdStr + "&aId=" + bookBean.getaId());
