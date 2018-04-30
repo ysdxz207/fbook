@@ -41,5 +41,5 @@ public class Constants {
     /**
      * 跨域允许
      */
-    public static final String [] ALLOWED_ORIGINS = ResourceUtils.load("conf/common.properties").getProperty("origin.access.allow.url").split(",");
+    public static String [] ALLOWED_ORIGINS = new String[0];
 }
