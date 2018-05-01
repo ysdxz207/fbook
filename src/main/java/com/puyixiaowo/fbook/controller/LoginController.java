@@ -246,6 +246,9 @@ public class LoginController extends BaseController {
             logout(request, response);
             halt(responseBean.serialize());
             return;
+        } else {
+            //登录成功跳转首页
+            response.redirect("/");
         }
     }
 

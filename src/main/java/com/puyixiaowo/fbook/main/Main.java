@@ -1,6 +1,8 @@
 package com.puyixiaowo.fbook.main;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.puyixiaowo.fbook.Routes;
 import com.puyixiaowo.fbook.bean.sys.AppConfigBean;
 import com.puyixiaowo.fbook.error.ErrorHandler;
@@ -31,6 +33,9 @@ public class Main {
 
         ErrorHandler.handleSystemErrors();
         Routes.init();
+
+        //关闭循环引用
+        JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.DisableCircularReferenceDetect.getMask();
         //ID序列化为字符串类型
         SerializeConfig.getGlobalInstance().put(Long.class, new CustomIdSerializer());
     }
