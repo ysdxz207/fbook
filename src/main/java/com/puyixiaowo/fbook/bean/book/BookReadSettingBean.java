@@ -12,7 +12,7 @@ public class BookReadSettingBean extends Validatable implements Serializable {
 	private Long id;
 	private Long userId;
 	private Long createTime;
-	private Integer pageMethod;
+	private String pageMethod;
 	private String bgColor;
 	private Integer fontSize;
 	private Integer lineHeight;
@@ -43,11 +43,11 @@ public class BookReadSettingBean extends Validatable implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public Integer getPageMethod (){
+	public String getPageMethod (){
 		return pageMethod;
 	}
 
-	public void setPageMethod (Integer pageMethod){
+	public void setPageMethod (String pageMethod){
 		this.pageMethod = pageMethod;
 	}
 
