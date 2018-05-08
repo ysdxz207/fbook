@@ -69,6 +69,7 @@ CREATE TABLE `book_read_setting` (
   `user_id`      INTEGER(20) NOT NULL UNIQUE,
   `create_time`     INTEGER(13) DEFAULT '0',
   `page_method`        VARCHAR(64) DEFAULT '⇄',
+  `color`      VARCHAR(64) DEFAULT '#131313',
   `bg_color`      VARCHAR(64) DEFAULT '#817f79',
   `font_size`        INTEGER(6) DEFAULT '23',
   `line_height`        INTEGER(6) DEFAULT '28',

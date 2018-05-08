@@ -16,6 +16,7 @@ public class BookReadSettingBean extends Validatable implements Serializable {
 	private String bgColor;
 	private Integer fontSize;
 	private Integer lineHeight;
+	private String color;
 	private Integer sort;
 
 
@@ -81,5 +82,13 @@ public class BookReadSettingBean extends Validatable implements Serializable {
 
 	public void setSort (Integer sort){
 		this.sort = sort;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 }
