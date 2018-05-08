@@ -85,6 +85,9 @@ public class BookController extends BaseController {
             Integer chapter = request.queryParams("chapter") != null ?
                     Integer.valueOf(request.queryParams("chapter")) : null;
 
+            //是否预加载
+            boolean isPreLoad = request.queryParamOrDefault("preLoad", "false");
+
             if (StringUtils.isBlank(bookIdStr)) {
                 return responseBean.errorMessage("bookId不可为空");
             }
@@ -134,9 +137,11 @@ public class BookController extends BaseController {
             }
 
             //保存读书配置
-            bookReadBean.setLastReadingChapter(bookChapterBean.getTitle());
-            bookReadBean.setLastReadingChapterNum(chapter);
-            BookReadService.saveBookRead(bookReadBean);
+            if (!isPreLoad) {
+                bookReadBean.setLastReadingChapter(bookChapterBean.getTitle());
+                bookReadBean.setLastReadingChapterNum(chapter);
+                BookReadService.saveBookRead(bookReadBean);
+            }
 
 
             bookChapterBean.setBookId(bookId);
