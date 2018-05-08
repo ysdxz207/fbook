@@ -86,7 +86,7 @@ public class BookController extends BaseController {
                     Integer.valueOf(request.queryParams("chapter")) : null;
 
             //是否预加载
-            boolean isPreLoad = request.queryParamOrDefault("preLoad", "false");
+            boolean isPreLoad = Boolean.valueOf(request.queryParamOrDefault("preLoad", "false"));
 
             if (StringUtils.isBlank(bookIdStr)) {
                 return responseBean.errorMessage("bookId不可为空");
