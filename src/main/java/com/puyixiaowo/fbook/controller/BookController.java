@@ -381,6 +381,12 @@ public class BookController extends BaseController {
             BookReadBean bookReadBean = getParamsEntity(request, BookReadBean.class, false, false);
 
             bookReadBean.setUserId(userBean.getId());
+
+            if (bookReadBean.getId() == null) {
+                BookReadBean bookReadBeanDB = BookReadService.getUserBookRead(userBean.getId(),
+                        bookReadBean.getBookId());
+                bookReadBean.setId(bookReadBeanDB.getId());
+            }
             DBUtils.insertOrUpdate(bookReadBean, false);
         } catch (Exception e) {
             responseBean.error(e);
