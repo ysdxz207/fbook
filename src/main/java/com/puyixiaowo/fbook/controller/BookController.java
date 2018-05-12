@@ -197,6 +197,17 @@ public class BookController extends BaseController {
 
             bookReadSettingBean.setUserId(userBean.getId());
             DBUtils.insertOrUpdate(bookReadSettingBean, false);
+
+            //如果有读书记录则保存
+            if (StringUtils.isNotBlank(bookReadSettingBean.getLastReadingChapter())
+                    && bookReadSettingBean.getLastReadingChapterNum() != null
+                    && bookReadSettingBean.getBookId() != null) {
+                BookReadBean bookReadBean = BookReadService.getUserBookRead(userBean.getId(),
+                        bookReadSettingBean.getBookId());
+                bookReadBean.setLastReadingChapter(bookReadSettingBean.getLastReadingChapter());
+                bookReadBean.setLastReadingChapterNum(bookReadSettingBean.getLastReadingChapterNum());
+                DBUtils.insertOrUpdate(bookReadBean, false);
+            }
         } catch (Exception e) {
             responseBean.error(e);
         }
@@ -357,6 +368,23 @@ public class BookController extends BaseController {
             responseBean.error(e);
         }
 
+
+        return responseBean.serialize();
+    }
+
+    public static Object saveBookRead(Request request,
+                                             Response response) {
+        ResponseBean responseBean = new ResponseBean();
+
+        try {
+            UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
+            BookReadBean bookReadBean = getParamsEntity(request, BookReadBean.class, false, false);
+
+            bookReadBean.setUserId(userBean.getId());
+            DBUtils.insertOrUpdate(bookReadBean, false);
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
 
         return responseBean.serialize();
     }

@@ -17,6 +17,7 @@ public class BookReadBean extends Validatable implements Serializable {
 	private String source;
 	@NotNull
 	private String lastReadingChapter;
+	@NotNull
 	private Integer lastReadingChapterNum;
 
 

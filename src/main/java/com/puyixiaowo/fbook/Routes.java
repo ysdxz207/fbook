@@ -50,6 +50,8 @@ public class Routes {
 
             post("/source/change", ((request, response) ->
                     BookController.changeBookSource(request, response)));
+            post("/saveBookRead", ((request, response) ->
+                    BookController.saveBookRead(request, response)));
         });
     }
 }

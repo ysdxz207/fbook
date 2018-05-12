@@ -2,6 +2,7 @@ package com.puyixiaowo.fbook.bean.book;
 
 import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.fbook.annotation.Table;
+import com.puyixiaowo.fbook.annotation.Transient;
 
 import java.io.Serializable;
 
@@ -18,6 +19,14 @@ public class BookReadSettingBean extends Validatable implements Serializable {
 	private Integer lineHeight;
 	private String color;
 	private Integer sort;
+
+	@Transient
+	private String lastReadingChapter;
+	@Transient
+	private Integer lastReadingChapterNum;
+	@Transient
+	private Long bookId;
+
 
 
 	public Long getId (){
@@ -90,5 +99,29 @@ public class BookReadSettingBean extends Validatable implements Serializable {
 
 	public void setColor(String color) {
 		this.color = color;
+	}
+
+	public String getLastReadingChapter() {
+		return lastReadingChapter;
+	}
+
+	public void setLastReadingChapter(String lastReadingChapter) {
+		this.lastReadingChapter = lastReadingChapter;
+	}
+
+	public Integer getLastReadingChapterNum() {
+		return lastReadingChapterNum;
+	}
+
+	public void setLastReadingChapterNum(Integer lastReadingChapterNum) {
+		this.lastReadingChapterNum = lastReadingChapterNum;
+	}
+
+	public Long getBookId() {
+		return bookId;
+	}
+
+	public void setBookId(Long bookId) {
+		this.bookId = bookId;
 	}
 }
