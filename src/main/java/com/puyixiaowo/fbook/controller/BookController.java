@@ -219,12 +219,15 @@ public class BookController extends BaseController {
 
         PageBean pageBean = getPageBean(request);
         try {
+            UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
+
             String keywords = request.queryParams("keywords");
 
             RowBounds rowBounds = pageBean.getRowBounds();
             rowBounds.setLimit(100);
             pageBean.setRowBounds(rowBounds);
-            pageBean = BookService.requestSearchBook(keywords, pageBean);
+            pageBean = BookService.requestSearchBook(userBean,
+                    keywords, pageBean);
         } catch (Exception e) {
             pageBean.error(e);
         }

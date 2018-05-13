@@ -19,6 +19,7 @@ public class BookReadSettingBean extends Validatable implements Serializable {
 	private Integer lineHeight;
 	private String color;
 	private Integer sort;
+	private String channel;
 
 	@Transient
 	private String lastReadingChapter;
@@ -99,6 +100,14 @@ public class BookReadSettingBean extends Validatable implements Serializable {
 
 	public void setColor(String color) {
 		this.color = color;
+	}
+
+	public String getChannel() {
+		return channel;
+	}
+
+	public void setChannel(String channel) {
+		this.channel = channel;
 	}
 
 	public String getLastReadingChapter() {

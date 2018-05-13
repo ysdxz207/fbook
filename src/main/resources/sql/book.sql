@@ -68,12 +68,13 @@ CREATE TABLE `book_read_setting` (
   `id`        INTEGER(20)  NOT NULL UNIQUE,
   `user_id`      INTEGER(20) NOT NULL UNIQUE,
   `create_time`     INTEGER(13) DEFAULT '0',
-  `page_method`        VARCHAR(64) DEFAULT '⇄',
+  `page_method`        VARCHAR(32) DEFAULT '⇄',
   `color`      VARCHAR(64) DEFAULT '#131313',
-  `bg_color`      VARCHAR(64) DEFAULT '#817f79',
+  `bg_color`      VARCHAR(64) DEFAULT '#6d816f',
   `font_size`        INTEGER(6) DEFAULT '23',
   `line_height`        INTEGER(6) DEFAULT '28',
   `sort`        INTEGER(4) DEFAULT '0',
+  `channel`     VARCHAR(32) DEFAULT 'man',
 
   PRIMARY KEY (`id`)
 );
