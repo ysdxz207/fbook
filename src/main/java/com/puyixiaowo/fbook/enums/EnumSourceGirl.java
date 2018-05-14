@@ -10,7 +10,7 @@ public enum EnumSourceGirl {
             "http://www.ggdown.com/",
             "10855655014424708676",
             "http://zhannei.baidu.com/cse/search?p=0&area=1&s={s}&q={q}",
-            Encoding.UTF8),
+            Encoding.GBK),
     LWXSW("乐文小说网",
             "http://www.lwxsw.cc/",
             "6939410700241642371",

@@ -3,6 +3,7 @@ package com.puyixiaowo.fbook.service.book;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.puyixiaowo.fbook.bean.UserBean;
 import com.puyixiaowo.fbook.bean.book.BookBean;
 import com.puyixiaowo.fbook.bean.book.BookChapterBean;
 import com.puyixiaowo.fbook.bean.book.BookReadBean;
@@ -54,7 +55,7 @@ public class BookChapterService {
         String source = bookReadBean.getSource();
 
         if (StringUtils.isBlank(source)) {
-            source = BookService.getDefaultSource(aId).get_id();
+            source = BookService.getDefaultSource(userId, aId).get_id();
             //可能为第一次读书或配置被删除
             bookReadBean.setSource(source);
             bookReadBean.setBookId(bookId);
@@ -156,6 +157,9 @@ public class BookChapterService {
             String url = EnumSourceGirl.GEGE.link + bookBean.getaId().substring(0, 2) + "/" + bookBean.getaId();
             Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.GEGE.encoding);
 
+            if (response == null) {
+                return list;
+            }
             Document document = response.parse();
 
             Elements elements = document.select(".chapterlist");
@@ -200,11 +204,31 @@ public class BookChapterService {
     }
 
 
-    public static BookChapterBean requestBookContent(String link) {
+    public static BookChapterBean requestBookContent(UserBean userBean,
+                                                     String link) {
 
         if (StringUtils.isBlank(link)) {
             return null;
         }
+
+        BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userBean.getId());
+
+        EnumChannel channel = EnumChannel.getEnum(bookReadSettingBean.getChannel());
+
+        switch (channel) {
+            case boy:
+                return getBookContentBoy(link);
+
+            case girl:
+                return getBookContentGirl(link);
+
+            default:
+        }
+
+        return null;
+    }
+
+    public static BookChapterBean getBookContentBoy(String link) {
 
         String linkDecode = "";
 
@@ -253,6 +277,31 @@ public class BookChapterService {
             return bookChapterBean;
         }
         return null;
+    }
+
+    public static BookChapterBean getBookContentGirl(String link) {
+        BookChapterBean bookChapterBean = new BookChapterBean();
+
+        try {
+            Connection.Response response = HtmlUtils.getPage(link, EnumSourceGirl.GEGE.encoding);
+
+            if (response == null) {
+                return bookChapterBean;
+            }
+            Document document = response.parse();
+
+
+            String content = document.select("#pagecontent").html();
+            String title = document.select("#BookCon h1").text();
+
+            bookChapterBean.setTitle(title);
+            bookChapterBean.setContent(content);
+            bookChapterBean.setLink(link);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bookChapterBean;
     }
 
 
@@ -351,14 +400,16 @@ public class BookChapterService {
         return 1;
     }
 
-    public static BookChapterBean getChapter(List<BookChapterBean> bookChapterBeanList,
+    public static BookChapterBean getChapter(UserBean userBean,
+                                             List<BookChapterBean> bookChapterBeanList,
                                              int chapterNum) {
 
         for (BookChapterBean bookChapterBean:
              bookChapterBeanList) {
             int num = BookChapterService.getChapterNum(bookChapterBeanList, bookChapterBean.getTitle());
             if (num == chapterNum) {
-                BookChapterBean bookChapterBeanContent = BookChapterService.requestBookContent(bookChapterBean.getLink());
+                BookChapterBean bookChapterBeanContent = BookChapterService.requestBookContent(userBean,
+                        bookChapterBean.getLink());
                 if (bookChapterBeanContent == null) {
                     //接口没返回内容，可能源有问题
                     return null;
@@ -375,11 +426,7 @@ public class BookChapterService {
     public static void main(String[] args) throws Exception {
 
 
-        DBUtils.initDB(ResourceUtils.load("jdbc.properties"));
-        List<BookChapterBean> list = getGirlChapterList(443514092943048154L,
-                null);
-
-        System.out.println(JSON.toJSONString(list));
+        System.out.println(JSON.toJSONString(getBookContentGirl("http://www.ggdown.com/29/29131/8825503.html")));
     }
 
 }

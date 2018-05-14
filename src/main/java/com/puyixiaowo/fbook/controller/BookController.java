@@ -49,9 +49,11 @@ public class BookController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
         BookBean bookBean = null;
         try {
+            UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
 
             bookBean = getParamsEntity(request, BookBean.class, true, false);
-            bookBean = BookService.requestBookDetail(bookBean);
+            bookBean = BookService.requestBookDetail(userBean,
+                    bookBean);
 
 
             //保存或更新书籍信息
@@ -127,7 +129,8 @@ public class BookController extends BaseController {
                 return responseBean.error(ReadError.READ_LAST_CHAPTER_ERROR);
             }
 
-            BookChapterBean bookChapterBean = BookChapterService.getChapter(chapterBeanList,
+            BookChapterBean bookChapterBean = BookChapterService.getChapter(userBean,
+                    chapterBeanList,
                     chapter);
             if (bookChapterBean == null) {
 
@@ -260,6 +263,8 @@ public class BookController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
 
         try {
+            UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
+
             BookBean bookBean = getParamsEntity(request, BookBean.class, true, false);
             BookBean bookBeanDB = BookService.selectBookBeanByAId(bookBean.getaId());
 
@@ -267,7 +272,8 @@ public class BookController extends BaseController {
                 bookBean.setId(bookBeanDB.getId());
             }
 
-            bookBean = BookService.requestBookDetail(bookBean);
+            bookBean = BookService.requestBookDetail(userBean,
+                    bookBean);
 
             if (bookBean == null) {
                 return responseBean.errorMessage("书籍不存在");
@@ -275,8 +281,6 @@ public class BookController extends BaseController {
 
             //添加或更新书籍信息
             DBUtils.insertOrUpdate(bookBean, false);
-
-            UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
 
             //增加到书架或删除书籍
             boolean isOnBookshelf = BookshelfService.addOrDelBookFromBookshelf(userBean, bookBean.getaId());

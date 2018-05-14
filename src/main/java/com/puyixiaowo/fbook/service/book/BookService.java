@@ -18,7 +18,6 @@ import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.HtmlUtils;
 import com.puyixiaowo.fbook.utils.HttpUtils;
 import com.puyixiaowo.fbook.utils.StringUtils;
-import com.puyixiaowo.generator.Run;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Connection;
@@ -28,6 +27,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.print.Book;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -43,10 +43,14 @@ import java.util.regex.Pattern;
 public class BookService {
     private static final Logger logger = LoggerFactory.getLogger(BookService.class);
 
-    static Pattern patternAuthor = Pattern.compile("作者：(.*)");
-    static Pattern patternType = Pattern.compile("类型：(.*)");
-    static Pattern patternUpdated = Pattern.compile("更新时间：(.*)");
-    static Pattern patternNewChapter = Pattern.compile("最新章节：(.*)");
+    private static Pattern PATTERN_SEARCH_AUTHOR = Pattern.compile("作者：(.*)");
+    private static Pattern PATTERN_SEARCH_TYPE = Pattern.compile("类型：(.*)");
+    private static Pattern PATTERN_SEARCH_UPDATED = Pattern.compile("更新时间：(.*)");
+    private static Pattern PATTERN_SEARCH_NEW_CHAPTER = Pattern.compile("最新章节：(.*)");
+    private static Pattern PATTERN_SEARCH_AID = Pattern.compile("http\\:\\/\\/.*\\/.*\\/(.*)\\/");
+
+    private static Pattern PATTERN_DETAIL_UPDATED = Pattern.compile("(\\d{1,4}[-|\\/]\\d{1,2}[-|\\/]\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2})", Pattern.CASE_INSENSITIVE|Pattern.MULTILINE);
+
 
     public static String getSelectSql(BookBean bookBean,
                                       PageBean pageBean) {
@@ -83,7 +87,10 @@ public class BookService {
         params.put("userId", userId);
 
         List<BookBean> bookBeanList = DBUtils.selectList(BookBean.class,
-                "select b.* from bookshelf bs left join book b on b.id = bs.book_id and bs.user_id=:userId", params);
+                "select * from book where id in (" +
+                        "  select book_id from bookshelf bs" +
+                        "  where bs.user_id= :userId" +
+                        ")", params);
         return bookBeanList;
     }
 
@@ -135,8 +142,29 @@ public class BookService {
     }
 
 
-    public static BookBean requestBookDetail(BookBean bookBean) {
+    public static BookBean requestBookDetail(UserBean userBean,
+                                             BookBean bookBean) {
 
+        BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userBean.getId());
+
+        EnumChannel channel = EnumChannel.getEnum(bookReadSettingBean.getChannel());
+
+        switch (channel) {
+            case boy:
+                return getBookDetailBoy(bookBean);
+
+            case girl:
+                return getBookDetailGirl(bookBean);
+
+            default:
+                return null;
+        }
+
+
+    }
+
+
+    private static BookBean getBookDetailBoy(BookBean bookBean) {
         if (bookBean == null
                 || bookBean.getaId() == null) {
             return null;
@@ -193,6 +221,49 @@ public class BookService {
         return bookBean;
     }
 
+    private static BookBean getBookDetailGirl(BookBean bookBean) {
+
+        try {
+            String url = EnumSourceGirl.GEGE.link + "/books/" + bookBean.getaId() + ".html";
+            Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.GEGE.encoding);
+
+            if (response == null) {
+                logger.info("[girl获取书籍信息失败]response为空");
+                return null;
+            }
+            Document document = response.parse();
+
+            String title = document.select(".book-title h1").text();
+            String author = document.select(".book-title em").text().replace("作者：", "");
+            String description = document.select(".book-intro").text();
+            String faceUrl = document.select(".book-img img").attr("src");
+            String strInfo = document.select(".book-stats").text();
+
+            String updated = "";
+
+            Matcher matcherUpdated = PATTERN_DETAIL_UPDATED.matcher(strInfo);
+            if (matcherUpdated.find()) {
+                updated = matcherUpdated.group(1);
+            }
+
+
+            BookInfo bookInfo = new BookInfo();
+            bookInfo.setBookId(bookBean.getId());
+            bookInfo.setDescription(description);
+            bookInfo.setUpdated(updated);
+
+            bookBean.setName(title);
+            bookBean.setAuthor(author);
+            bookBean.setFaceUrl(faceUrl);
+            bookBean.setBookInfo(bookInfo);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bookBean;
+    }
+
+
     private static String getUpdateDateString(String updated) {
         updated = DateFormatUtils
                 .format(getBookDate(updated),
@@ -224,7 +295,34 @@ public class BookService {
         return list;
     }
 
-    public static BookSource getDefaultSource(String aId) {
+    public static BookSource getDefaultSource(Long userId,
+                                              String aId) {
+        BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userId);
+
+        //根据频道获取章节信息
+        EnumChannel channel = EnumChannel.getEnum(bookReadSettingBean.getChannel());
+
+        switch (channel) {
+            case boy:
+                return getBookSourceBoy(aId);
+
+            case girl:
+                return getBookSourceGirl();
+
+            default:
+        }
+        return getBookSourceBoy(aId);
+    }
+
+    private static BookSource getBookSourceGirl() {
+
+        BookSource bookSource = new BookSource();
+        bookSource.setName(EnumSourceGirl.GEGE.name);
+        bookSource.setSource(EnumSourceGirl.GEGE.sourceId);
+        return bookSource;
+    }
+
+    public static BookSource getBookSourceBoy(String aId) {
         List<BookSource> bookSourceList = getBookSource(aId);
 
         if (bookSourceList.size() == 1) {
@@ -310,7 +408,7 @@ public class BookService {
             String url = EnumSourceGirl.GEGE.searchLink;
             url = url.replace("{s}", EnumSourceGirl.GEGE.sourceId);
             url = url.replace("{q}", URLEncoder.encode(keywords, EnumSourceGirl.GEGE.encoding.encoding));
-            Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.GEGE.encoding);
+            Connection.Response response = HtmlUtils.getPage(url, BookConstants.BAIDU_ZHANNEI_SEARCH_ENCODING);
 
             if (response == null) {
                 throw new RuntimeException("搜索接口未响应");
@@ -331,13 +429,16 @@ public class BookService {
                 String updated = "";
                 String newChapter = "";
 
+                Matcher matcherAid = PATTERN_SEARCH_AID.matcher(link);
+                String aid = matcherAid.find() ? matcherAid.group(1) : "";
+
                 Elements eInfos = e.select(".result-game-item-info-tag");
 
                 for (Element eInfo : eInfos) {
-                    Matcher matcherAuthor = patternAuthor.matcher(eInfo.text());
-                    Matcher matcherType = patternType.matcher(eInfo.text());
-                    Matcher matcherUpdated = patternUpdated.matcher(eInfo.text());
-                    Matcher matcherNewChapter = patternNewChapter.matcher(eInfo.text());
+                    Matcher matcherAuthor = PATTERN_SEARCH_AUTHOR.matcher(eInfo.text());
+                    Matcher matcherType = PATTERN_SEARCH_TYPE.matcher(eInfo.text());
+                    Matcher matcherUpdated = PATTERN_SEARCH_UPDATED.matcher(eInfo.text());
+                    Matcher matcherNewChapter = PATTERN_SEARCH_NEW_CHAPTER.matcher(eInfo.text());
                     author = matcherAuthor.matches() ? matcherAuthor.group(1) : author;
                     type = matcherType.matches() ? matcherType.group(1) : type;
                     updated = matcherUpdated.matches() ? matcherUpdated.group(1) : updated;
@@ -349,6 +450,7 @@ public class BookService {
                 bookBean.setAuthor(author);
                 bookBean.setFaceUrl(img);
                 bookBean.setLastUpdateChapter(newChapter);
+                bookBean.setaId(aid);
 
                 bookInfo.setCategory(type);
                 bookInfo.setUpdated(updated);
@@ -367,6 +469,5 @@ public class BookService {
     }
 
     public static void main(String[] args) {
-        searchGirl("魔道祖师", new PageBean());
     }
 }

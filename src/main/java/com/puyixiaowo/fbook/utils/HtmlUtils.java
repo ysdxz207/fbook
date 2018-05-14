@@ -14,7 +14,7 @@ import java.net.SocketException;
  * 访问页面工具
  */
 public class HtmlUtils {
-    public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36";
+    public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36";
     public static final String ENCODING = "GBK";
     private static int RETRY_TIMES = 5;
 
