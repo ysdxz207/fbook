@@ -124,7 +124,6 @@ public class BookController extends BaseController {
 
             //最后一章
             if (chapter > chapterBeanList.size()) {
-                response.redirect("/detail?id=" + bookIdStr + "&aId=" + bookBean.getaId());
                 return responseBean.error(ReadError.READ_LAST_CHAPTER_ERROR);
             }
 
