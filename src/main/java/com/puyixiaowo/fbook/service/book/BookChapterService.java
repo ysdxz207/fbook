@@ -3,13 +3,15 @@ package com.puyixiaowo.fbook.service.book;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.puyixiaowo.fbook.bean.book.*;
+import com.puyixiaowo.fbook.bean.book.BookBean;
+import com.puyixiaowo.fbook.bean.book.BookChapterBean;
+import com.puyixiaowo.fbook.bean.book.BookReadBean;
+import com.puyixiaowo.fbook.bean.book.BookReadSettingBean;
 import com.puyixiaowo.fbook.constants.BookConstants;
 import com.puyixiaowo.fbook.constants.Constants;
-import com.puyixiaowo.fbook.enums.Encoding;
 import com.puyixiaowo.fbook.enums.EnumChannel;
 import com.puyixiaowo.fbook.enums.EnumSort;
-import com.puyixiaowo.fbook.enums.EnumSourceWoman;
+import com.puyixiaowo.fbook.enums.EnumSourceGirl;
 import com.puyixiaowo.fbook.utils.*;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
@@ -18,14 +20,12 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,12 +65,12 @@ public class BookChapterService {
         EnumChannel channel = EnumChannel.getEnum(bookReadSettingBean.getChannel());
 
         switch (channel) {
-            case man:
-                list = getManChapterList(bookId, source);
+            case boy:
+                list = getBoyChapterList(bookId, source);
                 break;
 
-            case woman:
-                list = getWomanChapterList(bookId, source);
+            case girl:
+                list = getGirlChapterList(bookId, source);
                 break;
 
                 default:
@@ -92,7 +92,7 @@ public class BookChapterService {
         return list;
     }
 
-    public static List<BookChapterBean> getManChapterList(Long bookId,
+    public static List<BookChapterBean> getBoyChapterList(Long bookId,
                                                           String source) {
 
         List<BookChapterBean> list = new ArrayList<>();
@@ -144,7 +144,7 @@ public class BookChapterService {
      *      目前默认书源是http://www.ggdown.com
      * @return
      */
-    public static List<BookChapterBean> getWomanChapterList(Long bookId,
+    public static List<BookChapterBean> getGirlChapterList(Long bookId,
                                                           String source) {
 
         List<BookChapterBean> list = new ArrayList<>();
@@ -153,8 +153,8 @@ public class BookChapterService {
 
             BookBean bookBean = BookService.selectBookBeanById(bookId);
 
-            String url = EnumSourceWoman.GEGE.link + bookBean.getaId().substring(0, 2) + "/" + bookBean.getaId();
-            Connection.Response response = HtmlUtils.getPage(url, EnumSourceWoman.GEGE.encoding);
+            String url = EnumSourceGirl.GEGE.link + bookBean.getaId().substring(0, 2) + "/" + bookBean.getaId();
+            Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.GEGE.encoding);
 
             Document document = response.parse();
 
@@ -181,7 +181,7 @@ public class BookChapterService {
 
         } catch (Exception e) {
 
-            logger.info("[获取章节目录失败][woman]:" + e.getMessage() == null ? JSON.toJSONString(e) : e.getMessage());
+            logger.info("[获取章节目录失败][girl]:" + e.getMessage() == null ? JSON.toJSONString(e) : e.getMessage());
             throw new RuntimeException("获取章节目录失败");
         }
 
@@ -376,7 +376,7 @@ public class BookChapterService {
 
 
         DBUtils.initDB(ResourceUtils.load("jdbc.properties"));
-        List<BookChapterBean> list = getWomanChapterList(443514092943048154L,
+        List<BookChapterBean> list = getGirlChapterList(443514092943048154L,
                 null);
 
         System.out.println(JSON.toJSONString(list));

@@ -13,7 +13,7 @@ import com.puyixiaowo.fbook.constants.BookConstants;
 import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.enums.Encoding;
 import com.puyixiaowo.fbook.enums.EnumChannel;
-import com.puyixiaowo.fbook.enums.EnumSourceWoman;
+import com.puyixiaowo.fbook.enums.EnumSourceGirl;
 import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.HtmlUtils;
 import com.puyixiaowo.fbook.utils.HttpUtils;
@@ -101,12 +101,12 @@ public class BookService {
         EnumChannel channel = EnumChannel.getEnum(bookReadSettingBean.getChannel());
 
         switch (channel) {
-            case man:
-                pageBean = searchMan(keywords, pageBean);
+            case boy:
+                pageBean = searchBoy(keywords, pageBean);
                 break;
 
-            case woman:
-                pageBean = searchWoman(keywords, pageBean);
+            case girl:
+                pageBean = searchGirl(keywords, pageBean);
                 break;
 
             default:
@@ -241,7 +241,7 @@ public class BookService {
         return DBUtils.selectOne(BookBean.class, "select * from book where a_id=:aId", params);
     }
 
-    public static PageBean searchMan(String keywords, PageBean pageBean) {
+    public static PageBean searchBoy(String keywords, PageBean pageBean) {
         List<BookBean> bookBeanList = new ArrayList<>();
 
         Map<String, String> params = new HashMap<>();
@@ -302,15 +302,15 @@ public class BookService {
         return pageBean;
     }
 
-    public static PageBean searchWoman(String keywords,
+    public static PageBean searchGirl(String keywords,
                                        PageBean pageBean) {
         List<BookBean> bookBeanList = new ArrayList<>();
 
         try {
-            String url = EnumSourceWoman.GEGE.searchLink;
-            url = url.replace("{s}", EnumSourceWoman.GEGE.sourceId);
-            url = url.replace("{q}", URLEncoder.encode(keywords, EnumSourceWoman.GEGE.encoding.encoding));
-            Connection.Response response = HtmlUtils.getPage(url, EnumSourceWoman.GEGE.encoding);
+            String url = EnumSourceGirl.GEGE.searchLink;
+            url = url.replace("{s}", EnumSourceGirl.GEGE.sourceId);
+            url = url.replace("{q}", URLEncoder.encode(keywords, EnumSourceGirl.GEGE.encoding.encoding));
+            Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.GEGE.encoding);
 
             if (response == null) {
                 throw new RuntimeException("搜索接口未响应");
@@ -357,7 +357,7 @@ public class BookService {
                 bookBeanList.add(bookBean);
             }
         } catch (Exception e) {
-            logger.info("[获取搜索列表失败][woman]:" + e.getMessage() == null ? JSON.toJSONString(e) : e.getMessage());
+            logger.info("[获取搜索列表失败][girl]:" + e.getMessage() == null ? JSON.toJSONString(e) : e.getMessage());
             throw new RuntimeException("获取搜索列表失败");
         }
 
@@ -367,6 +367,6 @@ public class BookService {
     }
 
     public static void main(String[] args) {
-        searchWoman("魔道祖师", new PageBean());
+        searchGirl("魔道祖师", new PageBean());
     }
 }

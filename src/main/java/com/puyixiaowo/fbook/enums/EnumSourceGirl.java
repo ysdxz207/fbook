@@ -5,7 +5,7 @@ package com.puyixiaowo.fbook.enums;
  * @date 2018-05-13 14:05:38
  * 女频源
  */
-public enum EnumSourceWoman {
+public enum EnumSourceGirl {
     GEGE("格格党",
             "http://www.ggdown.com/",
             "10855655014424708676",
@@ -17,11 +17,11 @@ public enum EnumSourceWoman {
             "http://zhannei.baidu.com/cse/search?p=0&area=1&s={s}&q={q}",
             Encoding.GBK);
 
-    EnumSourceWoman(String name,
-                    String link,
-                    String sourceId,
-                    String searchLink,
-                    Encoding encoding) {
+    EnumSourceGirl(String name,
+                   String link,
+                   String sourceId,
+                   String searchLink,
+                   Encoding encoding) {
         this.name = name;
         this.link = link;
         this.sourceId = sourceId;

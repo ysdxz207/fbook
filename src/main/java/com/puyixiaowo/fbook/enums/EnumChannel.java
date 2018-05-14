@@ -7,8 +7,8 @@ package com.puyixiaowo.fbook.enums;
  * 频道
  */
 public enum EnumChannel {
-    man,
-    woman,
+    boy,
+    girl,
     unknown;
 
 
