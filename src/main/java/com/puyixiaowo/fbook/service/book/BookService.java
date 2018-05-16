@@ -224,8 +224,8 @@ public class BookService {
     private static BookBean getBookDetailGirl(BookBean bookBean) {
 
         try {
-            String url = EnumSourceGirl.GEGE.link + "/books/" + bookBean.getaId() + ".html";
-            Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.GEGE.encoding);
+            String url = EnumSourceGirl.LWXSW.link + "/books/" + bookBean.getaId() + ".html";
+            Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.LWXSW.encoding);
 
             if (response == null) {
                 logger.info("[girl获取书籍信息失败]response为空");
@@ -317,8 +317,8 @@ public class BookService {
     private static BookSource getBookSourceGirl() {
 
         BookSource bookSource = new BookSource();
-        bookSource.setName(EnumSourceGirl.GEGE.name);
-        bookSource.setSource(EnumSourceGirl.GEGE.sourceId);
+        bookSource.setName(EnumSourceGirl.LWXSW.name);
+        bookSource.setSource(EnumSourceGirl.LWXSW.sourceId);
         return bookSource;
     }
 
@@ -405,9 +405,9 @@ public class BookService {
         List<BookBean> bookBeanList = new ArrayList<>();
 
         try {
-            String url = EnumSourceGirl.GEGE.searchLink;
-            url = url.replace("{s}", EnumSourceGirl.GEGE.sourceId);
-            url = url.replace("{q}", URLEncoder.encode(keywords, EnumSourceGirl.GEGE.encoding.encoding));
+            String url = EnumSourceGirl.LWXSW.searchLink;
+            url = url.replace("{s}", EnumSourceGirl.LWXSW.sourceId);
+            url = url.replace("{q}", URLEncoder.encode(keywords, EnumSourceGirl.LWXSW.encoding.encoding));
             Connection.Response response = HtmlUtils.getPage(url, BookConstants.BAIDU_ZHANNEI_SEARCH_ENCODING);
 
             if (response == null) {

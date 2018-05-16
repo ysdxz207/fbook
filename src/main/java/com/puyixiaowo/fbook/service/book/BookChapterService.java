@@ -17,15 +17,18 @@ import com.puyixiaowo.fbook.utils.*;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.soap.Text;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -154,8 +157,8 @@ public class BookChapterService {
 
             BookBean bookBean = BookService.selectBookBeanById(bookId);
 
-            String url = EnumSourceGirl.GEGE.link + bookBean.getaId().substring(0, 2) + "/" + bookBean.getaId();
-            Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.GEGE.encoding);
+            String url = EnumSourceGirl.LWXSW.link + bookBean.getaId().substring(0, 2) + "/" + bookBean.getaId();
+            Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.LWXSW.encoding);
 
             if (response == null) {
                 return list;
@@ -283,16 +286,53 @@ public class BookChapterService {
         BookChapterBean bookChapterBean = new BookChapterBean();
 
         try {
-            Connection.Response response = HtmlUtils.getPage(link, EnumSourceGirl.GEGE.encoding);
+            Connection.Response response = HtmlUtils.getPage(link, EnumSourceGirl.LWXSW.encoding);
 
             if (response == null) {
                 return bookChapterBean;
             }
             Document document = response.parse();
 
+            String content = "";
 
-            String content = document.select("#pagecontent").html();
-            String title = document.select("#BookCon h1").text();
+            List<TextNode> textNodeList = document.select("#htmlContent").get(0).textNodes();
+
+
+            int [] arrShouldRemove = {0, 1, 2};
+            Iterator<TextNode> itContents = textNodeList.iterator();
+            StringBuilder sbContent = new StringBuilder();
+
+            int elementIndex = 0;
+            while (itContents.hasNext()) {
+                TextNode textNode = itContents.next();
+                boolean breakWhile = false;
+                for (int shouldRemoveIndex :
+                        arrShouldRemove) {
+                    if (shouldRemoveIndex == elementIndex) {
+                        textNode.remove();
+                        breakWhile = true;
+                        break;
+                    }
+                }
+
+                elementIndex ++;
+
+
+                if (breakWhile) {
+                    continue;
+                }
+                String tempHtml = textNode.outerHtml();
+                sbContent.append(tempHtml);
+                if (StringUtils.isNotBlank(tempHtml)) {
+                    sbContent.append("</br>");
+                }
+            }
+
+            content = sbContent.toString();
+
+
+             document.select(".readTitle").get(0).child(0).remove();
+            String title = document.select(".readTitle").text();
 
             bookChapterBean.setTitle(title);
             bookChapterBean.setContent(content);
@@ -426,7 +466,7 @@ public class BookChapterService {
     public static void main(String[] args) throws Exception {
 
 
-        System.out.println(JSON.toJSONString(getBookContentGirl("http://www.ggdown.com/29/29131/8825503.html")));
+        System.out.println(JSON.toJSONString(getBookContentGirl("http://www.lwxsw.cc/book/7153/4096497_2.html")));
     }
 
 }
