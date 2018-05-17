@@ -157,7 +157,7 @@ public class BookChapterService {
 
             BookBean bookBean = BookService.selectBookBeanById(bookId);
 
-            String url = EnumSourceGirl.LWXSW.link + bookBean.getaId().substring(0, 2) + "/" + bookBean.getaId();
+            String url = Constants.pickRulesTemplate.getChapterListLink(bookBean);
             Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.LWXSW.encoding);
 
             if (response == null) {

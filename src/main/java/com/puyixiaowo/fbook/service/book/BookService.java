@@ -15,6 +15,7 @@ import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.HtmlUtils;
 import com.puyixiaowo.fbook.utils.HttpUtils;
 import com.puyixiaowo.fbook.utils.StringUtils;
+import com.puyixiaowo.fbook.utils.pickrules.PickRulesTemplate;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Connection;
@@ -222,7 +223,7 @@ public class BookService {
                                               BookBean bookBean) {
 
         try {
-            String url = EnumSourceGirl.LWXSW.link + "/books/" + bookBean.getaId() + ".html";
+            String url = Constants.pickRulesTemplate.getBookDetailLink(bookBean).replace("{id}", bookBean.getaId());
             Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.LWXSW.encoding);
 
             if (response == null) {

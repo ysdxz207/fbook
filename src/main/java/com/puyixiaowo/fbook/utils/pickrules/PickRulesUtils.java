@@ -30,6 +30,7 @@ public class PickRulesUtils {
         try {
 
             sb.append("package " + PACKAGE_NAME_IMPL + ";\n\n");
+            sb.append("import com.puyixiaowo.fbook.bean.book.BookBean;\n\n");
             sb.append("import org.jsoup.nodes.*;\n\n");
             sb.append("import org.jsoup.select.*;\n\n");
             sb.append("public class " + CLASS_NAME_DEFAULT_TEMPLATE_IMPL + " extends " + CLASS_DEFAULT_TEMPLATE_IMPL + " implements " + PACKAGE_NAME_INTERFACE + ".PickRulesTemplate {");

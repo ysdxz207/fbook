@@ -1,5 +1,6 @@
 package com.puyixiaowo.fbook.utils.pickrules.impl;
 
+import com.puyixiaowo.fbook.bean.book.BookBean;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesTemplate;
 import org.jsoup.nodes.Document;
 
@@ -12,6 +13,11 @@ import org.jsoup.nodes.Document;
  */
 
 public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
+
+    @Override
+    public String getBookDetailLink(BookBean bookBean) {
+        return null;
+    }
 
     @Override
     public String getBookDetailTitle(Document document) {
@@ -49,12 +55,22 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
     }
 
     @Override
+    public String getChapterListLink(BookBean bookBean) {
+        return null;
+    }
+
+    @Override
     public String getChapterListTitle(Document document) {
         return null;
     }
 
     @Override
     public String getChapterListLink(Document document) {
+        return null;
+    }
+
+    @Override
+    public String getChapterDetailLink(BookBean bookBean) {
         return null;
     }
 
