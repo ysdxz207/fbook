@@ -8,14 +8,13 @@ import com.puyixiaowo.fbook.bean.book.*;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.constants.BookConstants;
 import com.puyixiaowo.fbook.constants.Constants;
-import com.puyixiaowo.fbook.enums.Encoding;
 import com.puyixiaowo.fbook.enums.EnumChannel;
 import com.puyixiaowo.fbook.enums.EnumSourceGirl;
 import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.HtmlUtils;
 import com.puyixiaowo.fbook.utils.HttpUtils;
 import com.puyixiaowo.fbook.utils.StringUtils;
-import com.puyixiaowo.fbook.utils.pickrules.PickRulesTemplate;
+import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Connection;
@@ -25,7 +24,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.print.Book;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -223,7 +221,7 @@ public class BookService {
                                               BookBean bookBean) {
 
         try {
-            String url = Constants.pickRulesTemplate.getBookDetailLink(bookBean).replace("{id}", bookBean.getaId());
+            String url = PickRulesUtils.pickRulesTemplate.getBookDetailLink(bookBean).replace("{id}", bookBean.getaId());
             Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.LWXSW.encoding);
 
             if (response == null) {

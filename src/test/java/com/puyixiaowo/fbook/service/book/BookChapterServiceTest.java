@@ -23,7 +23,7 @@ public class BookChapterServiceTest {
         PickRulesBean pickRulesBean = new PickRulesBean();
         pickRulesBean.setChapterListLink(templateString);
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
-        System.out.println(Constants.pickRulesTemplate.getChapterListLink(bookBean));
+        System.out.println(PickRulesUtils.pickRulesTemplate.getChapterListLink(bookBean));
     }
 }
 

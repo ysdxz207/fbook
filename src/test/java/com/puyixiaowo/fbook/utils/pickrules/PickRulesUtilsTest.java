@@ -1,7 +1,6 @@
 package com.puyixiaowo.fbook.utils.pickrules;
 
 import com.puyixiaowo.fbook.bean.book.PickRulesBean;
-import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.enums.EnumSourceGirl;
 import com.puyixiaowo.fbook.utils.HtmlUtils;
 import org.jsoup.Connection;
@@ -31,8 +30,8 @@ public class PickRulesUtilsTest {
 
         Document document = response.parse();
 
-        System.out.println(Constants.pickRulesTemplate.getBookDetailTitle(document));
-        System.out.println(Constants.pickRulesTemplate.getBookDetailAuthor(document));
+        System.out.println(PickRulesUtils.pickRulesTemplate.getBookDetailTitle(document));
+        System.out.println(PickRulesUtils.pickRulesTemplate.getBookDetailAuthor(document));
 
     }
 }

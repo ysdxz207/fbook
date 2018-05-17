@@ -1,9 +1,5 @@
 package com.puyixiaowo.fbook.constants;
 
-import com.puyixiaowo.fbook.utils.ResourceUtils;
-import com.puyixiaowo.fbook.utils.pickrules.PickRulesTemplate;
-import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
-
 public class Constants {
 
     public static final String ENCODING = "UTF-8";
@@ -45,5 +41,4 @@ public class Constants {
      */
     public static String [] ALLOWED_ORIGINS = new String[0];
 
-    public static PickRulesTemplate pickRulesTemplate = new DefaultPickRulesTemplateImpl();
 }

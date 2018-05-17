@@ -14,6 +14,7 @@ import com.puyixiaowo.fbook.enums.EnumChannel;
 import com.puyixiaowo.fbook.enums.EnumSort;
 import com.puyixiaowo.fbook.enums.EnumSourceGirl;
 import com.puyixiaowo.fbook.utils.*;
+import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -157,7 +158,7 @@ public class BookChapterService {
 
             BookBean bookBean = BookService.selectBookBeanById(bookId);
 
-            String url = Constants.pickRulesTemplate.getChapterListLink(bookBean);
+            String url = PickRulesUtils.pickRulesTemplate.getChapterListLink(bookBean);
             Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.LWXSW.encoding);
 
             if (response == null) {

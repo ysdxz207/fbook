@@ -2,7 +2,6 @@ package com.puyixiaowo.fbook.utils.pickrules;
 
 import com.itranswarp.compiler.JavaStringCompiler;
 import com.puyixiaowo.fbook.bean.book.PickRulesBean;
-import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.utils.StringUtils;
 import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
 
@@ -11,9 +10,17 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
+ *
+ * @author Moses
+ * @date 2018-05-17 18:17:14
  * 爬取规则工具
+ *
  */
+
 public class PickRulesUtils {
+    public static PickRulesTemplate pickRulesTemplate = new DefaultPickRulesTemplateImpl();
+
+
     private static final String PACKAGE_NAME_IMPL = DefaultPickRulesTemplateImpl.class.getPackage().getName();
     private static final String PACKAGE_NAME_INTERFACE = PickRulesTemplate.class.getPackage().getName();
     private static final String CLASS_NAME_DEFAULT_TEMPLATE_IMPL = "PickRulesTemplateImpl";
@@ -72,7 +79,7 @@ public class PickRulesUtils {
             JavaStringCompiler compiler = new JavaStringCompiler();
             Map<String, byte[]> results = compiler.compile(CLASS_NAME_DEFAULT_TEMPLATE_IMPL + ".java", templateString);
             Class<?> clazz = compiler.loadClass(CLASS_TEMPLATE_IMPL, results);
-            Constants.pickRulesTemplate = (PickRulesTemplate) clazz.newInstance();
+            pickRulesTemplate = (PickRulesTemplate) clazz.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
