@@ -23,7 +23,7 @@ public class PickRulesUtils {
 
     private static final String PACKAGE_NAME_IMPL = DefaultPickRulesTemplateImpl.class.getPackage().getName();
     private static final String PACKAGE_NAME_INTERFACE = PickRulesTemplate.class.getPackage().getName();
-    private static final String CLASS_NAME_DEFAULT_TEMPLATE_IMPL = "PickRulesTemplateImpl";
+    private static final String CLASS_NAME_DEFAULT_TEMPLATE_IMPL = "DynamicPickRulesTemplateImpl";
     private static final String CLASS_DEFAULT_TEMPLATE_IMPL = PACKAGE_NAME_IMPL + ".DefaultPickRulesTemplateImpl";
     private static final String CLASS_TEMPLATE_IMPL = PACKAGE_NAME_IMPL + "." + CLASS_NAME_DEFAULT_TEMPLATE_IMPL;
 
