@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fbook.bean.UserBean;
-import com.puyixiaowo.fbook.bean.book.BookBean;
-import com.puyixiaowo.fbook.bean.book.BookInfo;
-import com.puyixiaowo.fbook.bean.book.BookReadSettingBean;
-import com.puyixiaowo.fbook.bean.book.BookSource;
+import com.puyixiaowo.fbook.bean.book.*;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.constants.BookConstants;
 import com.puyixiaowo.fbook.constants.Constants;
@@ -154,7 +151,7 @@ public class BookService {
                 return getBookDetailBoy(bookBean);
 
             case girl:
-                return getBookDetailGirl(bookBean);
+                return getBookDetailGirl(null, bookBean);
 
             default:
                 return null;
@@ -221,7 +218,8 @@ public class BookService {
         return bookBean;
     }
 
-    private static BookBean getBookDetailGirl(BookBean bookBean) {
+    private static BookBean getBookDetailGirl(PickRulesBean pickRulesBean,
+                                              BookBean bookBean) {
 
         try {
             String url = EnumSourceGirl.LWXSW.link + "/books/" + bookBean.getaId() + ".html";
@@ -469,5 +467,9 @@ public class BookService {
     }
 
     public static void main(String[] args) {
+
+        PageBean pageBean = new PageBean();
+        pageBean = searchGirl("道君", pageBean);
+        System.out.println(JSON.toJSONString(pageBean));
     }
 }

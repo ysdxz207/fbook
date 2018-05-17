@@ -1,6 +1,8 @@
 package com.puyixiaowo.fbook.constants;
 
 import com.puyixiaowo.fbook.utils.ResourceUtils;
+import com.puyixiaowo.fbook.utils.pickrules.PickRulesTemplate;
+import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
 
 public class Constants {
 
@@ -42,4 +44,6 @@ public class Constants {
      * 跨域允许
      */
     public static String [] ALLOWED_ORIGINS = new String[0];
+
+    public static PickRulesTemplate pickRulesTemplate = new DefaultPickRulesTemplateImpl();
 }
