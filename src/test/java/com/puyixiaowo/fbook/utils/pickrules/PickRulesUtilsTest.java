@@ -20,6 +20,10 @@ public class PickRulesUtilsTest {
                 "    public String getBookDetailTitle(Document document) {\n" +
                 "        return document.select(\".bookTitle\").text();\n" +
                 "    }");
+        pickRulesBean.setBookDetailAuthor("@Override\n" +
+                "    public String getBookDetailAuthor(Document document) {\n" +
+                "        return document.select(\".bookTitle\").text();\n" +
+                "    }");
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
 
         String url = "http://www.lwxsw.cc/book/12946";
@@ -28,6 +32,7 @@ public class PickRulesUtilsTest {
         Document document = response.parse();
 
         System.out.println(Constants.pickRulesTemplate.getBookDetailTitle(document));
+        System.out.println(Constants.pickRulesTemplate.getBookDetailAuthor(document));
 
     }
 }

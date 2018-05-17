@@ -3,10 +3,8 @@ package com.puyixiaowo.fbook.utils.pickrules;
 import com.itranswarp.compiler.JavaStringCompiler;
 import com.puyixiaowo.fbook.bean.book.PickRulesBean;
 import com.puyixiaowo.fbook.constants.Constants;
-import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.StringUtils;
 import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
-import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -18,7 +16,9 @@ import java.util.Map;
 public class PickRulesUtils {
     private static final String PACKAGE_NAME_IMPL = DefaultPickRulesTemplateImpl.class.getPackage().getName();
     private static final String PACKAGE_NAME_INTERFACE = PickRulesTemplate.class.getPackage().getName();
-    private static final String CLASS_NAME_IMPL_TEMPLATE = "PickRulesTemplateImpl";
+    private static final String CLASS_NAME_DEFAULT_TEMPLATE_IMPL = "PickRulesTemplateImpl";
+    private static final String CLASS_DEFAULT_TEMPLATE_IMPL = PACKAGE_NAME_IMPL + ".DefaultPickRulesTemplateImpl";
+    private static final String CLASS_TEMPLATE_IMPL = PACKAGE_NAME_IMPL + "." + CLASS_NAME_DEFAULT_TEMPLATE_IMPL;
 
     private static String buildPickRulesTemplateString(PickRulesBean pickRulesBean) {
 
@@ -32,7 +32,7 @@ public class PickRulesUtils {
             sb.append("package " + PACKAGE_NAME_IMPL + ";\n\n");
             sb.append("import org.jsoup.nodes.*;\n\n");
             sb.append("import org.jsoup.select.*;\n\n");
-            sb.append("public class " + CLASS_NAME_IMPL_TEMPLATE + " implements " + PACKAGE_NAME_INTERFACE + ".PickRulesTemplate {");
+            sb.append("public class " + CLASS_NAME_DEFAULT_TEMPLATE_IMPL + " extends " + CLASS_DEFAULT_TEMPLATE_IMPL + " implements " + PACKAGE_NAME_INTERFACE + ".PickRulesTemplate {");
 
             Field[] fields = pickRulesBean.getClass().getDeclaredFields();
             for (Field field : fields) {
@@ -72,8 +72,8 @@ public class PickRulesUtils {
             }
             System.out.println(templateString);
             JavaStringCompiler compiler = new JavaStringCompiler();
-            Map<String, byte[]> results = compiler.compile(CLASS_NAME_IMPL_TEMPLATE + ".java", templateString);
-            Class<?> clazz = compiler.loadClass(PACKAGE_NAME_IMPL + "." + CLASS_NAME_IMPL_TEMPLATE, results);
+            Map<String, byte[]> results = compiler.compile(CLASS_NAME_DEFAULT_TEMPLATE_IMPL + ".java", templateString);
+            Class<?> clazz = compiler.loadClass(CLASS_TEMPLATE_IMPL, results);
             Constants.pickRulesTemplate = (PickRulesTemplate) clazz.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
