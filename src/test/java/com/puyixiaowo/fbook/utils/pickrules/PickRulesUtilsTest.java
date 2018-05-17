@@ -2,6 +2,7 @@ package com.puyixiaowo.fbook.utils.pickrules;
 
 import com.puyixiaowo.fbook.bean.book.PickRulesBean;
 import com.puyixiaowo.fbook.enums.EnumSourceGirl;
+import com.puyixiaowo.fbook.service.book.BookChapterServiceTest;
 import com.puyixiaowo.fbook.utils.HtmlUtils;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
@@ -12,6 +13,8 @@ public class PickRulesUtilsTest {
     @Test
     public void testUpdatePickRulesTemplate() throws Exception {
 
+        BookChapterServiceTest bookChapterServiceTest = new BookChapterServiceTest();
+        String url = bookChapterServiceTest.testGetGirlChapterList();
 
         PickRulesBean pickRulesBean = new PickRulesBean();
 
@@ -25,7 +28,6 @@ public class PickRulesUtilsTest {
                 "    }");
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
 
-        String url = "http://www.lwxsw.cc/book/12946";
         Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.LWXSW.encoding);
 
         Document document = response.parse();

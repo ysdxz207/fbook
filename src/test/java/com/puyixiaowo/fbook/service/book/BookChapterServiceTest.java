@@ -2,7 +2,6 @@ package com.puyixiaowo.fbook.service.book;
 
 import com.puyixiaowo.fbook.bean.book.BookBean;
 import com.puyixiaowo.fbook.bean.book.PickRulesBean;
-import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
 import org.junit.Test;
 
@@ -10,10 +9,10 @@ public class BookChapterServiceTest {
 
 
     @Test
-    public void testGetGirlChapterList() throws Exception {
+    public String testGetGirlChapterList() throws Exception {
 
         BookBean bookBean = new BookBean();
-        bookBean.setaId("123123");
+        bookBean.setaId("12946");
 
         String templateString = "@Override\n" +
                 "    public String getChapterListLink(BookBean bookBean) {\n" +
@@ -24,6 +23,7 @@ public class BookChapterServiceTest {
         pickRulesBean.setChapterListLink(templateString);
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
         System.out.println(PickRulesUtils.pickRulesTemplate.getChapterListLink(bookBean));
+        return PickRulesUtils.pickRulesTemplate.getChapterListLink(bookBean);
     }
 }
 
