@@ -60,9 +60,6 @@ public class PickRulesUtils {
 
     public static void updatePickRulesTemplate(PickRulesBean pickRulesBean) {
         try {
-            //查出原先模版
-//            PickRulesBean pickRulesBeanOrigin = DBUtils.selectOne("",null);
-//            BeanUtils.copyProperties(pickRulesBean, pickRulesBeanOrigin);
 
             String templateString = buildPickRulesTemplateString(pickRulesBean);
 
