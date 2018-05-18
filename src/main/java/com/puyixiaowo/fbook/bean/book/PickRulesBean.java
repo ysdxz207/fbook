@@ -7,6 +7,7 @@ public class PickRulesBean implements Serializable {
 
     private String id;
 
+    private String searchEncoding;
     private String searchLink;
     private String searchItems;
     private String searchItemAId;
@@ -40,6 +41,14 @@ public class PickRulesBean implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getSearchEncoding() {
+        return searchEncoding;
+    }
+
+    public void setSearchEncoding(String searchEncoding) {
+        this.searchEncoding = searchEncoding;
     }
 
     public String getSearchLink() {

@@ -19,17 +19,17 @@ public class HtmlUtils {
     private static int RETRY_TIMES = 5;
 
     public static Connection.Response getPage(String url,
-                                              Encoding encoding) throws IOException {
+                                              String encoding) throws IOException {
         return accessPage(url, Connection.Method.GET, encoding);
     }
 
-    public static Connection.Response postPage(String url, Encoding encoding) throws IOException {
+    public static Connection.Response postPage(String url, String encoding) throws IOException {
         return accessPage(url, Connection.Method.POST, encoding);
     }
 
     public static Connection.Response accessPage(String url,
                                                  Connection.Method method,
-                                                 Encoding encoding) {
+                                                 String encoding) {
 
         Connection.Response response = null;
         try {
@@ -39,7 +39,7 @@ public class HtmlUtils {
                     .method(method);
 
             response = connection.execute();
-            response.charset(encoding == null ? ENCODING : encoding.encoding);
+            response.charset(encoding == null ? ENCODING : encoding);
 
         } catch (SocketException e) {
             //重试

@@ -9,7 +9,7 @@ public class BookChapterServiceTest {
 
 
     @Test
-    public String testGetGirlChapterList() throws Exception {
+    public void testGetGirlChapterList() throws Exception {
 
         BookBean bookBean = new BookBean();
         bookBean.setaId("12946");
@@ -23,7 +23,6 @@ public class BookChapterServiceTest {
         pickRulesBean.setChapterListLink(templateString);
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
         System.out.println(PickRulesUtils.pickRulesTemplate.getChapterListLink(bookBean));
-        return PickRulesUtils.pickRulesTemplate.getChapterListLink(bookBean);
     }
 }
 

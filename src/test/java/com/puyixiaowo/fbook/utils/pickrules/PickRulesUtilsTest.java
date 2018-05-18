@@ -13,30 +13,23 @@ public class PickRulesUtilsTest {
     @Test
     public void testUpdatePickRulesTemplate() throws Exception {
 
-        BookChapterServiceTest bookChapterServiceTest = new BookChapterServiceTest();
-        String url = bookChapterServiceTest.testGetGirlChapterList();
-
+        String url = "http://www.lwxsw.cc/book/12946";
         PickRulesBean pickRulesBean = new PickRulesBean();
 
         pickRulesBean.setBookDetailTitle("@Override\n" +
                 "    public String getBookDetailTitle(Document document) {\n" +
                 "        return document.select(\".bookTitle\").text();\n" +
                 "    }");
-        pickRulesBean.setBookDetailAuthor("@Override\n" +
-                "    public String getBookDetailAuthor(Document document) {\n" +
-                "        return document.select(\".bookTitle\").text();\n" +
-                "    }");
 
 
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
 
-        Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.LWXSW.encoding);
+        Connection.Response response = HtmlUtils.getPage(url,
+                PickRulesUtils.pickRulesTemplate.getBookEncoding());
 
         Document document = response.parse();
 
         System.out.println(PickRulesUtils.pickRulesTemplate.getBookDetailTitle(document));
-        System.out.println(PickRulesUtils.pickRulesTemplate.getBookDetailAuthor(document));
-
     }
 }
 

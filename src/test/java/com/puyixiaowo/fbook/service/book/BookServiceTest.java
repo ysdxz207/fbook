@@ -13,6 +13,13 @@ public class BookServiceTest {
     public void testSearchGirl() throws Exception {
 
         PickRulesBean pickRulesBean = new PickRulesBean();
+
+        pickRulesBean.setSearchEncoding("@Override\n" +
+                "    public String getSearchEncoding() {\n" +
+                "        return \"\";\n" +
+                "    }");
+
+
         pickRulesBean.setSearchLink("@Override\n" +
                 "    public String getSearchLink(String keywords) {\n" +
                 "        return \"http://zhannei.baidu.com/cse/search?p=0&area=1&s=6939410700241642371&q=\" + keywords;\n" +

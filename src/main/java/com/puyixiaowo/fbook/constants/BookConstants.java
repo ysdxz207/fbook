@@ -42,5 +42,4 @@ public class BookConstants {
      */
     public static final String URL_CHAPTER_CONTENT = "http://chapter2.zhuishushenqi.com/chapter/";
 
-    public static final Encoding BAIDU_ZHANNEI_SEARCH_ENCODING = Encoding.UTF8;
 }

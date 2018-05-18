@@ -12,7 +12,6 @@ import com.puyixiaowo.fbook.constants.BookConstants;
 import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.enums.EnumChannel;
 import com.puyixiaowo.fbook.enums.EnumSort;
-import com.puyixiaowo.fbook.enums.EnumSourceGirl;
 import com.puyixiaowo.fbook.utils.*;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
 import org.jsoup.Connection;
@@ -23,7 +22,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.soap.Text;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -159,7 +157,8 @@ public class BookChapterService {
             BookBean bookBean = BookService.selectBookBeanById(bookId);
 
             String url = PickRulesUtils.pickRulesTemplate.getChapterListLink(bookBean);
-            Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.LWXSW.encoding);
+            Connection.Response response = HtmlUtils.getPage(url,
+                    PickRulesUtils.pickRulesTemplate.getBookEncoding());
 
             if (response == null) {
                 return list;
@@ -287,7 +286,8 @@ public class BookChapterService {
         BookChapterBean bookChapterBean = new BookChapterBean();
 
         try {
-            Connection.Response response = HtmlUtils.getPage(link, EnumSourceGirl.LWXSW.encoding);
+            Connection.Response response = HtmlUtils.getPage(link,
+                    PickRulesUtils.pickRulesTemplate.getBookEncoding());
 
             if (response == null) {
                 return bookChapterBean;

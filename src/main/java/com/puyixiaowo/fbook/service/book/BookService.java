@@ -221,7 +221,8 @@ public class BookService {
 
         try {
             String url = PickRulesUtils.pickRulesTemplate.getBookDetailLink(bookBean).replace("{id}", bookBean.getaId());
-            Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.LWXSW.encoding);
+            Connection.Response response = HtmlUtils.getPage(url,
+                    PickRulesUtils.pickRulesTemplate.getBookEncoding());
 
             if (response == null) {
                 logger.info("[girl获取书籍信息失败]response为空");
@@ -402,7 +403,8 @@ public class BookService {
 
         try {
             String url = PickRulesUtils.pickRulesTemplate.getSearchLink(keywords);
-            Connection.Response response = HtmlUtils.getPage(url, BookConstants.BAIDU_ZHANNEI_SEARCH_ENCODING);
+            Connection.Response response = HtmlUtils.getPage(url,
+                    PickRulesUtils.pickRulesTemplate.getSearchEncoding());
 
             if (response == null) {
                 throw new RuntimeException("搜索接口未响应");

@@ -22,6 +22,11 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
     }
 
     @Override
+    public String getSearchEncoding() {
+        return null;
+    }
+
+    @Override
     public Elements getSearchItems(Document document) {
         return null;
     }
@@ -58,6 +63,11 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
 
     @Override
     public String getSearchItemFaceUrl(Element element) {
+        return null;
+    }
+
+    @Override
+    public String getBookEncoding() {
         return null;
     }
 
