@@ -1,8 +1,12 @@
 package com.puyixiaowo.fbook.bean.book;
 
+import com.puyixiaowo.core.entity.Validatable;
+import com.puyixiaowo.fbook.annotation.Table;
+
 import java.io.Serializable;
 
-public class PickRulesBean implements Serializable {
+@Table("pick_rules")
+public class PickRulesBean extends Validatable implements Serializable {
     private static final long serialVersionUID = -6808379757080016944L;
 
     private String id;
@@ -10,7 +14,7 @@ public class PickRulesBean implements Serializable {
     private String searchEncoding;
     private String searchLink;
     private String searchItems;
-    private String searchItemAId;
+    private String searchItemBookIdThird;
     private String searchItemTitle;
     private String searchItemAuthor;
     private String searchItemCategory;
@@ -26,7 +30,6 @@ public class PickRulesBean implements Serializable {
     private String bookDetailCategory;
     private String bookDetailDescription;
     private String bookDetailFaceUrl;
-    private String bookDetailIntro;
 
     private String chapterListItems;
     private String chapterListTitle;
@@ -68,12 +71,12 @@ public class PickRulesBean implements Serializable {
         this.searchItems = searchItems;
     }
 
-    public String getSearchItemAId() {
-        return searchItemAId;
+    public String getSearchItemBookIdThird() {
+        return searchItemBookIdThird;
     }
 
-    public void setSearchItemAId(String searchItemAId) {
-        this.searchItemAId = searchItemAId;
+    public void setSearchItemBookIdThird(String searchItemBookIdThird) {
+        this.searchItemBookIdThird = searchItemBookIdThird;
     }
 
     public String getSearchItemTitle() {
@@ -186,14 +189,6 @@ public class PickRulesBean implements Serializable {
 
     public void setBookDetailFaceUrl(String bookDetailFaceUrl) {
         this.bookDetailFaceUrl = bookDetailFaceUrl;
-    }
-
-    public String getBookDetailIntro() {
-        return bookDetailIntro;
-    }
-
-    public void setBookDetailIntro(String bookDetailIntro) {
-        this.bookDetailIntro = bookDetailIntro;
     }
 
     public String getChapterListItems() {

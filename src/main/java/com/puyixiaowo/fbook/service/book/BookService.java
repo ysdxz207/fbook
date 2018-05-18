@@ -38,15 +38,6 @@ import java.util.regex.Pattern;
 public class BookService {
     private static final Logger logger = LoggerFactory.getLogger(BookService.class);
 
-    private static Pattern PATTERN_SEARCH_AUTHOR = Pattern.compile("作者：(.*)");
-    private static Pattern PATTERN_SEARCH_TYPE = Pattern.compile("类型：(.*)");
-    private static Pattern PATTERN_SEARCH_UPDATED = Pattern.compile("更新时间：(.*)");
-    private static Pattern PATTERN_SEARCH_NEW_CHAPTER = Pattern.compile("最新章节：(.*)");
-    private static Pattern PATTERN_SEARCH_AID = Pattern.compile("http\\:\\/\\/.*\\/.*\\/(.*)\\/");
-
-    private static Pattern PATTERN_DETAIL_UPDATED = Pattern.compile("(\\d{1,4}[-|\\/]\\d{1,2}[-|\\/]\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2})", Pattern.CASE_INSENSITIVE|Pattern.MULTILINE);
-
-
     public static String getSelectSql(BookBean bookBean,
                                       PageBean pageBean) {
 
@@ -72,8 +63,8 @@ public class BookService {
             bookBean.setName("%" + bookBean.getName() + "%");
         }
 
-        if (bookBean.getaId() != null) {
-            sbSql.append("and t.a_id = :aId ");
+        if (bookBean.getBookIdThird() != null) {
+            sbSql.append("and t.book_id_third = :bookIdThird ");
         }
     }
 
@@ -118,10 +109,10 @@ public class BookService {
         return pageBean;
     }
 
-    public static BookBean selectBookBeanByAId(String aId) {
+    public static BookBean selectBookBeanByBookIdThird(String bookIdThird) {
         BookBean bookBean = new BookBean();
-        bookBean.setaId(aId);
-        return DBUtils.selectOne("select * from book where a_id=:aId", bookBean);
+        bookBean.setBookIdThird(bookIdThird);
+        return DBUtils.selectOne("select * from book where book_id_third=:bookIdThird", bookBean);
     }
 
     public static Date getBookDate(String dateStr) {
@@ -161,12 +152,12 @@ public class BookService {
 
     private static BookBean getBookDetailBoy(BookBean bookBean) {
         if (bookBean == null
-                || bookBean.getaId() == null) {
+                || bookBean.getBookIdThird() == null) {
             return null;
         }
 
 
-        String url = BookConstants.URL_BOOK + bookBean.getaId();
+        String url = BookConstants.URL_BOOK + bookBean.getBookIdThird();
 
         JSONObject json = JSON.parseObject(HttpUtils.httpGet(url, null));
 
@@ -264,10 +255,10 @@ public class BookService {
         return StringUtils.isBlank(updated) ? "" : updated;
     }
 
-    public static List<BookSource> getBookSource(String aId) {
+    public static List<BookSource> getBookSource(String bookIdThird) {
         List<BookSource> list = new ArrayList<>();
 
-        String url = BookConstants.URL_BOOK_SOURCE + aId;
+        String url = BookConstants.URL_BOOK_SOURCE + bookIdThird;
         JSONArray json = JSON.parseArray(HttpUtils.httpGet(url, null));
 
         if (json == null) {
@@ -289,7 +280,7 @@ public class BookService {
     }
 
     public static BookSource getDefaultSource(Long userId,
-                                              String aId) {
+                                              String bookIdThird) {
         BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userId);
 
         //根据频道获取章节信息
@@ -297,14 +288,14 @@ public class BookService {
 
         switch (channel) {
             case boy:
-                return getBookSourceBoy(aId);
+                return getBookSourceBoy(bookIdThird);
 
             case girl:
                 return getBookSourceGirl();
 
             default:
         }
-        return getBookSourceBoy(aId);
+        return getBookSourceBoy(bookIdThird);
     }
 
     private static BookSource getBookSourceGirl() {
@@ -315,8 +306,8 @@ public class BookService {
         return bookSource;
     }
 
-    public static BookSource getBookSourceBoy(String aId) {
-        List<BookSource> bookSourceList = getBookSource(aId);
+    public static BookSource getBookSourceBoy(String bookIdThird) {
+        List<BookSource> bookSourceList = getBookSource(bookIdThird);
 
         if (bookSourceList.size() == 1) {
             return bookSourceList.get(0);
@@ -325,11 +316,11 @@ public class BookService {
         return Collections.max(bookSourceList);
     }
 
-    public static BookBean getBookByAId(String aId) {
+    public static BookBean getBookByBookIdThird(String bookIdThird) {
 
         Map<String, Object> params = new HashMap<>();
-        params.put("aId", aId);
-        return DBUtils.selectOne(BookBean.class, "select * from book where a_id=:aId", params);
+        params.put("bookIdThird", bookIdThird);
+        return DBUtils.selectOne(BookBean.class, "select * from book where book_id_third=:bookIdThird", params);
     }
 
     public static PageBean searchBoy(String keywords, PageBean pageBean) {
@@ -371,7 +362,7 @@ public class BookService {
                     e.printStackTrace();
                 }
             }
-            bookBean.setaId(jsonBook.getString("_id"));
+            bookBean.setBookIdThird(jsonBook.getString("_id"));
             bookBean.setAuthor(jsonBook.getString("author"));
             bookBean.setName(jsonBook.getString("title"));
             bookBean.setCreateTime(System.currentTimeMillis());
@@ -415,7 +406,7 @@ public class BookService {
                 BookBean bookBean = new BookBean();
                 BookInfo bookInfo = new BookInfo();
 
-                String aid = PickRulesUtils.pickRulesTemplate.getSearchItemAId(e);
+                String bookIdThird = PickRulesUtils.pickRulesTemplate.getSearchItemBookIdThird(e);
                 String title = PickRulesUtils.pickRulesTemplate.getSearchItemTitle(e);
                 String img = PickRulesUtils.pickRulesTemplate.getSearchItemFaceUrl(e);
                 String author = PickRulesUtils.pickRulesTemplate.getSearchItemAuthor(e);
@@ -426,7 +417,7 @@ public class BookService {
                 bookBean.setName(title);
                 bookBean.setAuthor(author);
                 bookBean.setFaceUrl(img);
-                bookBean.setaId(aid);
+                bookBean.setBookIdThird(bookIdThird);
 
                 bookInfo.setLastUpdateChapter(newChapter);
                 bookInfo.setCategory(category);

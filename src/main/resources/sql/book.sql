@@ -21,7 +21,7 @@ CREATE TABLE `book` (
   `id`        INTEGER(20)  NOT NULL UNIQUE,
   `author`      VARCHAR(64) NOT NULL,
   `face_url`    TEXT DEFAULT 'http://puyixiaowo.win/images/tools/book/face_pic.png',
-  `a_id`      VARCHAR(128) NOT NULL,
+  `book_id_third`      VARCHAR(128) NOT NULL,
   `name`      VARCHAR(128) NOT NULL,
   `url`      VARCHAR(512)           DEFAULT NULL,
   `create_time`     INTEGER(13) DEFAULT '0',
@@ -75,5 +75,38 @@ CREATE TABLE `book_read_setting` (
   `sort`        INTEGER(4) DEFAULT '0',
   `channel`     VARCHAR(32) DEFAULT 'boy',
 
+  PRIMARY KEY (`id`)
+);
+
+-- ----------------------------
+-- Table structure for pick_rules
+-- ----------------------------
+DROP TABLE IF EXISTS `pick_rules`;
+CREATE TABLE `pick_rules` (
+  `id`        INTEGER(20)  NOT NULL UNIQUE,
+  `search_encoding`      TEXT,
+  `search_link`     TEXT,
+  `search_items`        TEXT,
+  `search_item_book_id_third`        TEXT,
+  `search_item_title`        TEXT,
+  `search_item_author`        TEXT,
+  `search_item_category`        TEXT,
+  `search_item_update_date`        TEXT,
+  `search_item_update_chapter`        TEXT,
+  `search_item_face_url`        TEXT,
+  `book_detail_link`        TEXT,
+  `book_detail_title`        TEXT,
+  `book_detail_author`        TEXT,
+  `book_detail_update_date`        TEXT,
+  `book_detail_update_chapter`        TEXT,
+  `book_detail_category`        TEXT,
+  `book_detail_description`        TEXT,
+  `book_detail_face_url`        TEXT,
+  `chapter_list_items`        TEXT,
+  `chapter_list_title`        TEXT,
+  `chapter_list_link`        TEXT,
+  `chapter_list_detail_link`        TEXT,
+  `chapter_detail_title`        TEXT,
+  `chapter_detail_content`        TEXT,
   PRIMARY KEY (`id`)
 );

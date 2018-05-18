@@ -5,7 +5,6 @@ import com.puyixiaowo.fbook.bean.book.BookBean;
 import com.puyixiaowo.fbook.bean.book.PickRulesBean;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class BookServiceTest {
@@ -35,11 +34,11 @@ public class BookServiceTest {
                 "        return element.select(\".result-item-title a\").attr(\"title\");\n" +
                 "    }");
 
-        pickRulesBean.setSearchItemAId("@Override\n" +
-                "    public String getSearchItemAId(Element element) {\n" +
-                "        Matcher matcherAid = Pattern.compile(\"http\\\\:\\\\/\\\\/.*\\\\/.*\\\\/(.*)\\\\/\").matcher(element.select(\".result-item-title a\").attr(\"href\"));\n" +
-                "        String aid = matcherAid.find() ? matcherAid.group(1) : \"\";\n" +
-                "        return aid;\n" +
+        pickRulesBean.setSearchItemBookIdThird("@Override\n" +
+                "    public String getSearchItemBookIdThird(Element element) {\n" +
+                "        Matcher matcherBookIdThird = Pattern.compile(\"http\\\\:\\\\/\\\\/.*\\\\/.*\\\\/(.*)\\\\/\").matcher(element.select(\".result-item-title a\").attr(\"href\"));\n" +
+                "        String bookIdThird = matcherBookIdThird.find() ? matcherBookIdThird.group(1) : \"\";\n" +
+                "        return bookIdThird;\n" +
                 "    }");
 
         pickRulesBean.setSearchItemFaceUrl("@Override\n" +
@@ -89,12 +88,12 @@ public class BookServiceTest {
     public void testGetBookDetailGirl() {
         PickRulesBean pickRulesBean = new PickRulesBean();
         BookBean bookBean = new BookBean();
-        bookBean.setaId("12946");
+        bookBean.setBookIdThird("12946");
 
 
         pickRulesBean.setBookDetailLink("@Override\n" +
                 "    public String getBookDetailLink(BookBean bookBean) {\n" +
-                "        return \"http://www.lwxsw.cc/book/\" + bookBean.getaId() + \"/\";\n" +
+                "        return \"http://www.lwxsw.cc/book/\" + bookBean.getBookIdThird() + \"/\";\n" +
                 "    }");
 
 

@@ -5,12 +5,6 @@ import com.puyixiaowo.fbook.bean.book.BookBean;
 import com.puyixiaowo.fbook.bean.book.BookshelfBean;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.utils.DBUtils;
-import com.puyixiaowo.fbook.utils.StringUtils;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  *
@@ -55,10 +49,10 @@ public class BookshelfService {
     }
 
     public static boolean addOrDelBookFromBookshelf(UserBean userBean,
-                                                    String aId) {
+                                                    String bookIdThird) {
         boolean isOnBookShelf;
-        //首先根据aId获取bookId
-        BookBean bookBean = BookService.getBookByAId(aId);
+        //首先根据bookIdThird获取bookId
+        BookBean bookBean = BookService.getBookByBookIdThird(bookIdThird);
 
         if (bookBean == null) {
             isOnBookShelf = false;

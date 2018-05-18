@@ -22,7 +22,7 @@ public class BookChapterServiceTest {
         PickRulesBean pickRulesBean = new PickRulesBean();
         pickRulesBean.setChapterListLink("@Override\n" +
                 "    public String getChapterListLink(BookBean bookBean) {\n" +
-                "        return \"http://www.lwxsw.cc/book/\" + bookBean.getaId() + \"/\";\n" +
+                "        return \"http://www.lwxsw.cc/book/\" + bookBean.getBookIdThird() + \"/\";\n" +
                 "    }");
 
         pickRulesBean.setChapterListItems("@Override\n" +

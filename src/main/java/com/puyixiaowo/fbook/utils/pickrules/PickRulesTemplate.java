@@ -11,7 +11,7 @@ public interface PickRulesTemplate {
     public String getSearchLink(String keywords);
     public String getSearchEncoding();
     public Elements getSearchItems(Document document);
-    public String getSearchItemAId(Element element);
+    public String getSearchItemBookIdThird(Element element);
     public String getSearchItemTitle(Element element);
     public String getSearchItemAuthor(Element element);
     public String getSearchItemCategory(Element element);

@@ -42,7 +42,7 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
     }
 
     @Override
-    public String getSearchItemAId(Element element) {
+    public String getSearchItemBookIdThird(Element element) {
         return null;
     }
 

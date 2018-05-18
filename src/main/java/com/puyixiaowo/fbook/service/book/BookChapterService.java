@@ -45,7 +45,7 @@ public class BookChapterService {
 
     public static List<BookChapterBean> requestBookChapters(Long userId,
                                                             Long bookId,
-                                                            String aId,
+                                                            String bookIdThird,
                                                             boolean keepSort) {
 
         List<BookChapterBean> list = new ArrayList<>();
@@ -58,7 +58,7 @@ public class BookChapterService {
         String source = bookReadBean.getSource();
 
         if (StringUtils.isBlank(source)) {
-            source = BookService.getDefaultSource(userId, aId).get_id();
+            source = BookService.getDefaultSource(userId, bookIdThird).get_id();
             //可能为第一次读书或配置被删除
             bookReadBean.setSource(source);
             bookReadBean.setBookId(bookId);
@@ -352,10 +352,10 @@ public class BookChapterService {
     public static BookChapterBean getNextChapter(int page,
                                                  Long userId,
                                                  Long bookId,
-                                                 String aId,
+                                                 String bookIdThird,
                                                  BookReadBean bookReadBean) {
 
-        List<BookChapterBean> bookChapterBeanList = requestBookChapters(userId, bookId, aId, true);
+        List<BookChapterBean> bookChapterBeanList = requestBookChapters(userId, bookId, bookIdThird, true);
 
         int index = bookReadBean.getLastReadingChapterNum() - 1 + page;
         if (index < 0
