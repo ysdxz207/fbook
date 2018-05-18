@@ -207,11 +207,11 @@ public class BookService {
         bookInfo.setRetentionRatio(retentionRatio);
         bookInfo.setUpdated(getUpdateDateString(updated));
         bookInfo.setCategory(category);
+        bookInfo.setLastUpdateChapter(lastChapter);
 
         bookBean.setName(json.getString("title"));
         bookBean.setAuthor(json.getString("author"));
         bookBean.setFaceUrl(cover);
-        bookBean.setLastUpdateChapter(lastChapter);
         bookBean.setBookInfo(bookInfo);
         return bookBean;
     }
@@ -243,11 +243,11 @@ public class BookService {
             bookInfo.setDescription(description);
             bookInfo.setUpdated(updateDate);
             bookInfo.setCategory(category);
+            bookInfo.setLastUpdateChapter(updateChapter);
 
             bookBean.setName(title);
             bookBean.setAuthor(author);
             bookBean.setFaceUrl(faceUrl);
-            bookBean.setLastUpdateChapter(updateChapter);
             bookBean.setBookInfo(bookInfo);
 
         } catch (Exception e) {
@@ -375,11 +375,11 @@ public class BookService {
             bookBean.setAuthor(jsonBook.getString("author"));
             bookBean.setName(jsonBook.getString("title"));
             bookBean.setCreateTime(System.currentTimeMillis());
-            bookBean.setLastUpdateChapter(jsonBook.getString("lastChapter"));
             bookBean.setFaceUrl(faceUrl);
             bookBean.setOnShelf(false);
 
 
+            bookinfo.setLastUpdateChapter(jsonBook.getString("lastChapter"));
             bookinfo.setCategory(jsonBook.getString("cat"));
             bookinfo.setDescription(jsonBook.getString("shortIntro"));
             bookinfo.setRetentionRatio(jsonBook.getString("retentionRatio"));
@@ -426,9 +426,9 @@ public class BookService {
                 bookBean.setName(title);
                 bookBean.setAuthor(author);
                 bookBean.setFaceUrl(img);
-                bookBean.setLastUpdateChapter(newChapter);
                 bookBean.setaId(aid);
 
+                bookInfo.setLastUpdateChapter(newChapter);
                 bookInfo.setCategory(category);
                 bookInfo.setUpdated(updated);
                 bookBean.setBookInfo(bookInfo);

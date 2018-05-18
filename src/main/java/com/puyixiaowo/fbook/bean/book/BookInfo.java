@@ -13,6 +13,7 @@ public class BookInfo implements Serializable{
     private String rating;
     private String retentionRatio;
     private String updated;
+    private String lastUpdateChapter;
     private String category;
 
 
@@ -54,6 +55,14 @@ public class BookInfo implements Serializable{
 
     public void setUpdated(String updated) {
         this.updated = updated;
+    }
+
+    public String getLastUpdateChapter() {
+        return lastUpdateChapter;
+    }
+
+    public void setLastUpdateChapter(String lastUpdateChapter) {
+        this.lastUpdateChapter = lastUpdateChapter;
     }
 
     public String getCategory() {

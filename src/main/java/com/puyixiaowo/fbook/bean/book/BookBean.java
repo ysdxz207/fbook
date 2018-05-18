@@ -18,7 +18,6 @@ public class BookBean extends Validatable implements Serializable{
 	private String aId;//api接口书ID
 	private String name;
 	private String url;
-	private String lastUpdateChapter;
 	private Long createTime;
 	private Integer isOver;
 
@@ -75,14 +74,6 @@ public class BookBean extends Validatable implements Serializable{
 
 	public void setUrl (String url){
 		this.url = url;
-	}
-
-	public String getLastUpdateChapter (){
-		return lastUpdateChapter;
-	}
-
-	public void setLastUpdateChapter (String lastUpdateChapter){
-		this.lastUpdateChapter = lastUpdateChapter;
 	}
 
 	public Long getCreateTime (){
