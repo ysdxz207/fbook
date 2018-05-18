@@ -32,9 +32,10 @@ public interface PickRulesTemplate {
     public String getBookDetailIntro(Document document);
 
     //章节列表
+    public Elements getChapterListItems(Document document);
     public String getChapterListLink(BookBean bookBean);
-    public String getChapterListTitle(Document document);
-    public String getChapterListLink(Document document);
+    public String getChapterListTitle(Element element);
+    public String getChapterListDetailLink(Element element);
 
     //章节内容
     public String getChapterDetailLink(BookBean bookBean);

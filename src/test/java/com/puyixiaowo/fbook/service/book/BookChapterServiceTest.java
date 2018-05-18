@@ -12,17 +12,32 @@ public class BookChapterServiceTest {
     public void testGetGirlChapterList() throws Exception {
 
         BookBean bookBean = new BookBean();
+        bookBean.setId(439816480461160448L);
         bookBean.setaId("12946");
 
-        String templateString = "@Override\n" +
-                "    public String getChapterListLink(BookBean bookBean) {\n" +
-                "        return \"http://www.lwxsw.cc/book/\" + bookBean.getaId();\n" +
-                "    }";
 
         PickRulesBean pickRulesBean = new PickRulesBean();
-        pickRulesBean.setChapterListLink(templateString);
+        pickRulesBean.setChapterListLink("@Override\n" +
+                "    public String getChapterListLink(BookBean bookBean) {\n" +
+                "        return \"http://www.lwxsw.cc/book/\" + bookBean.getaId() + \"/\";\n" +
+                "    }");
+
+        pickRulesBean.setChapterListItems("@Override\n" +
+                "    public Elements getChapterListItems(Document document) {\n" +
+                "        return null;\n" +
+                "    }");
+
+        pickRulesBean.setChapterListTitle("@Override\n" +
+                "    public String getChapterListTitle(Element element) {\n" +
+                "        return \"\";\n" +
+                "    }");
+
+        pickRulesBean.setChapterListDetailLink("@Override\n" +
+                "    public String getChapterListDetailLink(Element element) {\n" +
+                "        return \"\";\n" +
+                "    }");
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
-        System.out.println(PickRulesUtils.pickRulesTemplate.getChapterListLink(bookBean));
+        System.out.println(BookChapterService.getGirlChapterList(bookBean.getId()));
     }
 }
 

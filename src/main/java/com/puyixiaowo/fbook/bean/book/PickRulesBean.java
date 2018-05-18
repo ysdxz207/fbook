@@ -28,14 +28,15 @@ public class PickRulesBean implements Serializable {
     private String bookDetailFaceUrl;
     private String bookDetailIntro;
 
+    private String chapterListItems;
     private String chapterListTitle;
     private String chapterListLink;
+    private String chapterListDetailLink;
 
     private String chapterDetailTitle;
     private String chapterDetailContent;
     private String chapterDetailMaxPage;
     private String chapterDetailCurrentPage;
-
 
     public String getId() {
         return id;
@@ -197,6 +198,14 @@ public class PickRulesBean implements Serializable {
         this.bookDetailIntro = bookDetailIntro;
     }
 
+    public String getChapterListItems() {
+        return chapterListItems;
+    }
+
+    public void setChapterListItems(String chapterListItems) {
+        this.chapterListItems = chapterListItems;
+    }
+
     public String getChapterListTitle() {
         return chapterListTitle;
     }
@@ -211,6 +220,14 @@ public class PickRulesBean implements Serializable {
 
     public void setChapterListLink(String chapterListLink) {
         this.chapterListLink = chapterListLink;
+    }
+
+    public String getChapterListDetailLink() {
+        return chapterListDetailLink;
+    }
+
+    public void setChapterListDetailLink(String chapterListDetailLink) {
+        this.chapterListDetailLink = chapterListDetailLink;
     }
 
     public String getChapterDetailTitle() {

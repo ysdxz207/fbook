@@ -117,17 +117,22 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
     }
 
     @Override
+    public Elements getChapterListItems(Document document) {
+        return null;
+    }
+
+    @Override
     public String getChapterListLink(BookBean bookBean) {
         return null;
     }
 
     @Override
-    public String getChapterListTitle(Document document) {
+    public String getChapterListTitle(Element element) {
         return null;
     }
 
     @Override
-    public String getChapterListLink(Document document) {
+    public String getChapterListDetailLink(Element element) {
         return null;
     }
 

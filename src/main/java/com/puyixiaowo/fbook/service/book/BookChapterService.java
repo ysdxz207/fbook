@@ -14,6 +14,7 @@ import com.puyixiaowo.fbook.enums.EnumChannel;
 import com.puyixiaowo.fbook.enums.EnumSort;
 import com.puyixiaowo.fbook.utils.*;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
+import com.puyixiaowo.generator.Run;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -73,7 +74,7 @@ public class BookChapterService {
                 break;
 
             case girl:
-                list = getGirlChapterList(bookId, source);
+                list = getGirlChapterList(bookId);
                 break;
 
                 default:
@@ -143,18 +144,20 @@ public class BookChapterService {
     /**
      *
      * @param bookId
-     * @param source
      *      目前默认书源是http://www.ggdown.com
      * @return
      */
-    public static List<BookChapterBean> getGirlChapterList(Long bookId,
-                                                          String source) {
+    public static List<BookChapterBean> getGirlChapterList(Long bookId) {
 
         List<BookChapterBean> list = new ArrayList<>();
 
         try {
 
             BookBean bookBean = BookService.selectBookBeanById(bookId);
+
+            if (bookBean == null) {
+                throw new RuntimeException("书不存在");
+            }
 
             String url = PickRulesUtils.pickRulesTemplate.getChapterListLink(bookBean);
             Connection.Response response = HtmlUtils.getPage(url,
@@ -165,21 +168,17 @@ public class BookChapterService {
             }
             Document document = response.parse();
 
-            Elements elements = document.select(".chapterlist");
-            Element element = elements.get(0);
-
-            Elements esA = element.select("a");
+            Elements elements = PickRulesUtils.pickRulesTemplate.getChapterListItems(document);
 
             int chapterNum = 1;
-            for (Element e : esA) {
-                String title = e.text();
-                String link = url + "/" + e.attr("href");
+            for (Element element : elements) {
+                String title = PickRulesUtils.pickRulesTemplate.getChapterListTitle(element);
+                String link = PickRulesUtils.pickRulesTemplate.getChapterListDetailLink(element);
 
                 BookChapterBean bookChapterBean = new BookChapterBean();
                 bookChapterBean.setBookId(bookId);
                 bookChapterBean.setTitle(title);
                 bookChapterBean.setLink(link);
-                bookChapterBean.setSource(source);
                 bookChapterBean.setChapterNum(chapterNum);
 
                 list.add(bookChapterBean);
