@@ -7,6 +7,16 @@ public class PickRulesBean implements Serializable {
 
     private String id;
 
+    private String searchLink;
+    private String searchItems;
+    private String searchItemAId;
+    private String searchItemTitle;
+    private String searchItemAuthor;
+    private String searchItemCategory;
+    private String searchItemUpdateDate;
+    private String searchItemUpdateChapter;
+    private String searchItemFaceUrl;
+
     private String bookDetailTitle;
     private String bookDetailAuthor;
     private String bookDetailUpdateDate;
@@ -30,6 +40,78 @@ public class PickRulesBean implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getSearchLink() {
+        return searchLink;
+    }
+
+    public void setSearchLink(String searchLink) {
+        this.searchLink = searchLink;
+    }
+
+    public String getSearchItems() {
+        return searchItems;
+    }
+
+    public void setSearchItems(String searchItems) {
+        this.searchItems = searchItems;
+    }
+
+    public String getSearchItemAId() {
+        return searchItemAId;
+    }
+
+    public void setSearchItemAId(String searchItemAId) {
+        this.searchItemAId = searchItemAId;
+    }
+
+    public String getSearchItemTitle() {
+        return searchItemTitle;
+    }
+
+    public void setSearchItemTitle(String searchItemTitle) {
+        this.searchItemTitle = searchItemTitle;
+    }
+
+    public String getSearchItemAuthor() {
+        return searchItemAuthor;
+    }
+
+    public void setSearchItemAuthor(String searchItemAuthor) {
+        this.searchItemAuthor = searchItemAuthor;
+    }
+
+    public String getSearchItemCategory() {
+        return searchItemCategory;
+    }
+
+    public void setSearchItemCategory(String searchItemCategory) {
+        this.searchItemCategory = searchItemCategory;
+    }
+
+    public String getSearchItemUpdateDate() {
+        return searchItemUpdateDate;
+    }
+
+    public void setSearchItemUpdateDate(String searchItemUpdateDate) {
+        this.searchItemUpdateDate = searchItemUpdateDate;
+    }
+
+    public String getSearchItemUpdateChapter() {
+        return searchItemUpdateChapter;
+    }
+
+    public void setSearchItemUpdateChapter(String searchItemUpdateChapter) {
+        this.searchItemUpdateChapter = searchItemUpdateChapter;
+    }
+
+    public String getSearchItemFaceUrl() {
+        return searchItemFaceUrl;
+    }
+
+    public void setSearchItemFaceUrl(String searchItemFaceUrl) {
+        this.searchItemFaceUrl = searchItemFaceUrl;
     }
 
     public String getBookDetailTitle() {

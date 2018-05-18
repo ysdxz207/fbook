@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -402,9 +401,7 @@ public class BookService {
         List<BookBean> bookBeanList = new ArrayList<>();
 
         try {
-            String url = EnumSourceGirl.LWXSW.searchLink;
-            url = url.replace("{s}", EnumSourceGirl.LWXSW.sourceId);
-            url = url.replace("{q}", URLEncoder.encode(keywords, EnumSourceGirl.LWXSW.encoding.encoding));
+            String url = PickRulesUtils.pickRulesTemplate.getSearchLink(keywords);
             Connection.Response response = HtmlUtils.getPage(url, BookConstants.BAIDU_ZHANNEI_SEARCH_ENCODING);
 
             if (response == null) {
@@ -412,36 +409,21 @@ public class BookService {
             }
             Document document = response.parse();
 
-            Elements elements = document.select(".result-item");
+
+
+            Elements elements = PickRulesUtils.pickRulesTemplate.getSearchItems(document);
             for (Element e :
                     elements) {
                 BookBean bookBean = new BookBean();
                 BookInfo bookInfo = new BookInfo();
 
-                String title = e.select(".result-item-title a").attr("title");
-                String link = e.select(".result-item-title a").attr("href");
-                String img = e.select("img").attr("src");
-                String author = "";
-                String type = "";
-                String updated = "";
-                String newChapter = "";
-
-                Matcher matcherAid = PATTERN_SEARCH_AID.matcher(link);
-                String aid = matcherAid.find() ? matcherAid.group(1) : "";
-
-                Elements eInfos = e.select(".result-game-item-info-tag");
-
-                for (Element eInfo : eInfos) {
-                    Matcher matcherAuthor = PATTERN_SEARCH_AUTHOR.matcher(eInfo.text());
-                    Matcher matcherType = PATTERN_SEARCH_TYPE.matcher(eInfo.text());
-                    Matcher matcherUpdated = PATTERN_SEARCH_UPDATED.matcher(eInfo.text());
-                    Matcher matcherNewChapter = PATTERN_SEARCH_NEW_CHAPTER.matcher(eInfo.text());
-                    author = matcherAuthor.matches() ? matcherAuthor.group(1) : author;
-                    type = matcherType.matches() ? matcherType.group(1) : type;
-                    updated = matcherUpdated.matches() ? matcherUpdated.group(1) : updated;
-                    newChapter = matcherNewChapter.matches() ? matcherNewChapter.group(1) : newChapter;
-                }
-
+                String aid = PickRulesUtils.pickRulesTemplate.getSearchItemAId(e);
+                String title = PickRulesUtils.pickRulesTemplate.getSearchItemTitle(e);
+                String img = PickRulesUtils.pickRulesTemplate.getSearchItemFaceUrl(e);
+                String author = PickRulesUtils.pickRulesTemplate.getSearchItemAuthor(e);
+                String category = PickRulesUtils.pickRulesTemplate.getSearchItemCategory(e);
+                String updated = PickRulesUtils.pickRulesTemplate.getSearchItemUpdateDate(e);
+                String newChapter = PickRulesUtils.pickRulesTemplate.getSearchItemUpdateChapter(e);
 
                 bookBean.setName(title);
                 bookBean.setAuthor(author);
@@ -449,7 +431,7 @@ public class BookService {
                 bookBean.setLastUpdateChapter(newChapter);
                 bookBean.setaId(aid);
 
-                bookInfo.setCategory(type);
+                bookInfo.setCategory(category);
                 bookInfo.setUpdated(updated);
                 bookBean.setBookInfo(bookInfo);
 
@@ -463,12 +445,5 @@ public class BookService {
         pageBean.setList(bookBeanList);
 
         return pageBean;
-    }
-
-    public static void main(String[] args) {
-
-        PageBean pageBean = new PageBean();
-        pageBean = searchGirl("道君", pageBean);
-        System.out.println(JSON.toJSONString(pageBean));
     }
 }

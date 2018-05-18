@@ -3,6 +3,8 @@ package com.puyixiaowo.fbook.utils.pickrules.impl;
 import com.puyixiaowo.fbook.bean.book.BookBean;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesTemplate;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  *
@@ -13,6 +15,51 @@ import org.jsoup.nodes.Document;
  */
 
 public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
+
+    @Override
+    public String getSearchLink(String keywords) {
+        return null;
+    }
+
+    @Override
+    public Elements getSearchItems(Document document) {
+        return null;
+    }
+
+    @Override
+    public String getSearchItemAId(Element element) {
+        return null;
+    }
+
+    @Override
+    public String getSearchItemTitle(Element element) {
+        return null;
+    }
+
+    @Override
+    public String getSearchItemAuthor(Element element) {
+        return null;
+    }
+
+    @Override
+    public String getSearchItemCategory(Element element) {
+        return null;
+    }
+
+    @Override
+    public String getSearchItemUpdateDate(Element element) {
+        return null;
+    }
+
+    @Override
+    public String getSearchItemUpdateChapter(Element element) {
+        return null;
+    }
+
+    @Override
+    public String getSearchItemFaceUrl(Element element) {
+        return null;
+    }
 
     @Override
     public String getBookDetailLink(BookBean bookBean) {

@@ -2,8 +2,21 @@ package com.puyixiaowo.fbook.utils.pickrules;
 
 import com.puyixiaowo.fbook.bean.book.BookBean;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public interface PickRulesTemplate {
+
+    //搜索
+    public String getSearchLink(String keywords);
+    public Elements getSearchItems(Document document);
+    public String getSearchItemAId(Element element);
+    public String getSearchItemTitle(Element element);
+    public String getSearchItemAuthor(Element element);
+    public String getSearchItemCategory(Element element);
+    public String getSearchItemUpdateDate(Element element);
+    public String getSearchItemUpdateChapter(Element element);
+    public String getSearchItemFaceUrl(Element element);
 
     //详情
     public String getBookDetailLink(BookBean bookBean);

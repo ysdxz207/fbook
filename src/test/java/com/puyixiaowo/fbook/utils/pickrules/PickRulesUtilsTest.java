@@ -26,6 +26,8 @@ public class PickRulesUtilsTest {
                 "    public String getBookDetailAuthor(Document document) {\n" +
                 "        return document.select(\".bookTitle\").text();\n" +
                 "    }");
+
+
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
 
         Connection.Response response = HtmlUtils.getPage(url, EnumSourceGirl.LWXSW.encoding);
