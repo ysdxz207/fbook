@@ -18,6 +18,7 @@ public class PickRulesBean implements Serializable {
     private String searchItemUpdateChapter;
     private String searchItemFaceUrl;
 
+    private String bookDetailLink;
     private String bookDetailTitle;
     private String bookDetailAuthor;
     private String bookDetailUpdateDate;
@@ -121,6 +122,14 @@ public class PickRulesBean implements Serializable {
 
     public void setSearchItemFaceUrl(String searchItemFaceUrl) {
         this.searchItemFaceUrl = searchItemFaceUrl;
+    }
+
+    public String getBookDetailLink() {
+        return bookDetailLink;
+    }
+
+    public void setBookDetailLink(String bookDetailLink) {
+        this.bookDetailLink = bookDetailLink;
     }
 
     public String getBookDetailTitle() {

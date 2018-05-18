@@ -149,7 +149,7 @@ public class BookService {
                 return getBookDetailBoy(bookBean);
 
             case girl:
-                return getBookDetailGirl(null, bookBean);
+                return getBookDetailGirl(bookBean);
 
             default:
                 return null;
@@ -216,11 +216,10 @@ public class BookService {
         return bookBean;
     }
 
-    private static BookBean getBookDetailGirl(PickRulesBean pickRulesBean,
-                                              BookBean bookBean) {
+    public static BookBean getBookDetailGirl(BookBean bookBean) {
 
         try {
-            String url = PickRulesUtils.pickRulesTemplate.getBookDetailLink(bookBean).replace("{id}", bookBean.getaId());
+            String url = PickRulesUtils.pickRulesTemplate.getBookDetailLink(bookBean);
             Connection.Response response = HtmlUtils.getPage(url,
                     PickRulesUtils.pickRulesTemplate.getBookEncoding());
 
@@ -230,7 +229,7 @@ public class BookService {
             }
             Document document = response.parse();
 
-            String title = document.select(".book-title h1").text();
+            String title = PickRulesUtils.pickRulesTemplate.getBookDetailTitle(document);
             String author = document.select(".book-title em").text().replace("作者：", "");
             String description = document.select(".book-intro").text();
             String faceUrl = document.select(".book-img img").attr("src");

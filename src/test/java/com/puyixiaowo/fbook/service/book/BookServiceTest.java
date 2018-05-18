@@ -1,6 +1,7 @@
 package com.puyixiaowo.fbook.service.book;
 
 import com.alibaba.fastjson.JSON;
+import com.puyixiaowo.fbook.bean.book.BookBean;
 import com.puyixiaowo.fbook.bean.book.PickRulesBean;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
@@ -82,6 +83,31 @@ public class BookServiceTest {
         PageBean pageBean = new PageBean();
         BookService.searchGirl("道君", pageBean);
         System.out.println(JSON.toJSONString(pageBean));
+    }
+
+    @Test
+    public void testGetBookDetailGirl() {
+        PickRulesBean pickRulesBean = new PickRulesBean();
+        BookBean bookBean = new BookBean();
+        bookBean.setaId("12946");
+
+
+        pickRulesBean.setBookDetailLink("@Override\n" +
+                "    public String getBookDetailLink(BookBean bookBean) {\n" +
+                "        return \"http://www.lwxsw.cc/book/\" + bookBean.getaId();\n" +
+                "    }");
+
+
+        pickRulesBean.setBookDetailTitle("@Override\n" +
+                "    public String getBookDetailTitle(Document document) {\n" +
+                "        return document.select(\".bookTitle\").text();\n" +
+                "    }");
+
+
+        PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
+
+        bookBean = BookService.getBookDetailGirl(bookBean);
+        System.out.println(JSON.toJSONString(bookBean));
     }
 }
 

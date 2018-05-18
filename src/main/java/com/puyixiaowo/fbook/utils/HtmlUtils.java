@@ -3,6 +3,8 @@ package com.puyixiaowo.fbook.utils;
 import com.puyixiaowo.fbook.enums.Encoding;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -15,6 +17,8 @@ import java.net.SocketTimeoutException;
  * 访问页面工具
  */
 public class HtmlUtils {
+    private static final Logger logger = LoggerFactory.getLogger(HtmlUtils.class);
+
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36";
     public static final String ENCODING = "GBK";
     private static int RETRY_TIMES = 5;
@@ -48,7 +52,7 @@ public class HtmlUtils {
             //重试
             if (RETRY_TIMES > 0) {
                 RETRY_TIMES --;
-                System.out.println("重试");
+                logger.info("[访问重试]:" + url);
                 return accessPage(url, method, encoding);
             }
 
