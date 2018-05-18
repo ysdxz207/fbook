@@ -24,6 +24,7 @@ public class PickRulesBean implements Serializable {
     private String bookDetailUpdateDate;
     private String bookDetailUpdateChapter;
     private String bookDetailCategory;
+    private String bookDetailDescription;
     private String bookDetailFaceUrl;
     private String bookDetailIntro;
 
@@ -170,6 +171,14 @@ public class PickRulesBean implements Serializable {
 
     public void setBookDetailCategory(String bookDetailCategory) {
         this.bookDetailCategory = bookDetailCategory;
+    }
+
+    public String getBookDetailDescription() {
+        return bookDetailDescription;
+    }
+
+    public void setBookDetailDescription(String bookDetailDescription) {
+        this.bookDetailDescription = bookDetailDescription;
     }
 
     public String getBookDetailFaceUrl() {

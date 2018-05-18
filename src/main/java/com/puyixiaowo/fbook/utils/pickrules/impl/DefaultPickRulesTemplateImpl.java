@@ -102,6 +102,11 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
     }
 
     @Override
+    public String getBookDetailDescription(Document document) {
+        return null;
+    }
+
+    @Override
     public String getBookDetailFaceUrl(Document document) {
         return null;
     }

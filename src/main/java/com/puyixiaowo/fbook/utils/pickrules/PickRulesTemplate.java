@@ -27,6 +27,7 @@ public interface PickRulesTemplate {
     public String getBookDetailUpdateDate(Document document);
     public String getBookDetailUpdateChapter(Document document);
     public String getBookDetailCategory(Document document);
+    public String getBookDetailDescription(Document document);
     public String getBookDetailFaceUrl(Document document);
     public String getBookDetailIntro(Document document);
 

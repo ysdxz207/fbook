@@ -230,27 +230,24 @@ public class BookService {
             Document document = response.parse();
 
             String title = PickRulesUtils.pickRulesTemplate.getBookDetailTitle(document);
-            String author = document.select(".book-title em").text().replace("作者：", "");
-            String description = document.select(".book-intro").text();
-            String faceUrl = document.select(".book-img img").attr("src");
-            String strInfo = document.select(".book-stats").text();
-
-            String updated = "";
-
-            Matcher matcherUpdated = PATTERN_DETAIL_UPDATED.matcher(strInfo);
-            if (matcherUpdated.find()) {
-                updated = matcherUpdated.group(1);
-            }
+            String author = PickRulesUtils.pickRulesTemplate.getBookDetailAuthor(document);
+            String category = PickRulesUtils.pickRulesTemplate.getBookDetailCategory(document);
+            String description = PickRulesUtils.pickRulesTemplate.getBookDetailDescription(document);
+            String faceUrl = PickRulesUtils.pickRulesTemplate.getBookDetailFaceUrl(document);
+            String updateDate = PickRulesUtils.pickRulesTemplate.getBookDetailUpdateDate(document);
+            String updateChapter = PickRulesUtils.pickRulesTemplate.getBookDetailUpdateChapter(document);
 
 
             BookInfo bookInfo = new BookInfo();
             bookInfo.setBookId(bookBean.getId());
             bookInfo.setDescription(description);
-            bookInfo.setUpdated(updated);
+            bookInfo.setUpdated(updateDate);
+            bookInfo.setCategory(category);
 
             bookBean.setName(title);
             bookBean.setAuthor(author);
             bookBean.setFaceUrl(faceUrl);
+            bookBean.setLastUpdateChapter(updateChapter);
             bookBean.setBookInfo(bookInfo);
 
         } catch (Exception e) {

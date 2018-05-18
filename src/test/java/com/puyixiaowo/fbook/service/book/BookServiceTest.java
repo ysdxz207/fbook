@@ -17,7 +17,7 @@ public class BookServiceTest {
 
         pickRulesBean.setSearchEncoding("@Override\n" +
                 "    public String getSearchEncoding() {\n" +
-                "        return \"\";\n" +
+                "        return \"UTF-8\";\n" +
                 "    }");
 
 
@@ -94,13 +94,43 @@ public class BookServiceTest {
 
         pickRulesBean.setBookDetailLink("@Override\n" +
                 "    public String getBookDetailLink(BookBean bookBean) {\n" +
-                "        return \"http://www.lwxsw.cc/book/\" + bookBean.getaId();\n" +
+                "        return \"http://www.lwxsw.cc/book/\" + bookBean.getaId() + \"/\";\n" +
                 "    }");
 
 
         pickRulesBean.setBookDetailTitle("@Override\n" +
                 "    public String getBookDetailTitle(Document document) {\n" +
                 "        return document.select(\".bookTitle\").text();\n" +
+                "    }");
+
+        pickRulesBean.setBookDetailAuthor("@Override\n" +
+                "    public String getBookDetailAuthor(Document document) {\n" +
+                "        return document.select(\".booktag\").get(0).getAllElements().eachText().get(1);\n" +
+                "    }");
+
+        pickRulesBean.setBookDetailCategory("@Override\n" +
+                "    public String getBookDetailCategory(Document document) {\n" +
+                "        return document.select(\".booktag\").get(0).getAllElements().eachText().get(2);\n" +
+                "    }");
+
+        pickRulesBean.setBookDetailDescription("@Override\n" +
+                "    public String getBookDetailDescription(Document document) {\n" +
+                "        return document.select(\"#bookIntro\").text();\n" +
+                "    }");
+
+        pickRulesBean.setBookDetailFaceUrl("@Override\n" +
+                "    public String getBookDetailFaceUrl(Document document) {\n" +
+                "        return document.select(\"#bookIntro img\").attr(\"src\");\n" +
+                "    }");
+
+        pickRulesBean.setBookDetailUpdateDate("@Override\n" +
+                "    public String getBookDetailUpdateDate(Document document) {\n" +
+                "        return document.select(\"p.visible-xs\").text().split(\"：\")[1];\n" +
+                "    }");
+
+        pickRulesBean.setBookDetailUpdateChapter("@Override\n" +
+                "    public String getBookDetailUpdateChapter(Document document) {\n" +
+                "        return document.select(\"p\").get(1).select(\"a\").text();\n" +
                 "    }");
 
 
