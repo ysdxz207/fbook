@@ -6,6 +6,7 @@ import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 /**
  *
@@ -17,6 +18,7 @@ public class HtmlUtils {
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36";
     public static final String ENCODING = "GBK";
     private static int RETRY_TIMES = 5;
+    private static int TIMEOUT = 3 * 1000;
 
     public static Connection.Response getPage(String url,
                                               String encoding) throws IOException {
@@ -36,12 +38,13 @@ public class HtmlUtils {
             Connection connection = Jsoup.connect(url)
                     .userAgent(USER_AGENT)
                     .ignoreContentType(true)
+                    .timeout(TIMEOUT)
                     .method(method);
 
             response = connection.execute();
             response.charset(encoding == null ? ENCODING : encoding);
 
-        } catch (SocketException e) {
+        } catch (SocketException | SocketTimeoutException e) {
             //重试
             if (RETRY_TIMES > 0) {
                 RETRY_TIMES --;
@@ -51,6 +54,7 @@ public class HtmlUtils {
 
         } catch (Exception e) {
 
+            e.printStackTrace();
         }
         return response;
     }
