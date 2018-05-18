@@ -22,7 +22,7 @@ public class HtmlUtils {
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36";
     public static final String ENCODING = "GBK";
     private static int RETRY_TIMES = 5;
-    private static int TIMEOUT = 3 * 1000;
+    private static int TIMEOUT = 5 * 1000;
 
     public static Connection.Response getPage(String url,
                                               String encoding) throws IOException {

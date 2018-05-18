@@ -171,6 +171,7 @@ public class BookChapterService {
 
             int chapterNum = 1;
             for (Element element : elements) {
+
                 String title = PickRulesUtils.pickRulesTemplate.getChapterListTitle(element);
                 String link = PickRulesUtils.pickRulesTemplate.getChapterListDetailLink(element);
 
@@ -292,46 +293,8 @@ public class BookChapterService {
             }
             Document document = response.parse();
 
-            String content = "";
-
-            List<TextNode> textNodeList = document.select("#htmlContent").get(0).textNodes();
-
-
-            int [] arrShouldRemove = {0, 1, 2};
-            Iterator<TextNode> itContents = textNodeList.iterator();
-            StringBuilder sbContent = new StringBuilder();
-
-            int elementIndex = 0;
-            while (itContents.hasNext()) {
-                TextNode textNode = itContents.next();
-                boolean breakWhile = false;
-                for (int shouldRemoveIndex :
-                        arrShouldRemove) {
-                    if (shouldRemoveIndex == elementIndex) {
-                        textNode.remove();
-                        breakWhile = true;
-                        break;
-                    }
-                }
-
-                elementIndex ++;
-
-
-                if (breakWhile) {
-                    continue;
-                }
-                String tempHtml = textNode.outerHtml();
-                sbContent.append(tempHtml);
-                if (StringUtils.isNotBlank(tempHtml)) {
-                    sbContent.append("</br>");
-                }
-            }
-
-            content = sbContent.toString();
-
-
-             document.select(".readTitle").get(0).child(0).remove();
-            String title = document.select(".readTitle").text();
+            String title = PickRulesUtils.pickRulesTemplate.getChapterDetailTitle(document);
+            String content = PickRulesUtils.pickRulesTemplate.getChapterDetailContent(document);
 
             bookChapterBean.setTitle(title);
             bookChapterBean.setContent(content);

@@ -35,8 +35,6 @@ public class PickRulesBean implements Serializable {
 
     private String chapterDetailTitle;
     private String chapterDetailContent;
-    private String chapterDetailMaxPage;
-    private String chapterDetailCurrentPage;
 
     public String getId() {
         return id;
@@ -246,19 +244,4 @@ public class PickRulesBean implements Serializable {
         this.chapterDetailContent = chapterDetailContent;
     }
 
-    public String getChapterDetailMaxPage() {
-        return chapterDetailMaxPage;
-    }
-
-    public void setChapterDetailMaxPage(String chapterDetailMaxPage) {
-        this.chapterDetailMaxPage = chapterDetailMaxPage;
-    }
-
-    public String getChapterDetailCurrentPage() {
-        return chapterDetailCurrentPage;
-    }
-
-    public void setChapterDetailCurrentPage(String chapterDetailCurrentPage) {
-        this.chapterDetailCurrentPage = chapterDetailCurrentPage;
-    }
 }

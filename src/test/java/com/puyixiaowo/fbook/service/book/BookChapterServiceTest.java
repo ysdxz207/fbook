@@ -16,7 +16,7 @@ public class BookChapterServiceTest {
         DBUtils.initDB("jdbc.properties");
 
         BookBean bookBean = new BookBean();
-        bookBean.setId(439816480461160448L);
+        bookBean.setId(443514092943048154L);
 
 
         PickRulesBean pickRulesBean = new PickRulesBean();
@@ -27,7 +27,7 @@ public class BookChapterServiceTest {
 
         pickRulesBean.setChapterListItems("@Override\n" +
                 "    public Elements getChapterListItems(Document document) {\n" +
-                "        return document.select(\".panel-chapterlist dd a\");\n" +
+                "        return document.select(\"#list-chapterAll .panel-chapterlist dd a\");\n" +
                 "    }");
 
         pickRulesBean.setChapterListTitle("@Override\n" +
@@ -37,10 +37,23 @@ public class BookChapterServiceTest {
 
         pickRulesBean.setChapterListDetailLink("@Override\n" +
                 "    public String getChapterListDetailLink(Element element) {\n" +
-                "        return \"http://www.lwxsw.cc/book/\" + element.attr(\"href\");\n" +
+                "        return element.baseUri() + element.attr(\"href\");\n" +
                 "    }");
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
         System.out.println(JSON.toJSONString(BookChapterService.getGirlChapterList(bookBean.getId())));
+    }
+
+    @Test
+    public void testGetBookContentGirl() {
+        String link = "http://www.lwxsw.cc/book/12946/7554155.html";
+        PickRulesBean pickRulesBean = new PickRulesBean();
+
+        pickRulesBean.setChapterDetailTitle("");
+//        pickRulesBean.setChapterDetailContent("");
+
+
+
+        System.out.println(JSON.toJSONString(BookChapterService.getBookContentGirl(link)));
     }
 }
 
