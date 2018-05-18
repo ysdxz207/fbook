@@ -29,7 +29,6 @@ public interface PickRulesTemplate {
     public String getBookDetailCategory(Document document);
     public String getBookDetailDescription(Document document);
     public String getBookDetailFaceUrl(Document document);
-    public String getBookDetailIntro(Document document);
 
     //章节列表
     public Elements getChapterListItems(Document document);
@@ -38,9 +37,6 @@ public interface PickRulesTemplate {
     public String getChapterListDetailLink(Element element);
 
     //章节内容
-    public String getChapterDetailLink(BookBean bookBean);
     public String getChapterDetailTitle(Document document);
     public String getChapterDetailContent(Document document);
-    public String getChapterDetailMaxPage(Document document);
-    public String getChapterDetailCurrentPage(Document document);
 }

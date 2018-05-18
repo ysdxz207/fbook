@@ -12,6 +12,9 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static com.puyixiaowo.fbook.utils.HtmlUtils.*;
 
 
@@ -28,127 +31,123 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
 
     @Override
     public String getSearchLink(String keywords) {
-        return null;
+        return "http://zhannei.baidu.com/cse/search?p=0&area=1&s=6939410700241642371&q=" + keywords;
     }
 
     @Override
     public String getSearchEncoding() {
-        return null;
+        return "UTF-8";
     }
 
     @Override
     public Elements getSearchItems(Document document) {
-        return null;
+        return document.select(".result-item");
     }
 
     @Override
     public String getSearchItemBookIdThird(Element element) {
-        return null;
+        Matcher matcherBookIdThird = Pattern.compile("http\\:\\/\\/.*\\/.*\\/(.*)\\/").matcher(element.select(".result-item-title a").attr("href"));
+        String bookIdThird = matcherBookIdThird.find() ? matcherBookIdThird.group(1) : "";
+        return bookIdThird;
     }
 
     @Override
     public String getSearchItemTitle(Element element) {
-        return null;
+        return element.select(".result-item-title a").attr("title");
     }
 
     @Override
     public String getSearchItemAuthor(Element element) {
-        return null;
+        List<String> listInfos = element.select(".result-game-item-info-tag").eachText();
+        return listInfos.get(0).split("：")[1];
     }
 
     @Override
     public String getSearchItemCategory(Element element) {
-        return null;
+        List<String> listInfos = element.select(".result-game-item-info-tag").eachText();
+        return listInfos.get(1).split("：")[1].trim();
     }
 
     @Override
     public String getSearchItemUpdateDate(Element element) {
-        return null;
+        List<String> listInfos = element.select(".result-game-item-info-tag").eachText();
+        return listInfos.get(2).split("：")[1];
     }
 
     @Override
     public String getSearchItemUpdateChapter(Element element) {
-        return null;
+        List<String> listInfos = element.select(".result-game-item-info-tag").eachText();
+        return listInfos.get(3).split("：")[1];
     }
 
     @Override
     public String getSearchItemFaceUrl(Element element) {
-        return null;
+        return element.select("img").attr("src");
     }
 
     @Override
     public String getBookEncoding() {
-        return null;
+        return "GBK";
     }
 
     @Override
     public String getBookDetailLink(BookBean bookBean) {
-        return null;
+        return "http://www.lwxsw.cc/book/" + bookBean.getBookIdThird() + "/";
     }
 
     @Override
     public String getBookDetailTitle(Document document) {
-        return null;
+        return document.select(".bookTitle").text();
     }
 
     @Override
     public String getBookDetailAuthor(Document document) {
-        return null;
+        return document.select(".booktag").get(0).getAllElements().eachText().get(1);
     }
 
     @Override
     public String getBookDetailUpdateDate(Document document) {
-        return null;
+        return document.select("p.visible-xs").text().split("：")[1];
     }
 
     @Override
     public String getBookDetailUpdateChapter(Document document) {
-        return null;
+        return document.select("p").get(1).select("a").text().replace("正文 ", "");
     }
 
     @Override
     public String getBookDetailCategory(Document document) {
-        return null;
+        return document.select(".booktag").get(0).getAllElements().eachText().get(2);
     }
 
     @Override
     public String getBookDetailDescription(Document document) {
-        return null;
+        return document.select("#bookIntro").text();
     }
 
     @Override
     public String getBookDetailFaceUrl(Document document) {
-        return null;
-    }
-
-    @Override
-    public String getBookDetailIntro(Document document) {
-        return null;
+        return document.select("#bookIntro img").attr("src");
     }
 
     @Override
     public Elements getChapterListItems(Document document) {
-        return null;
+        return document.select("#list-chapterAll .panel-chapterlist dd a");
     }
 
     @Override
     public String getChapterListLink(BookBean bookBean) {
-        return null;
+        return "http://www.lwxsw.cc/book/" + bookBean.getBookIdThird() + "/";
     }
 
     @Override
     public String getChapterListTitle(Element element) {
-        return null;
+        return element.text();
     }
 
     @Override
     public String getChapterListDetailLink(Element element) {
-        return null;
-    }
-
-    @Override
-    public String getChapterDetailLink(BookBean bookBean) {
-        return null;
+        return element.baseUri() + element.attr("href");
     }
 
     @Override
@@ -212,15 +211,5 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
             }
         }
         return content;
-    }
-
-    @Override
-    public String getChapterDetailMaxPage(Document document) {
-        return null;
-    }
-
-    @Override
-    public String getChapterDetailCurrentPage(Document document) {
-        return null;
     }
 }
