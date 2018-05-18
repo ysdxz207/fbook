@@ -144,7 +144,6 @@ public class BookChapterService {
     /**
      *
      * @param bookId
-     *      目前默认书源是http://www.ggdown.com
      * @return
      */
     public static List<BookChapterBean> getGirlChapterList(Long bookId) {

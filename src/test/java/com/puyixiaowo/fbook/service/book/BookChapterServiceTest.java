@@ -13,7 +13,6 @@ public class BookChapterServiceTest {
 
         BookBean bookBean = new BookBean();
         bookBean.setId(439816480461160448L);
-        bookBean.setaId("12946");
 
 
         PickRulesBean pickRulesBean = new PickRulesBean();
