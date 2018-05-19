@@ -26,6 +26,7 @@ CREATE TABLE `book` (
   `url`      VARCHAR(512)           DEFAULT NULL,
   `create_time`     INTEGER(13) DEFAULT '0',
   `is_over`     INTEGER(2) DEFAULT '0',
+  `use_api`     INTEGER(4) DEFAULT '1',
   PRIMARY KEY (`id`)
 );
 

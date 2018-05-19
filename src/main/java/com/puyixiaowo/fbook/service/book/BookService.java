@@ -186,6 +186,7 @@ public class BookService {
         bookBean.setAuthor(json.getString("author"));
         bookBean.setFaceUrl(cover);
         bookBean.setBookInfo(bookInfo);
+        bookBean.setUseApi(true);
         return bookBean;
     }
 
@@ -197,8 +198,8 @@ public class BookService {
                     PickRulesUtils.pickRulesTemplate.getBookEncoding());
 
             if (response == null) {
-                logger.info("[girl获取书籍信息失败]response为空");
-                throw new RuntimeException("[girl获取书籍信息失败]response为空");
+                logger.info("[pick获取书籍信息失败]response为空");
+                throw new RuntimeException("[pick获取书籍信息失败]response为空");
             }
             Document document = response.parse();
 
@@ -222,6 +223,7 @@ public class BookService {
             bookBean.setAuthor(author);
             bookBean.setFaceUrl(faceUrl);
             bookBean.setBookInfo(bookInfo);
+            bookBean.setUseApi(false);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -398,7 +400,7 @@ public class BookService {
                 bookBeanList.add(bookBean);
             }
         } catch (Exception e) {
-            logger.info("[获取搜索列表失败][girl]:" + e.getMessage() == null ? JSON.toJSONString(e) : e.getMessage());
+            logger.info("[获取搜索列表失败][pick]:" + e.getMessage() == null ? JSON.toJSONString(e) : e.getMessage());
             throw new RuntimeException("获取搜索列表失败");
         }
 

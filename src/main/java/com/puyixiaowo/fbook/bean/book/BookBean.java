@@ -20,6 +20,7 @@ public class BookBean extends Validatable implements Serializable{
 	private String url;
 	private Long createTime;
 	private Integer isOver;
+	private Boolean useApi;
 
 
 	//
@@ -106,5 +107,13 @@ public class BookBean extends Validatable implements Serializable{
 
 	public void setOnShelf(Boolean onShelf) {
 		this.onShelf = onShelf;
+	}
+
+	public Boolean getUseApi() {
+		return useApi;
+	}
+
+	public void setUseApi(Boolean useApi) {
+		this.useApi = useApi;
 	}
 }
