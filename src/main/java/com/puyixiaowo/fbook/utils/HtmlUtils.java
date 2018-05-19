@@ -1,6 +1,5 @@
 package com.puyixiaowo.fbook.utils;
 
-import com.puyixiaowo.fbook.enums.Encoding;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;

@@ -1,6 +1,5 @@
 package com.puyixiaowo.fbook.constants;
 
-import com.puyixiaowo.fbook.enums.Encoding;
 
 /**
  * 

@@ -144,47 +144,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>com.samaxes.maven</groupId>
-                <artifactId>minify-maven-plugin</artifactId>
-                <version>1.7.6</version>
-                <executions>
-                    <execution>
-                        <id>default-minify</id>
-                        <phase>prepare-package</phase>
-                        <configuration>
-                            <charset>UTF-8</charset>
-                            <skipMerge>true</skipMerge> <!-- do not create one big file -->
-                            <nosuffix>true</nosuffix> <!-- do not use suffix like 'min' -->
 
-                            <!--资源根目录-->
-                            <webappSourceDir>${basedir}/src/main/resources</webappSourceDir>
-                            <!--覆盖未压缩的文件-->
-                            <webappTargetDir>${project.build.directory}/classes</webappTargetDir>
-                            <cssSourceDir>/static_resources</cssSourceDir>
-                            <cssSourceIncludes>
-                                <cssSourceInclude>**/*.css</cssSourceInclude>
-                            </cssSourceIncludes>
-                            <cssSourceExcludes>
-                                <cssSourceExclude>**/*.min.css</cssSourceExclude>
-                            </cssSourceExcludes>
-
-                            <!--js-->
-                            <jsSourceDir>/static_resources</jsSourceDir>
-                            <jsSourceIncludes>
-                                <jsSourceInclude>**/*.js</jsSourceInclude>
-                            </jsSourceIncludes>
-                            <jsSourceExcludes>
-                                <jsSourceExclude>**/*.min.js</jsSourceExclude>
-                            </jsSourceExcludes>
-
-                        </configuration>
-                        <goals>
-                            <goal>minify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 

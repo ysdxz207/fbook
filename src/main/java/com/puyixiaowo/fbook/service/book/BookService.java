@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fbook.bean.UserBean;
-import com.puyixiaowo.fbook.bean.book.*;
+import com.puyixiaowo.fbook.bean.book.BookBean;
+import com.puyixiaowo.fbook.bean.book.BookInfo;
+import com.puyixiaowo.fbook.bean.book.BookReadSettingBean;
+import com.puyixiaowo.fbook.bean.book.BookSource;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.constants.BookConstants;
 import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.enums.EnumChannel;
-import com.puyixiaowo.fbook.enums.EnumSourceGirl;
 import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.HtmlUtils;
 import com.puyixiaowo.fbook.utils.HttpUtils;
@@ -28,8 +30,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Moses
@@ -216,7 +216,7 @@ public class BookService {
 
             if (response == null) {
                 logger.info("[girl获取书籍信息失败]response为空");
-                return null;
+                throw new RuntimeException("[girl获取书籍信息失败]response为空");
             }
             Document document = response.parse();
 
@@ -301,8 +301,6 @@ public class BookService {
     private static BookSource getBookSourceGirl() {
 
         BookSource bookSource = new BookSource();
-        bookSource.setName(EnumSourceGirl.LWXSW.name);
-        bookSource.setSource(EnumSourceGirl.LWXSW.sourceId);
         return bookSource;
     }
 
