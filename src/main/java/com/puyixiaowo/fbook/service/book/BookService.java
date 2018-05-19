@@ -16,6 +16,7 @@ import com.puyixiaowo.fbook.utils.HtmlUtils;
 import com.puyixiaowo.fbook.utils.HttpUtils;
 import com.puyixiaowo.fbook.utils.StringUtils;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
+import com.puyixiaowo.generator.Run;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Connection;
@@ -122,6 +123,13 @@ public class BookService {
                                              BookBean bookBean) {
 
         BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userBean.getId());
+
+
+        if (!bookReadSettingBean.getUseApi()
+                .equals(bookBean.getUseApi())) {
+            String msg = bookBean.getUseApi() ? "[接口书籍]请将设置中使用接口源打开" : "[非接口书籍]请将设置中使用接口源关闭";
+            throw new RuntimeException(msg);
+        }
 
         if (bookReadSettingBean.getUseApi()) {
             return getBookDetailByApi(bookBean);

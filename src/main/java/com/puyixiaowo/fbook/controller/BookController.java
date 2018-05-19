@@ -52,8 +52,7 @@ public class BookController extends BaseController {
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
 
             bookBean = getParamsEntity(request, BookBean.class, true, false);
-            bookBean = BookService.requestBookDetail(userBean,
-                    bookBean);
+
 
 
             //保存或更新书籍信息
@@ -61,6 +60,9 @@ public class BookController extends BaseController {
             if (bookBeanDB != null) {
                 bookBean.setId(bookBeanDB.getId());
             }
+
+            bookBean = BookService.requestBookDetail(userBean,
+                    bookBeanDB);
             DBUtils.insertOrUpdate(bookBean, false);
 
             //是否在书架里
@@ -273,7 +275,7 @@ public class BookController extends BaseController {
             }
 
             bookBean = BookService.requestBookDetail(userBean,
-                    bookBean);
+                    bookBeanDB);
 
             if (bookBean == null) {
                 return responseBean.errorMessage("书籍不存在");
