@@ -64,9 +64,9 @@ public class BookChapterService {
         //根据频道获取章节信息
 
         if (bookReadSettingBean.getUseApi()) {
-            list = getByApiChapterList(bookId, source);
+            list = getChapterListByApi(bookId, source);
         } else {
-            list = getByPickChapterList(bookId);
+            list = getChapterListByPick(bookId);
         }
 
         if (bookReadBean.getId() == null) {
@@ -84,8 +84,8 @@ public class BookChapterService {
         return list;
     }
 
-    public static List<BookChapterBean> getByApiChapterList(Long bookId,
-                                                          String source) {
+    public static List<BookChapterBean> getChapterListByApi(Long bookId,
+                                                            String source) {
 
         List<BookChapterBean> list = new ArrayList<>();
         String url = BookConstants.URL_CHAPTERS + source + "?view=chapters";
@@ -134,7 +134,7 @@ public class BookChapterService {
      * @param bookId
      * @return
      */
-    public static List<BookChapterBean> getByPickChapterList(Long bookId) {
+    public static List<BookChapterBean> getChapterListByPick(Long bookId) {
 
         List<BookChapterBean> list = new ArrayList<>();
 

@@ -10,6 +10,7 @@ import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.exception.DBObjectExistsException;
 import com.puyixiaowo.fbook.service.LoginService;
 import com.puyixiaowo.fbook.service.UserService;
+import com.puyixiaowo.fbook.service.book.BookReadSettingService;
 import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.DesUtils;
 import com.puyixiaowo.fbook.utils.Md5Utils;
@@ -299,6 +300,22 @@ public class LoginController extends BaseController {
             userBeanDB.setNickname(userBean.getNickname());
 
             DBUtils.insertOrUpdate(userBeanDB, false);
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+
+        return responseBean;
+    }
+
+    public static ResponseBean getReadingSetting(Request request,
+                                                 Response response) {
+        ResponseBean responseBean = new ResponseBean();
+        try {
+            UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
+
+            BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userBean.getId());
+
+            responseBean.setData(bookReadSettingBean);
         } catch (Exception e) {
             responseBean.error(e);
         }

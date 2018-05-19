@@ -40,7 +40,7 @@ public class BookChapterServiceTest {
                 "        return element.baseUri() + element.attr(\"href\");\n" +
                 "    }");
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
-        System.out.println(JSON.toJSONString(BookChapterService.getByPickChapterList(bookBean.getId())));
+        System.out.println(JSON.toJSONString(BookChapterService.getChapterListByPick(bookBean.getId())));
     }
 
     @Test

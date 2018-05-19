@@ -175,7 +175,7 @@ public class BookController extends BaseController {
         return responseBean;
     }
 
-    public static Object saveBookReadSetting(Request request,
+    public static ResponseBean saveBookReadSetting(Request request,
                                              Response response) {
         ResponseBean responseBean = new ResponseBean();
 
@@ -190,7 +190,7 @@ public class BookController extends BaseController {
             //读书配置不存在
             if (bookReadSettingBean == null) {
                 responseBean.errorMessage("配置不存在");
-                return responseBean.serialize();
+                return responseBean;
             }
             //更新读书配置
             if (bookReadSettingBeanDB != null) {
@@ -214,7 +214,7 @@ public class BookController extends BaseController {
             responseBean.error(e);
         }
 
-        return responseBean.serialize();
+        return responseBean;
     }
 
     public static PageBean search(Request request, Response response) {
