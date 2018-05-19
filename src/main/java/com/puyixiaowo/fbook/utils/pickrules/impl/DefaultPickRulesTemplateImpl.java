@@ -31,7 +31,7 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
 
     @Override
     public String getSearchLink(String keywords) {
-        return "http://zhannei.baidu.com/cse/search?p=0&area=1&s=6939410700241642371&q=" + keywords;
+        return "http://zhannei.baidu.com/cse/search?entry=1&s=6939410700241642371&srt=def&nsid=0&q=" + keywords;
     }
 
     @Override

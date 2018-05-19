@@ -1,5 +1,6 @@
 package com.puyixiaowo.fbook.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
 import com.puyixiaowo.fbook.bean.UserBean;
 import com.puyixiaowo.fbook.bean.book.BookReadSettingBean;
@@ -300,6 +301,9 @@ public class LoginController extends BaseController {
             userBeanDB.setNickname(userBean.getNickname());
 
             DBUtils.insertOrUpdate(userBeanDB, false);
+            //更新session
+            request.session().attribute(Constants.SESSION_USER_KEY, userBeanDB);
+
         } catch (Exception e) {
             responseBean.error(e);
         }
@@ -307,7 +311,7 @@ public class LoginController extends BaseController {
         return responseBean;
     }
 
-    public static ResponseBean getReadingSetting(Request request,
+    public static ResponseBean getUserSetting(Request request,
                                                  Response response) {
         ResponseBean responseBean = new ResponseBean();
         try {
@@ -315,7 +319,11 @@ public class LoginController extends BaseController {
 
             BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userBean.getId());
 
-            responseBean.setData(bookReadSettingBean);
+            JSONObject json = new JSONObject();
+            userBean.setPassword(null);
+            json.put("user", userBean);
+            json.put("bookReadSetting", bookReadSettingBean);
+            responseBean.setData(json);
         } catch (Exception e) {
             responseBean.error(e);
         }

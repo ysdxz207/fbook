@@ -34,8 +34,8 @@ public class Routes {
             post("/chapter", ((request, response) ->
                     BookController.chapterContent(request, response)));
 
-            post("/getReadingSetting", ((request, response) ->
-                    LoginController.getReadingSetting(request, response)));
+            post("/getUserSetting", ((request, response) ->
+                    LoginController.getUserSetting(request, response)));
 
             post("/saveReadingSetting", ((request, response) ->
                     BookController.saveBookReadSetting(request, response)));
