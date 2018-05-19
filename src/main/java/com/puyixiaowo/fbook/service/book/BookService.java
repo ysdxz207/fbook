@@ -11,7 +11,6 @@ import com.puyixiaowo.fbook.bean.book.BookSource;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.constants.BookConstants;
 import com.puyixiaowo.fbook.constants.Constants;
-import com.puyixiaowo.fbook.enums.EnumChannel;
 import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.HtmlUtils;
 import com.puyixiaowo.fbook.utils.HttpUtils;
@@ -91,19 +90,10 @@ public class BookService {
                                              PageBean pageBean) {
         BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userBean.getId());
 
-        EnumChannel channel = EnumChannel.getEnum(bookReadSettingBean.getChannel());
-
-        switch (channel) {
-            case boy:
-                pageBean = searchBoy(keywords, pageBean);
-                break;
-
-            case girl:
-                pageBean = searchGirl(keywords, pageBean);
-                break;
-
-            default:
-                return pageBean;
+        if (bookReadSettingBean.getUseApi()) {
+            pageBean = searchByApi(keywords, pageBean);
+        } else {
+            pageBean = searchByPick(keywords, pageBean);
         }
 
         return pageBean;
@@ -133,24 +123,16 @@ public class BookService {
 
         BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userBean.getId());
 
-        EnumChannel channel = EnumChannel.getEnum(bookReadSettingBean.getChannel());
-
-        switch (channel) {
-            case boy:
-                return getBookDetailBoy(bookBean);
-
-            case girl:
-                return getBookDetailGirl(bookBean);
-
-            default:
-                return null;
+        if (bookReadSettingBean.getUseApi()) {
+            return getBookDetailByApi(bookBean);
+        } else {
+            return getBookDetailByPick(bookBean);
         }
-
 
     }
 
 
-    private static BookBean getBookDetailBoy(BookBean bookBean) {
+    private static BookBean getBookDetailByApi(BookBean bookBean) {
         if (bookBean == null
                 || bookBean.getBookIdThird() == null) {
             return null;
@@ -207,7 +189,7 @@ public class BookService {
         return bookBean;
     }
 
-    public static BookBean getBookDetailGirl(BookBean bookBean) {
+    public static BookBean getBookDetailByPick(BookBean bookBean) {
 
         try {
             String url = PickRulesUtils.pickRulesTemplate.getBookDetailLink(bookBean);
@@ -283,28 +265,20 @@ public class BookService {
                                               String bookIdThird) {
         BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userId);
 
-        //根据频道获取章节信息
-        EnumChannel channel = EnumChannel.getEnum(bookReadSettingBean.getChannel());
-
-        switch (channel) {
-            case boy:
-                return getBookSourceBoy(bookIdThird);
-
-            case girl:
-                return getBookSourceGirl();
-
-            default:
+        if (bookReadSettingBean.getUseApi()) {
+            return getBookSourceByApi(bookIdThird);
+        } else{
+            return getBookSourceByPick();
         }
-        return getBookSourceBoy(bookIdThird);
     }
 
-    private static BookSource getBookSourceGirl() {
+    private static BookSource getBookSourceByPick() {
 
         BookSource bookSource = new BookSource();
         return bookSource;
     }
 
-    public static BookSource getBookSourceBoy(String bookIdThird) {
+    public static BookSource getBookSourceByApi(String bookIdThird) {
         List<BookSource> bookSourceList = getBookSource(bookIdThird);
 
         if (bookSourceList.size() == 1) {
@@ -321,7 +295,7 @@ public class BookService {
         return DBUtils.selectOne(BookBean.class, "select * from book where book_id_third=:bookIdThird", params);
     }
 
-    public static PageBean searchBoy(String keywords, PageBean pageBean) {
+    public static PageBean searchByApi(String keywords, PageBean pageBean) {
         List<BookBean> bookBeanList = new ArrayList<>();
 
         Map<String, String> params = new HashMap<>();
@@ -382,8 +356,8 @@ public class BookService {
         return pageBean;
     }
 
-    public static PageBean searchGirl(String keywords,
-                                       PageBean pageBean) {
+    public static PageBean searchByPick(String keywords,
+                                      PageBean pageBean) {
         List<BookBean> bookBeanList = new ArrayList<>();
 
         try {
@@ -395,7 +369,6 @@ public class BookService {
                 throw new RuntimeException("搜索接口未响应");
             }
             Document document = response.parse();
-
 
 
             Elements elements = PickRulesUtils.pickRulesTemplate.getSearchItems(document);

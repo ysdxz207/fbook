@@ -10,15 +10,12 @@ import com.puyixiaowo.fbook.bean.book.BookReadBean;
 import com.puyixiaowo.fbook.bean.book.BookReadSettingBean;
 import com.puyixiaowo.fbook.constants.BookConstants;
 import com.puyixiaowo.fbook.constants.Constants;
-import com.puyixiaowo.fbook.enums.EnumChannel;
 import com.puyixiaowo.fbook.enums.EnumSort;
 import com.puyixiaowo.fbook.utils.*;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
-import com.puyixiaowo.generator.Run;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +25,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,19 +62,11 @@ public class BookChapterService {
         }
 
         //根据频道获取章节信息
-        EnumChannel channel = EnumChannel.getEnum(bookReadSettingBean.getChannel());
 
-        switch (channel) {
-            case boy:
-                list = getBoyChapterList(bookId, source);
-                break;
-
-            case girl:
-                list = getGirlChapterList(bookId);
-                break;
-
-                default:
-                    return list;
+        if (bookReadSettingBean.getUseApi()) {
+            list = getByApiChapterList(bookId, source);
+        } else {
+            list = getByPickChapterList(bookId);
         }
 
         if (bookReadBean.getId() == null) {
@@ -96,7 +84,7 @@ public class BookChapterService {
         return list;
     }
 
-    public static List<BookChapterBean> getBoyChapterList(Long bookId,
+    public static List<BookChapterBean> getByApiChapterList(Long bookId,
                                                           String source) {
 
         List<BookChapterBean> list = new ArrayList<>();
@@ -146,7 +134,7 @@ public class BookChapterService {
      * @param bookId
      * @return
      */
-    public static List<BookChapterBean> getGirlChapterList(Long bookId) {
+    public static List<BookChapterBean> getByPickChapterList(Long bookId) {
 
         List<BookChapterBean> list = new ArrayList<>();
 
@@ -215,22 +203,15 @@ public class BookChapterService {
 
         BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userBean.getId());
 
-        EnumChannel channel = EnumChannel.getEnum(bookReadSettingBean.getChannel());
-
-        switch (channel) {
-            case boy:
-                return getBookContentBoy(link);
-
-            case girl:
-                return getBookContentGirl(link);
-
-            default:
+        if (bookReadSettingBean.getUseApi()) {
+            return getBookContentByApi(link);
+        } else{
+            return getBookContentByPick(link);
         }
 
-        return null;
     }
 
-    public static BookChapterBean getBookContentBoy(String link) {
+    public static BookChapterBean getBookContentByApi(String link) {
 
         String linkDecode = "";
 
@@ -281,7 +262,7 @@ public class BookChapterService {
         return null;
     }
 
-    public static BookChapterBean getBookContentGirl(String link) {
+    public static BookChapterBean getBookContentByPick(String link) {
         BookChapterBean bookChapterBean = new BookChapterBean();
 
         try {
@@ -428,7 +409,7 @@ public class BookChapterService {
     public static void main(String[] args) throws Exception {
 
 
-        System.out.println(JSON.toJSONString(getBookContentGirl("http://www.lwxsw.cc/book/7153/4096497_2.html")));
+        System.out.println(JSON.toJSONString(getBookContentByPick("http://www.lwxsw.cc/book/7153/4096497_2.html")));
     }
 
 }

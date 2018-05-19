@@ -11,7 +11,7 @@ public class BookChapterServiceTest {
 
 
     @Test
-    public void testGetGirlChapterList() throws Exception {
+    public void testGetByPickChapterList() throws Exception {
 
         DBUtils.initDB("jdbc.properties");
 
@@ -40,11 +40,11 @@ public class BookChapterServiceTest {
                 "        return element.baseUri() + element.attr(\"href\");\n" +
                 "    }");
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
-        System.out.println(JSON.toJSONString(BookChapterService.getGirlChapterList(bookBean.getId())));
+        System.out.println(JSON.toJSONString(BookChapterService.getByPickChapterList(bookBean.getId())));
     }
 
     @Test
-    public void testGetBookContentGirl() {
+    public void testGetBookContentByPick() {
         String link = "http://www.lwxsw.cc/book/12946/7554155.html";
         PickRulesBean pickRulesBean = new PickRulesBean();
 
@@ -53,7 +53,7 @@ public class BookChapterServiceTest {
 
 
 
-        System.out.println(JSON.toJSONString(BookChapterService.getBookContentGirl(link)));
+        System.out.println(JSON.toJSONString(BookChapterService.getBookContentByPick(link)));
     }
 }
 

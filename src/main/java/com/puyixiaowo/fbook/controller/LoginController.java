@@ -3,12 +3,13 @@ package com.puyixiaowo.fbook.controller;
 import com.google.code.kaptcha.Producer;
 import com.puyixiaowo.fbook.bean.UserBean;
 import com.puyixiaowo.fbook.bean.book.BookReadSettingBean;
-import com.puyixiaowo.fbook.bean.book.BookshelfBean;
 import com.puyixiaowo.fbook.bean.error.LoginError;
+import com.puyixiaowo.fbook.bean.error.UserError;
 import com.puyixiaowo.fbook.bean.sys.ResponseBean;
 import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.exception.DBObjectExistsException;
 import com.puyixiaowo.fbook.service.LoginService;
+import com.puyixiaowo.fbook.service.UserService;
 import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.DesUtils;
 import com.puyixiaowo.fbook.utils.Md5Utils;
@@ -281,4 +282,27 @@ public class LoginController extends BaseController {
     }
 
 
+    public static ResponseBean editUserInfo(Request request,
+                                      Response response) {
+        ResponseBean responseBean = new ResponseBean();
+        try {
+            UserBean userBean = getParamsEntity(request, UserBean.class, false, false);
+            UserBean userBeanSession = request.session().attribute(Constants.SESSION_USER_KEY);
+
+
+            UserBean userBeanDB = UserService.selectUserById(userBeanSession.getId());
+
+            if (userBeanDB == null) {
+                return responseBean.error(UserError.NOT_EXISTS_ERROR);
+            }
+
+            userBeanDB.setNickname(userBean.getNickname());
+
+            DBUtils.insertOrUpdate(userBeanDB, false);
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+
+        return responseBean;
+    }
 }

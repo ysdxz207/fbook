@@ -10,7 +10,7 @@ import org.junit.Test;
 public class BookServiceTest {
 
     @Test
-    public void testSearchGirl() throws Exception {
+    public void testSearchByPick() throws Exception {
 
         PickRulesBean pickRulesBean = new PickRulesBean();
 
@@ -80,12 +80,12 @@ public class BookServiceTest {
 
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
         PageBean pageBean = new PageBean();
-        BookService.searchGirl("道君", pageBean);
+        BookService.searchByPick("道君", pageBean);
         System.out.println(JSON.toJSONString(pageBean));
     }
 
     @Test
-    public void testGetBookDetailGirl() {
+    public void testGetBookDetailByPick() {
         PickRulesBean pickRulesBean = new PickRulesBean();
         BookBean bookBean = new BookBean();
         bookBean.setBookIdThird("12946");
@@ -135,7 +135,7 @@ public class BookServiceTest {
 
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
 
-        bookBean = BookService.getBookDetailGirl(bookBean);
+        bookBean = BookService.getBookDetailByPick(bookBean);
         System.out.println(JSON.toJSONString(bookBean));
     }
 }

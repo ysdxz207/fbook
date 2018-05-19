@@ -73,7 +73,7 @@ CREATE TABLE `book_read_setting` (
   `font_size`        INTEGER(6) DEFAULT '23',
   `line_height`        INTEGER(6) DEFAULT '28',
   `sort`        INTEGER(4) DEFAULT '0',
-  `channel`     VARCHAR(32) DEFAULT 'boy',
+  `is_api`     INTEGER(4) DEFAULT '1',
 
   PRIMARY KEY (`id`)
 );

@@ -52,6 +52,8 @@ public class Routes {
                     BookController.changeBookSource(request, response)));
             post("/saveBookRead", ((request, response) ->
                     BookController.saveBookRead(request, response)));
+            post("/editUserInfo", ((request, response) ->
+                    LoginController.editUserInfo(request, response)));
         });
     }
 }
