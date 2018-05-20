@@ -56,13 +56,9 @@ public class BookController extends BaseController {
 
 
             //保存或更新书籍信息
-            BookBean bookBeanDB = BookService.selectBookBeanByBookIdThird(bookBean.getBookIdThird());
-            if (bookBeanDB != null) {
-                bookBean.setId(bookBeanDB.getId());
-            }
 
             bookBean = BookService.requestBookDetail(userBean,
-                    bookBeanDB);
+                    bookBean);
             DBUtils.insertOrUpdate(bookBean, false);
 
             //是否在书架里
@@ -268,14 +264,10 @@ public class BookController extends BaseController {
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
 
             BookBean bookBean = getParamsEntity(request, BookBean.class, true, false);
-            BookBean bookBeanDB = BookService.selectBookBeanByBookIdThird(bookBean.getBookIdThird());
 
-            if (bookBeanDB != null) {
-                bookBean.setId(bookBeanDB.getId());
-            }
 
             bookBean = BookService.requestBookDetail(userBean,
-                    bookBeanDB);
+                    bookBean);
 
             if (bookBean == null) {
                 return responseBean.errorMessage("书籍不存在");
@@ -333,7 +325,7 @@ public class BookController extends BaseController {
     public static Object changeBookSource(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
         String bookIdThird = request.queryParams("bookIdThird");
-        String source = request.queryParams("source");
+        String sourceId = request.queryParams("sourceId");
         String bookIdStr = request.queryParams("bookId");
 
         if (StringUtils.isBlank(bookIdThird)) {
@@ -349,7 +341,7 @@ public class BookController extends BaseController {
             BookReadBean bookReadBean = BookReadService
                     .getUserBookRead(userBean.getId(), bookId);
 
-            bookReadBean.setSource(source);
+            bookReadBean.setSource(sourceId);
             DBUtils.insertOrUpdate(bookReadBean, false);
             //切换书源后需要查询出当前章Link
             List<BookChapterBean> bookChapterBeanList = BookChapterService

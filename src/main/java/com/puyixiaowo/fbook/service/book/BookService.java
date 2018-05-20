@@ -121,11 +121,17 @@ public class BookService {
 
     public static BookBean requestBookDetail(UserBean userBean,
                                              BookBean bookBean) {
+        BookBean bookBeanDB = BookService.selectBookBeanByBookIdThird(bookBean.getBookIdThird());
 
+        if (bookBeanDB != null) {
+            bookBean.setId(bookBeanDB.getId());
+            bookBean.setUseApi(bookBeanDB.getUseApi());
+        }
         BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userBean.getId());
 
 
-        if (!bookReadSettingBean.getUseApi()
+        if (bookBeanDB != null
+            && !bookReadSettingBean.getUseApi()
                 .equals(bookBean.getUseApi())) {
             String msg = bookBean.getUseApi() ? "[接口书籍]请将设置中使用接口源打开" : "[非接口书籍]请将设置中使用接口源关闭";
             throw new RuntimeException(msg);
