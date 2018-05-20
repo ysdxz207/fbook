@@ -31,18 +31,23 @@ public class BookController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(BookController.class);
 
 
-    public static PageBean bookShelf(Request request, Response response) {
-        PageBean pageBean = getPageBean(request);
+    public static ResponseBean bookShelf(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
+        JSONObject json = new JSONObject();
 
         try {
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
             List<BookBean> list = BookService.getUserBookList(userBean.getId());
-            pageBean.setList(list);
+            BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userBean.getId());
+            json.put("bookList", list);
+            json.put("bookReadSetting", bookReadSettingBean);
+            responseBean.setData(json);
+
         } catch (Exception e) {
-            pageBean.error(e);
+            responseBean.error(e);
         }
 
-        return pageBean;
+        return responseBean;
     }
 
     public static ResponseBean bookDetail(Request request, Response response) {
