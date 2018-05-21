@@ -13,6 +13,8 @@ public class PickRulesBean extends Validatable implements Serializable {
 
     private String searchEncoding;
     private String searchLink;
+    private String searchMethod;
+    private String searchParams;
     private String searchItems;
     private String searchItemBookIdThird;
     private String searchItemTitle;
@@ -61,6 +63,22 @@ public class PickRulesBean extends Validatable implements Serializable {
 
     public void setSearchLink(String searchLink) {
         this.searchLink = searchLink;
+    }
+
+    public String getSearchParams() {
+        return searchParams;
+    }
+
+    public void setSearchParams(String searchParams) {
+        this.searchParams = searchParams;
+    }
+
+    public String getSearchMethod() {
+        return searchMethod;
+    }
+
+    public void setSearchMethod(String searchMethod) {
+        this.searchMethod = searchMethod;
     }
 
     public String getSearchItems() {

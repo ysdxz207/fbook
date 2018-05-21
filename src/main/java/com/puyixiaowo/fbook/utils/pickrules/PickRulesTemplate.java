@@ -1,5 +1,6 @@
 package com.puyixiaowo.fbook.utils.pickrules;
 
+import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fbook.bean.book.BookBean;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,6 +10,8 @@ public interface PickRulesTemplate {
 
     //搜索
     public String getSearchLink(String keywords);
+    public JSONObject getSearchParams(String keywords);
+    public String getSearchMethod();
     public String getSearchEncoding();
     public Elements getSearchItems(Document document);
     public String getSearchItemBookIdThird(Element element);
@@ -39,4 +42,5 @@ public interface PickRulesTemplate {
     //章节内容
     public String getChapterDetailTitle(Document document);
     public String getChapterDetailContent(Document document);
+
 }

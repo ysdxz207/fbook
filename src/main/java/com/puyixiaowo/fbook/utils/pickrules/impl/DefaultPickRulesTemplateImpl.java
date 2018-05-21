@@ -1,5 +1,6 @@
 package com.puyixiaowo.fbook.utils.pickrules.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fbook.bean.book.BookBean;
 import static com.puyixiaowo.fbook.utils.StringUtils.*;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesTemplate;
@@ -32,6 +33,16 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
     @Override
     public String getSearchLink(String keywords) {
         return "http://zhannei.baidu.com/cse/search?entry=1&s=6939410700241642371&srt=def&nsid=0&q=" + keywords;
+    }
+
+    @Override
+    public JSONObject getSearchParams(String keywords) {
+        return null;
+    }
+
+    @Override
+    public String getSearchMethod() {
+        return "GET";
     }
 
     @Override
@@ -201,7 +212,7 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
 
         if (currentpagenum < maxpagenum) {
             String url = document.baseUri().replace(".html", "_" + (currentpagenum + 1) + ".html");
-            Connection.Response response = accessPage(url, Connection.Method.GET, "GBK");
+            Connection.Response response = accessPage(url, null, Connection.Method.GET, "GBK");
             if (response != null) {
                 try {
                     return content + getChapterDetailContent(response.parse());

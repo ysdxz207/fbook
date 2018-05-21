@@ -378,8 +378,20 @@ public class BookService {
 
         try {
             String url = PickRulesUtils.pickRulesTemplate.getSearchLink(keywords);
-            Connection.Response response = HtmlUtils.getPage(url,
-                    PickRulesUtils.pickRulesTemplate.getSearchEncoding());
+            JSONObject params = PickRulesUtils.pickRulesTemplate.getSearchParams(keywords);
+            String method = PickRulesUtils.pickRulesTemplate.getSearchMethod();
+            Connection.Response response;
+
+            switch (method) {
+                default:
+                case "GET":
+                    response = HtmlUtils.getPage(url,
+                            PickRulesUtils.pickRulesTemplate.getSearchEncoding());
+                    break;
+                    case "POST":
+                    response = HtmlUtils.postPage(url, params, PickRulesUtils.pickRulesTemplate.getSearchEncoding());
+                    break;
+            }
 
             if (response == null) {
                 throw new RuntimeException("搜索接口未响应");

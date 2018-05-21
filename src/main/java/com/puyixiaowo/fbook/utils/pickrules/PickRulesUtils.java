@@ -43,6 +43,7 @@ public class PickRulesUtils {
             sb.append("import org.jsoup.select.*;\n\n");
             sb.append("import java.util.regex.*;\n\n");
             sb.append("import java.util.*;\n\n");
+            sb.append("import com.alibaba.fastjson.*;\n\n");
             sb.append("import static com.puyixiaowo.fbook.utils.StringUtils.*;\n\n");
             sb.append("import static com.puyixiaowo.fbook.utils.HtmlUtils.accessPage;\n\n");
             sb.append("public class " + CLASS_NAME_DEFAULT_TEMPLATE_IMPL + " extends " + CLASS_DEFAULT_TEMPLATE_IMPL + " implements " + PACKAGE_NAME_INTERFACE + ".PickRulesTemplate {");

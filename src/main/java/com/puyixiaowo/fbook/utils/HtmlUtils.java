@@ -1,5 +1,7 @@
 package com.puyixiaowo.fbook.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -8,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.Map;
 
 /**
  *
@@ -25,14 +28,15 @@ public class HtmlUtils {
 
     public static Connection.Response getPage(String url,
                                               String encoding) throws IOException {
-        return accessPage(url, Connection.Method.GET, encoding);
+        return accessPage(url, null, Connection.Method.GET, encoding);
     }
 
-    public static Connection.Response postPage(String url, String encoding) throws IOException {
-        return accessPage(url, Connection.Method.POST, encoding);
+    public static Connection.Response postPage(String url, JSONObject params, String encoding) throws IOException {
+        return accessPage(url, params, Connection.Method.POST, encoding);
     }
 
     public static Connection.Response accessPage(String url,
+                                                 JSONObject params,
                                                  Connection.Method method,
                                                  String encoding) {
 
@@ -44,6 +48,11 @@ public class HtmlUtils {
                     .timeout(TIMEOUT)
                     .method(method);
 
+            if (params != null
+                    && params.size() > 0) {
+                connection.data(JSON.toJavaObject(params, Map.class));
+            }
+
             response = connection.execute();
             response.charset(encoding == null ? ENCODING : encoding);
 
@@ -52,7 +61,7 @@ public class HtmlUtils {
             if (RETRY_TIMES > 0) {
                 RETRY_TIMES --;
                 logger.info("[访问重试]:" + url);
-                return accessPage(url, method, encoding);
+                return accessPage(url, params, method, encoding);
             }
 
         } catch (Exception e) {
@@ -61,5 +70,4 @@ public class HtmlUtils {
         }
         return response;
     }
-
 }
