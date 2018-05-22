@@ -16,7 +16,7 @@ public class BookServiceTestClass {
     @Test
     public void testSearchByPick() throws Exception {
 
-        PickRulesUtils.updatePickRulesTemplate(Two3usPickRulesTemplateImpl.class);
+        PickRulesUtils.getPickRulesTemplate(Two3usPickRulesTemplateImpl.class);
         PageBean pageBean = new PageBean();
         BookService.searchByPick("地球上线", pageBean);
         System.out.println(JSON.toJSONString(pageBean));
@@ -71,7 +71,7 @@ public class BookServiceTestClass {
                 "    }");
 
 
-        PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
+        PickRulesUtils.getPickRulesTemplate(pickRulesBean);
 
         bookBean = BookService.getBookDetailByPick(bookBean);
         System.out.println(JSON.toJSONString(bookBean));

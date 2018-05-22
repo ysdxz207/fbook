@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fbook.bean.UserBean;
-import com.puyixiaowo.fbook.bean.book.BookBean;
-import com.puyixiaowo.fbook.bean.book.BookInfo;
-import com.puyixiaowo.fbook.bean.book.BookReadSettingBean;
-import com.puyixiaowo.fbook.bean.book.BookSource;
+import com.puyixiaowo.fbook.bean.book.*;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.constants.BookConstants;
 import com.puyixiaowo.fbook.constants.Constants;
@@ -207,9 +204,9 @@ public class BookService {
     public static BookBean getBookDetailByPick(BookBean bookBean) {
 
         try {
-            String url = PickRulesUtils.pickRulesTemplate.getBookDetailLink(bookBean);
+            String url = PickRulesUtils.getPickRulesTemplate().getBookDetailLink(bookBean);
             Connection.Response response = HtmlUtils.getPage(url,
-                    PickRulesUtils.pickRulesTemplate.getBookEncoding());
+                    PickRulesUtils.getPickRulesTemplate().getBookEncoding());
 
             if (response == null) {
                 logger.info("[pick获取书籍信息失败]response为空");
@@ -217,13 +214,13 @@ public class BookService {
             }
             Document document = response.parse();
 
-            String title = PickRulesUtils.pickRulesTemplate.getBookDetailTitle(document);
-            String author = PickRulesUtils.pickRulesTemplate.getBookDetailAuthor(document);
-            String category = PickRulesUtils.pickRulesTemplate.getBookDetailCategory(document);
-            String description = PickRulesUtils.pickRulesTemplate.getBookDetailDescription(document);
-            String faceUrl = PickRulesUtils.pickRulesTemplate.getBookDetailFaceUrl(document);
-            String updateDate = PickRulesUtils.pickRulesTemplate.getBookDetailUpdateDate(document);
-            String updateChapter = PickRulesUtils.pickRulesTemplate.getBookDetailUpdateChapter(document);
+            String title = PickRulesUtils.getPickRulesTemplate().getBookDetailTitle(document);
+            String author = PickRulesUtils.getPickRulesTemplate().getBookDetailAuthor(document);
+            String category = PickRulesUtils.getPickRulesTemplate().getBookDetailCategory(document);
+            String description = PickRulesUtils.getPickRulesTemplate().getBookDetailDescription(document);
+            String faceUrl = PickRulesUtils.getPickRulesTemplate().getBookDetailFaceUrl(document);
+            String updateDate = PickRulesUtils.getPickRulesTemplate().getBookDetailUpdateDate(document);
+            String updateChapter = PickRulesUtils.getPickRulesTemplate().getBookDetailUpdateChapter(document);
 
 
             BookInfo bookInfo = new BookInfo();
@@ -377,19 +374,21 @@ public class BookService {
         List<BookBean> bookBeanList = new ArrayList<>();
 
         try {
-            String url = PickRulesUtils.pickRulesTemplate.getSearchLink(keywords);
-            JSONObject params = PickRulesUtils.pickRulesTemplate.getSearchParams(keywords);
-            String method = PickRulesUtils.pickRulesTemplate.getSearchMethod();
+            //
+
+            String url = PickRulesUtils.getPickRulesTemplate(source).getSearchLink(keywords);
+            JSONObject params = PickRulesUtils.getPickRulesTemplate(source.getSearchParams(keywords);
+            String method = PickRulesUtils.getPickRulesTemplate(source.getSearchMethod();
             Connection.Response response;
 
             switch (method) {
                 default:
                 case "GET":
                     response = HtmlUtils.getPage(url,
-                            PickRulesUtils.pickRulesTemplate.getSearchEncoding());
+                            PickRulesUtils.getPickRulesTemplate(source).getSearchEncoding());
                     break;
                     case "POST":
-                    response = HtmlUtils.postPage(url, params, PickRulesUtils.pickRulesTemplate.getSearchEncoding());
+                    response = HtmlUtils.postPage(url, params, PickRulesUtils.getPickRulesTemplate().getSearchEncoding());
                     break;
             }
 
@@ -399,19 +398,19 @@ public class BookService {
             Document document = response.parse();
 
 
-            Elements elements = PickRulesUtils.pickRulesTemplate.getSearchItems(document);
+            Elements elements = PickRulesUtils.getPickRulesTemplate().getSearchItems(document);
             for (Element e :
                     elements) {
                 BookBean bookBean = new BookBean();
                 BookInfo bookInfo = new BookInfo();
 
-                String bookIdThird = PickRulesUtils.pickRulesTemplate.getSearchItemBookIdThird(e);
-                String title = PickRulesUtils.pickRulesTemplate.getSearchItemTitle(e);
-                String img = PickRulesUtils.pickRulesTemplate.getSearchItemFaceUrl(e);
-                String author = PickRulesUtils.pickRulesTemplate.getSearchItemAuthor(e);
-                String category = PickRulesUtils.pickRulesTemplate.getSearchItemCategory(e);
-                String updated = PickRulesUtils.pickRulesTemplate.getSearchItemUpdateDate(e);
-                String newChapter = PickRulesUtils.pickRulesTemplate.getSearchItemUpdateChapter(e);
+                String bookIdThird = PickRulesUtils.getPickRulesTemplate().getSearchItemBookIdThird(e);
+                String title = PickRulesUtils.getPickRulesTemplate().getSearchItemTitle(e);
+                String img = PickRulesUtils.getPickRulesTemplate().getSearchItemFaceUrl(e);
+                String author = PickRulesUtils.getPickRulesTemplate().getSearchItemAuthor(e);
+                String category = PickRulesUtils.getPickRulesTemplate().getSearchItemCategory(e);
+                String updated = PickRulesUtils.getPickRulesTemplate().getSearchItemUpdateDate(e);
+                String newChapter = PickRulesUtils.getPickRulesTemplate().getSearchItemUpdateChapter(e);
 
                 bookBean.setName(title);
                 bookBean.setAuthor(author);

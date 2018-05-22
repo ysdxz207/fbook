@@ -4,6 +4,8 @@ import com.itranswarp.compiler.JavaStringCompiler;
 import com.puyixiaowo.fbook.bean.book.PickRulesBean;
 import com.puyixiaowo.fbook.utils.StringUtils;
 import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -18,7 +20,10 @@ import java.util.Map;
  */
 
 public class PickRulesUtils {
-    public static PickRulesTemplate pickRulesTemplate = new DefaultPickRulesTemplateImpl();
+
+    private static final Logger logger = LoggerFactory.getLogger(PickRulesUtils.class);
+
+    private static PickRulesTemplate pickRulesTemplate = new DefaultPickRulesTemplateImpl();
 
 
     private static final String PACKAGE_NAME_IMPL = DefaultPickRulesTemplateImpl.class.getPackage().getName();
@@ -26,6 +31,7 @@ public class PickRulesUtils {
     private static final String CLASS_NAME_DEFAULT_TEMPLATE_IMPL = "DynamicPickRulesTemplateImpl";
     private static final String CLASS_DEFAULT_TEMPLATE_IMPL = PACKAGE_NAME_IMPL + ".DefaultPickRulesTemplateImpl";
     private static final String CLASS_TEMPLATE_IMPL = PACKAGE_NAME_IMPL + "." + CLASS_NAME_DEFAULT_TEMPLATE_IMPL;
+
 
     private static String buildPickRulesTemplateString(PickRulesBean pickRulesBean) {
 
@@ -72,7 +78,7 @@ public class PickRulesUtils {
         return sb.toString();
     }
 
-    public static void updatePickRulesTemplate(PickRulesBean pickRulesBean) {
+    public static void getPickRulesTemplate(PickRulesBean pickRulesBean) {
         try {
 
             String templateString = buildPickRulesTemplateString(pickRulesBean);
@@ -91,14 +97,33 @@ public class PickRulesUtils {
         }
     }
 
-    public static void updatePickRulesTemplate(Class<? extends DefaultPickRulesTemplateImpl> clazz) {
+    public static PickRulesTemplate getPickRulesTemplate(Class<? extends DefaultPickRulesTemplateImpl> clazz) {
+
+        if (StringUtils.isBlank(clazz)) {
+            return pickRulesTemplate;
+        }
+
         try {
-            pickRulesTemplate = clazz.newInstance();
+            return clazz.newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
+        return pickRulesTemplate;
     }
+
+    public static PickRulesTemplate getPickRulesTemplate(String source) {
+
+        try {
+            Class clazz = Class.forName(source);
+            return getPickRulesTemplate(clazz);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return pickRulesTemplate;
+        }
+    }
+
 
 }

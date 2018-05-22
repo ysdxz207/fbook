@@ -36,7 +36,7 @@ public class BookChapterServiceTest {
                 "    public String getChapterListDetailLink(Element element) {\n" +
                 "        return element.baseUri() + element.attr(\"href\");\n" +
                 "    }");
-        PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
+        PickRulesUtils.getPickRulesTemplate(pickRulesBean);
         System.out.println(JSON.toJSONString(BookChapterService.getChapterListByPick(bookBean.getId())));
     }
 

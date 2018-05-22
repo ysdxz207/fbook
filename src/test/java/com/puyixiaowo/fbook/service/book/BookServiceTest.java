@@ -81,7 +81,7 @@ public class BookServiceTest {
                 "        return author;\n" +
                 "    }");
 
-        PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
+        PickRulesUtils.getPickRulesTemplate(pickRulesBean);
         PageBean pageBean = new PageBean();
         BookService.searchByPick("道君", pageBean);
         System.out.println(JSON.toJSONString(pageBean));
@@ -136,7 +136,7 @@ public class BookServiceTest {
                 "    }");
 
 
-        PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
+        PickRulesUtils.getPickRulesTemplate(pickRulesBean);
 
         bookBean = BookService.getBookDetailByPick(bookBean);
         System.out.println(JSON.toJSONString(bookBean));
