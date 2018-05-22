@@ -31,6 +31,10 @@ public class HtmlUtils {
         return accessPage(url, null, Connection.Method.GET, encoding);
     }
 
+    public static Connection.Response getPage(String url, JSONObject params, String encoding) throws IOException {
+        return accessPage(url, params, Connection.Method.GET, encoding);
+    }
+
     public static Connection.Response postPage(String url, JSONObject params, String encoding) throws IOException {
         return accessPage(url, params, Connection.Method.POST, encoding);
     }
