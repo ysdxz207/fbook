@@ -327,13 +327,13 @@ public class BookService {
     public static PageBean searchByApi(String keywords, PageBean pageBean) {
         List<BookBean> bookBeanList = new ArrayList<>();
 
-        Map<String, String> params = new HashMap<>();
+        JSONObject params = new JSONObject();
         params.put("query", keywords);
         params.put("start", pageBean.getRowBounds().getOffset() + "");
         params.put("limit", pageBean.getRowBounds().getLimit() + "");
         JSONObject json = null;
         try {
-            Connection.Response response = HtmlUtils.getPage(BookConstants.URL_SEARCH, "UTF-8");
+            Connection.Response response = HtmlUtils.getPage(BookConstants.URL_SEARCH, params, "UTF-8");
             json = JSON.parseObject(response.body());
         } catch (Exception e) {
         }
