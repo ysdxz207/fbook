@@ -12,6 +12,7 @@ import com.puyixiaowo.fbook.constants.BookConstants;
 import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.enums.EnumSort;
 import com.puyixiaowo.fbook.utils.*;
+import com.puyixiaowo.fbook.utils.pickrules.PickRulesTemplate;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
@@ -145,23 +146,24 @@ public class BookChapterService {
             if (bookBean == null) {
                 throw new RuntimeException("书不存在");
             }
+            PickRulesTemplate pickRulesTemplate = PickRulesUtils.getPickRulesTemplate(source);
 
-            String url = PickRulesUtils.getPickRulesTemplate(source).getChapterListLink(bookBean);
+            String url = pickRulesTemplate.getChapterListLink(bookBean);
             Connection.Response response = HtmlUtils.getPage(url,
-                    PickRulesUtils.getPickRulesTemplate(source).getBookEncoding());
+                    pickRulesTemplate.getBookEncoding());
 
             if (response == null) {
                 return list;
             }
             Document document = response.parse();
 
-            Elements elements = PickRulesUtils.getPickRulesTemplate(source).getChapterListItems(document);
+            Elements elements = pickRulesTemplate.getChapterListItems(document);
 
             int chapterNum = 1;
             for (Element element : elements) {
 
-                String title = PickRulesUtils.getPickRulesTemplate(source).getChapterListTitle(element);
-                String link = PickRulesUtils.getPickRulesTemplate(source).getChapterListDetailLink(element);
+                String title = pickRulesTemplate.getChapterListTitle(element);
+                String link = pickRulesTemplate.getChapterListDetailLink(element);
 
                 BookChapterBean bookChapterBean = new BookChapterBean();
                 bookChapterBean.setBookId(bookId);
@@ -270,16 +272,18 @@ public class BookChapterService {
         BookChapterBean bookChapterBean = new BookChapterBean();
 
         try {
+            PickRulesTemplate pickRulesTemplate = PickRulesUtils.getPickRulesTemplate(source);
+
             Connection.Response response = HtmlUtils.getPage(link,
-                    PickRulesUtils.getPickRulesTemplate(source).getBookEncoding());
+                    pickRulesTemplate.getBookEncoding());
 
             if (response == null) {
                 return bookChapterBean;
             }
             Document document = response.parse();
 
-            String title = PickRulesUtils.getPickRulesTemplate(source).getChapterDetailTitle(document);
-            String content = PickRulesUtils.getPickRulesTemplate(source).getChapterDetailContent(document);
+            String title = pickRulesTemplate.getChapterDetailTitle(document);
+            String content = pickRulesTemplate.getChapterDetailContent(document);
 
             bookChapterBean.setTitle(title);
             bookChapterBean.setContent(content);

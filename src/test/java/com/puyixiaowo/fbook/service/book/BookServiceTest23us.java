@@ -12,14 +12,14 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class BookServiceTestClass {
+public class BookServiceTest23us {
 
     @Test
     public void testSearchByPick() throws Exception {
 
-        PickRulesUtils.getPickRulesTemplate(Two3usPickRulesTemplateImpl.class);
-        PageBean pageBean = new PageBean();
         String source = Two3usPickRulesTemplateImpl.class.getName();
+        PickRulesUtils.updatePickRulesTemplate(source);
+        PageBean pageBean = new PageBean();
         BookService.searchByPick("地球上线", pageBean, source);
         System.out.println(JSON.toJSONString(pageBean));
     }

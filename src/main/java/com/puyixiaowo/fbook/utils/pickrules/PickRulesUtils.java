@@ -125,5 +125,12 @@ public class PickRulesUtils {
         }
     }
 
+    /**
+     * test使用
+     * @param source
+     */
+    public static void updatePickRulesTemplate(String source) {
+        pickRulesTemplate = getPickRulesTemplate(source);
+    }
 
 }
