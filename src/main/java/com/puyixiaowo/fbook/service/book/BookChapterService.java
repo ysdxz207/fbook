@@ -91,9 +91,14 @@ public class BookChapterService {
         List<BookChapterBean> list = new ArrayList<>();
         String url = BookConstants.URL_CHAPTERS + source + "?view=chapters";
 
-        JSONObject jsonObject = JSON.parseObject(HttpUtils.httpGet(url, null));
+        JSONObject jsonObject = null;
+        try {
+            Connection.Response response = HtmlUtils.getPage(url, "UTF-8");
+            jsonObject = JSON.parseObject(response.body());
+        } catch (Exception e) {
+        }
         if (jsonObject == null) {
-            logger.error("[book]api返回章节json为null");
+            logger.error("[book]api返回章节json为null,bookId=" + bookId);
             return list;
         }
 
