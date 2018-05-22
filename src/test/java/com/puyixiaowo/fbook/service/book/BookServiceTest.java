@@ -22,25 +22,11 @@ public class BookServiceTest {
                 "        return \"UTF-8\";\n" +
                 "    }");
 
-        pickRulesBean.setSearchMethod("@Override\n" +
-                "    public String getSearchMethod() {\n" +
-                "        return \"POST\";\n" +
-                "    }");
-
 
         pickRulesBean.setSearchLink("@Override\n" +
                 "    public String getSearchLink(String keywords) {\n" +
-                "        return \"http://m.23us.com.cn/home/search\";\n" +
+                "        return \"http://zhannei.baidu.com/cse/search?p=0&area=1&s=6939410700241642371&q=\" + keywords;\n" +
                 "    }");
-
-        pickRulesBean.setSearchParams("@Override\n" +
-                "    public JSONObject getSearchParams(String keywords) {\n" +
-                "        JSONObject jsonObject = new JSONObject();\n" +
-                "        jsonObject.put(\"q\", keywords);\n" +
-                "        jsonObject.put(\"action\", \"search\");\n" +
-                "        return jsonObject;\n" +
-                "    }");
-
         pickRulesBean.setSearchItems("@Override\n" +
                 "    public Elements getSearchItems(Document document) {\n" +
                 "        return document.select(\".result-item\");\n" +
@@ -97,7 +83,7 @@ public class BookServiceTest {
 
         PickRulesUtils.updatePickRulesTemplate(pickRulesBean);
         PageBean pageBean = new PageBean();
-        BookService.searchByPick("地球上线", pageBean);
+        BookService.searchByPick("道君", pageBean);
         System.out.println(JSON.toJSONString(pageBean));
     }
 

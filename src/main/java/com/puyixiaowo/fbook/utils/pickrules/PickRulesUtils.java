@@ -91,4 +91,14 @@ public class PickRulesUtils {
         }
     }
 
+    public static void updatePickRulesTemplate(Class<? extends DefaultPickRulesTemplateImpl> clazz) {
+        try {
+            pickRulesTemplate = clazz.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
