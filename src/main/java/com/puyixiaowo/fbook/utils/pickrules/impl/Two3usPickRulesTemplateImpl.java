@@ -56,7 +56,7 @@ public class Two3usPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl im
         Elements elsUls = document.select(".ptm-list-view");
 
         if (elsChapterList.size() == 0
-                && elsUls.size() > 0) {
+                && elsUls.size() > 1) {
 
             return elsUls.get(1).select("li div>a");
         }
