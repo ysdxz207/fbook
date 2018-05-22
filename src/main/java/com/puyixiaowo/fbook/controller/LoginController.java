@@ -17,6 +17,7 @@ import com.puyixiaowo.fbook.utils.DesUtils;
 import com.puyixiaowo.fbook.utils.Md5Utils;
 import com.puyixiaowo.fbook.utils.StringUtils;
 import com.puyixiaowo.fbook.utils.captcha.CaptchaProducer;
+import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -270,6 +271,7 @@ public class LoginController extends BaseController {
             //创建用户信息
             BookReadSettingBean bookReadSettingBean = new BookReadSettingBean();
             bookReadSettingBean.setUserId(userBean.getId());
+            bookReadSettingBean.setSearchSource(DefaultPickRulesTemplateImpl.class.getName());
             DBUtils.insertOrUpdate(bookReadSettingBean, false);
             //注册完直接登录
             request.session().attribute(Constants.SESSION_USER_KEY, userBean);
@@ -329,5 +331,9 @@ public class LoginController extends BaseController {
         }
 
         return responseBean;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(DefaultPickRulesTemplateImpl.class.getName());
     }
 }

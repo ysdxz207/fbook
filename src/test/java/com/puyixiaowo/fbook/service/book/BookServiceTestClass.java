@@ -6,6 +6,7 @@ import com.puyixiaowo.fbook.bean.book.PickRulesBean;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.utils.HtmlUtils;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
+import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
 import com.puyixiaowo.fbook.utils.pickrules.impl.Two3usPickRulesTemplateImpl;
 import org.junit.Test;
 
@@ -18,62 +19,17 @@ public class BookServiceTestClass {
 
         PickRulesUtils.getPickRulesTemplate(Two3usPickRulesTemplateImpl.class);
         PageBean pageBean = new PageBean();
-        BookService.searchByPick("地球上线", pageBean);
+        String source = Two3usPickRulesTemplateImpl.class.getName();
+        BookService.searchByPick("地球上线", pageBean, source);
         System.out.println(JSON.toJSONString(pageBean));
     }
 
     @Test
     public void testGetBookDetailByPick() {
-        PickRulesBean pickRulesBean = new PickRulesBean();
         BookBean bookBean = new BookBean();
         bookBean.setBookIdThird("12946");
-
-
-        pickRulesBean.setBookDetailLink("@Override\n" +
-                "    public String getBookDetailLink(BookBean bookBean) {\n" +
-                "        return \"http://www.lwxsw.cc/book/\" + bookBean.getBookIdThird() + \"/\";\n" +
-                "    }");
-
-
-        pickRulesBean.setBookDetailTitle("@Override\n" +
-                "    public String getBookDetailTitle(Document document) {\n" +
-                "        return document.select(\".bookTitle\").text();\n" +
-                "    }");
-
-        pickRulesBean.setBookDetailAuthor("@Override\n" +
-                "    public String getBookDetailAuthor(Document document) {\n" +
-                "        return document.select(\".booktag\").get(0).getAllElements().eachText().get(1);\n" +
-                "    }");
-
-        pickRulesBean.setBookDetailCategory("@Override\n" +
-                "    public String getBookDetailCategory(Document document) {\n" +
-                "        return document.select(\".booktag\").get(0).getAllElements().eachText().get(2);\n" +
-                "    }");
-
-        pickRulesBean.setBookDetailDescription("@Override\n" +
-                "    public String getBookDetailDescription(Document document) {\n" +
-                "        return document.select(\"#bookIntro\").text();\n" +
-                "    }");
-
-        pickRulesBean.setBookDetailFaceUrl("@Override\n" +
-                "    public String getBookDetailFaceUrl(Document document) {\n" +
-                "        return document.select(\"#bookIntro img\").attr(\"src\");\n" +
-                "    }");
-
-        pickRulesBean.setBookDetailUpdateDate("@Override\n" +
-                "    public String getBookDetailUpdateDate(Document document) {\n" +
-                "        return document.select(\"p.visible-xs\").text().split(\"：\")[1];\n" +
-                "    }");
-
-        pickRulesBean.setBookDetailUpdateChapter("@Override\n" +
-                "    public String getBookDetailUpdateChapter(Document document) {\n" +
-                "        return document.select(\"p\").get(1).select(\"a\").text();\n" +
-                "    }");
-
-
-        PickRulesUtils.getPickRulesTemplate(pickRulesBean);
-
-        bookBean = BookService.getBookDetailByPick(bookBean);
+        String source = DefaultPickRulesTemplateImpl.class.getName();
+        bookBean = BookService.getBookDetailByPick(bookBean, source);
         System.out.println(JSON.toJSONString(bookBean));
     }
 
