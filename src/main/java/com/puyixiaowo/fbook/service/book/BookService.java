@@ -270,8 +270,12 @@ public class BookService {
         List<BookSource> list = new ArrayList<>();
 
         String url = BookConstants.URL_BOOK_SOURCE + bookIdThird;
-        JSONArray json = JSON.parseArray(HttpUtils.httpGet(url, null));
-
+        JSONArray json = null;
+        try {
+            Connection.Response response = HtmlUtils.getPage(url, "UTF-8");
+            json = JSON.parseArray(response.body());
+        } catch (Exception e) {
+        }
         if (json == null) {
             return list;
         }
@@ -331,8 +335,12 @@ public class BookService {
         params.put("query", keywords);
         params.put("start", pageBean.getRowBounds().getOffset() + "");
         params.put("limit", pageBean.getRowBounds().getLimit() + "");
-        JSONObject json = JSONObject.parseObject(HttpUtils.httpGet(BookConstants.URL_SEARCH, params));
-
+        JSONObject json = null;
+        try {
+            Connection.Response response = HtmlUtils.getPage(BookConstants.URL_SEARCH, "UTF-8");
+            json = JSON.parseObject(response.body());
+        } catch (Exception e) {
+        }
         if (json == null) {
             pageBean.errorMessage("未从接口获取到结果");
             return pageBean;
