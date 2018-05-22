@@ -21,7 +21,7 @@
             <id>dev</id>
             <properties>
                 <redis.pass>123456</redis.pass>
-                <origin.access.allow.url>http://192.168.3.2:1234,http://localhost:1234</origin.access.allow.url>
+                <origin.access.allow.url>http://192.168.3.2:1234,http://localhost:1234,http://192.168.20.179:1234</origin.access.allow.url>
             </properties>
         </profile>
         <profile>

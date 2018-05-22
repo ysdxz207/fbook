@@ -155,8 +155,17 @@ public class BookService {
 
         String url = BookConstants.URL_BOOK + bookBean.getBookIdThird();
 
-        JSONObject json = JSON.parseObject(HttpUtils.httpGet(url, null));
+        JSONObject json = null;
+        try {
+            Connection.Response response = HtmlUtils.getPage(url, "UTF-8");
+            json = JSON.parseObject(response.body());
+        } catch (Exception e) {
+        }
 
+        if (json == null) {
+            logger.error("[" + bookBean.getName() + "][内容接口返回为空]bookId=" + bookBean.getId());
+            return null;
+        }
         Boolean ok = json.getBoolean("ok");
 
 
