@@ -91,7 +91,9 @@ public class BookService {
         if (bookReadSettingBean.getUseApi()) {
             pageBean = searchByApi(keywords, pageBean);
         } else {
-            pageBean = searchByPick(keywords, pageBean);
+            //所有源结果
+            String source = null;
+            pageBean = searchByPick(keywords, pageBean, source);
         }
 
         return pageBean;
@@ -128,7 +130,7 @@ public class BookService {
 
 
         if (bookBeanDB != null
-            && !bookReadSettingBean.getUseApi()
+                && !bookReadSettingBean.getUseApi()
                 .equals(bookBean.getUseApi())) {
             String msg = bookBean.getUseApi() ? "[接口书籍]请将设置中使用接口源打开" : "[非接口书籍]请将设置中使用接口源关闭";
             throw new RuntimeException(msg);
@@ -137,7 +139,9 @@ public class BookService {
         if (bookReadSettingBean.getUseApi()) {
             return getBookDetailByApi(bookBean);
         } else {
-            return getBookDetailByPick(bookBean);
+            BookReadBean bookReadBean = BookReadService.getUserBookRead(userBean.getId(), bookBean.getId());
+
+            return getBookDetailByPick(bookBean, bookReadBean.getSource());
         }
 
     }
@@ -201,12 +205,13 @@ public class BookService {
         return bookBean;
     }
 
-    public static BookBean getBookDetailByPick(BookBean bookBean) {
+    public static BookBean getBookDetailByPick(BookBean bookBean,
+                                               String source) {
 
         try {
-            String url = PickRulesUtils.getPickRulesTemplate().getBookDetailLink(bookBean);
+            String url = PickRulesUtils.getPickRulesTemplate(source).getBookDetailLink(bookBean);
             Connection.Response response = HtmlUtils.getPage(url,
-                    PickRulesUtils.getPickRulesTemplate().getBookEncoding());
+                    PickRulesUtils.getPickRulesTemplate(source).getBookEncoding());
 
             if (response == null) {
                 logger.info("[pick获取书籍信息失败]response为空");
@@ -214,13 +219,13 @@ public class BookService {
             }
             Document document = response.parse();
 
-            String title = PickRulesUtils.getPickRulesTemplate().getBookDetailTitle(document);
-            String author = PickRulesUtils.getPickRulesTemplate().getBookDetailAuthor(document);
-            String category = PickRulesUtils.getPickRulesTemplate().getBookDetailCategory(document);
-            String description = PickRulesUtils.getPickRulesTemplate().getBookDetailDescription(document);
-            String faceUrl = PickRulesUtils.getPickRulesTemplate().getBookDetailFaceUrl(document);
-            String updateDate = PickRulesUtils.getPickRulesTemplate().getBookDetailUpdateDate(document);
-            String updateChapter = PickRulesUtils.getPickRulesTemplate().getBookDetailUpdateChapter(document);
+            String title = PickRulesUtils.getPickRulesTemplate(source).getBookDetailTitle(document);
+            String author = PickRulesUtils.getPickRulesTemplate(source).getBookDetailAuthor(document);
+            String category = PickRulesUtils.getPickRulesTemplate(source).getBookDetailCategory(document);
+            String description = PickRulesUtils.getPickRulesTemplate(source).getBookDetailDescription(document);
+            String faceUrl = PickRulesUtils.getPickRulesTemplate(source).getBookDetailFaceUrl(document);
+            String updateDate = PickRulesUtils.getPickRulesTemplate(source).getBookDetailUpdateDate(document);
+            String updateChapter = PickRulesUtils.getPickRulesTemplate(source).getBookDetailUpdateChapter(document);
 
 
             BookInfo bookInfo = new BookInfo();
@@ -280,7 +285,7 @@ public class BookService {
 
         if (bookReadSettingBean.getUseApi()) {
             return getBookSourceByApi(bookIdThird);
-        } else{
+        } else {
             return getBookSourceByPick();
         }
     }
@@ -370,15 +375,14 @@ public class BookService {
     }
 
     public static PageBean searchByPick(String keywords,
-                                      PageBean pageBean) {
+                                        PageBean pageBean,
+                                        String source) {
         List<BookBean> bookBeanList = new ArrayList<>();
 
         try {
-            //
-
             String url = PickRulesUtils.getPickRulesTemplate(source).getSearchLink(keywords);
-            JSONObject params = PickRulesUtils.getPickRulesTemplate(source.getSearchParams(keywords);
-            String method = PickRulesUtils.getPickRulesTemplate(source.getSearchMethod();
+            JSONObject params = PickRulesUtils.getPickRulesTemplate(source).getSearchParams(keywords);
+            String method = PickRulesUtils.getPickRulesTemplate(source).getSearchMethod();
             Connection.Response response;
 
             switch (method) {
@@ -387,8 +391,8 @@ public class BookService {
                     response = HtmlUtils.getPage(url,
                             PickRulesUtils.getPickRulesTemplate(source).getSearchEncoding());
                     break;
-                    case "POST":
-                    response = HtmlUtils.postPage(url, params, PickRulesUtils.getPickRulesTemplate().getSearchEncoding());
+                case "POST":
+                    response = HtmlUtils.postPage(url, params, PickRulesUtils.getPickRulesTemplate(source).getSearchEncoding());
                     break;
             }
 
@@ -398,19 +402,19 @@ public class BookService {
             Document document = response.parse();
 
 
-            Elements elements = PickRulesUtils.getPickRulesTemplate().getSearchItems(document);
+            Elements elements = PickRulesUtils.getPickRulesTemplate(source).getSearchItems(document);
             for (Element e :
                     elements) {
                 BookBean bookBean = new BookBean();
                 BookInfo bookInfo = new BookInfo();
 
-                String bookIdThird = PickRulesUtils.getPickRulesTemplate().getSearchItemBookIdThird(e);
-                String title = PickRulesUtils.getPickRulesTemplate().getSearchItemTitle(e);
-                String img = PickRulesUtils.getPickRulesTemplate().getSearchItemFaceUrl(e);
-                String author = PickRulesUtils.getPickRulesTemplate().getSearchItemAuthor(e);
-                String category = PickRulesUtils.getPickRulesTemplate().getSearchItemCategory(e);
-                String updated = PickRulesUtils.getPickRulesTemplate().getSearchItemUpdateDate(e);
-                String newChapter = PickRulesUtils.getPickRulesTemplate().getSearchItemUpdateChapter(e);
+                String bookIdThird = PickRulesUtils.getPickRulesTemplate(source).getSearchItemBookIdThird(e);
+                String title = PickRulesUtils.getPickRulesTemplate(source).getSearchItemTitle(e);
+                String img = PickRulesUtils.getPickRulesTemplate(source).getSearchItemFaceUrl(e);
+                String author = PickRulesUtils.getPickRulesTemplate(source).getSearchItemAuthor(e);
+                String category = PickRulesUtils.getPickRulesTemplate(source).getSearchItemCategory(e);
+                String updated = PickRulesUtils.getPickRulesTemplate(source).getSearchItemUpdateDate(e);
+                String newChapter = PickRulesUtils.getPickRulesTemplate(source).getSearchItemUpdateChapter(e);
 
                 bookBean.setName(title);
                 bookBean.setAuthor(author);
