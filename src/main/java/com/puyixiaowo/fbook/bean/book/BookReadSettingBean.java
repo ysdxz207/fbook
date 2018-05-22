@@ -20,6 +20,7 @@ public class BookReadSettingBean extends Validatable implements Serializable {
 	private String color;
 	private Integer sort;
 	private Boolean useApi;
+	private String searchSource;
 
 	@Transient
 	private String lastReadingChapter;
@@ -132,5 +133,14 @@ public class BookReadSettingBean extends Validatable implements Serializable {
 
 	public void setBookId(Long bookId) {
 		this.bookId = bookId;
+	}
+
+
+	public String getSearchSource() {
+		return searchSource;
+	}
+
+	public void setSearchSource(String searchSource) {
+		this.searchSource = searchSource;
 	}
 }

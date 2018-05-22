@@ -207,8 +207,9 @@ public class BookChapterService {
             return getBookContentByApi(bookChapterBean.getLink());
         } else{
             BookReadBean bookReadBean = BookReadService.getUserBookRead(userBean.getId(), bookChapterBean.getBookId());
-
-            return getBookContentByPick(bookChapterBean.getLink(), bookReadBean.getSource());
+            //第一次因为没读过书，从配置中读取source
+            String source = bookReadBean.getSource() == null ? bookReadSettingBean.getSearchSource() : bookReadBean.getSource();
+            return getBookContentByPick(bookChapterBean.getLink(), source);
         }
 
     }

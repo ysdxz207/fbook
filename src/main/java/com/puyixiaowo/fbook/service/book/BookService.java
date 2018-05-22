@@ -91,9 +91,7 @@ public class BookService {
         if (bookReadSettingBean.getUseApi()) {
             pageBean = searchByApi(keywords, pageBean);
         } else {
-            //所有源结果
-            String source = null;
-            pageBean = searchByPick(keywords, pageBean, source);
+            pageBean = searchByPick(keywords, pageBean, bookReadSettingBean.getSearchSource());
         }
 
         return pageBean;
@@ -140,8 +138,9 @@ public class BookService {
             return getBookDetailByApi(bookBean);
         } else {
             BookReadBean bookReadBean = BookReadService.getUserBookRead(userBean.getId(), bookBean.getId());
-
-            return getBookDetailByPick(bookBean, bookReadBean.getSource());
+            //第一次因为没读过书，从配置中读取source
+            String source = bookReadBean.getSource() == null ? bookReadSettingBean.getSearchSource() : bookReadBean.getSource();
+            return getBookDetailByPick(bookBean, source);
         }
 
     }

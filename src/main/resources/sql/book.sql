@@ -75,6 +75,7 @@ CREATE TABLE `book_read_setting` (
   `line_height`        INTEGER(6) DEFAULT '28',
   `sort`        INTEGER(4) DEFAULT '0',
   `use_api`     INTEGER(4) DEFAULT '1',
+  `search_source`     VARCHAR(512) DEFAULT NULL ,
 
   PRIMARY KEY (`id`)
 );
