@@ -90,7 +90,7 @@ public class Two3usPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl im
 
     @Override
     public String getSearchItemTitle(Element element) {
-        return element.select("a").attr("title");
+        return element.select("a").text();
     }
 
     @Override

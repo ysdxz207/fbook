@@ -311,7 +311,7 @@ public class BookController extends BaseController {
             if (bookBean != null) {
                 BookReadBean bookReadBean = BookReadService.getUserBookRead(userBean.getId(), bookBean.getId());
                 if (bookReadBean != null
-                        && bookSource.get_id().equals(bookReadBean.getSource())) {
+                        && bookSource.getSource().equals(bookReadBean.getSource())) {
                     bookSource.setCurrentSource(true);
                 }
             }
