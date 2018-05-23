@@ -337,7 +337,7 @@ public class BookService {
         params.put("limit", pageBean.getRowBounds().getLimit() + "");
         JSONObject json = null;
         try {
-            Connection.Response response = HtmlUtils.getPage(BookConstants.URL_SEARCH, params, "UTF-8");
+            Connection.Response response = HtmlUtils.getPage(BookConstants.URL_SEARCH, params, "UTF-8", "PC");
             json = JSON.parseObject(response.body());
         } catch (Exception e) {
         }
@@ -408,7 +408,9 @@ public class BookService {
                 default:
                 case "GET":
                     response = HtmlUtils.getPage(url,
-                            pickRulesTemplate.getSearchEncoding());
+                            params,
+                            pickRulesTemplate.getSearchEncoding(),
+                            pickRulesTemplate.getSearchDevice());
                     break;
                 case "POST":
                     response = HtmlUtils.postPage(url, params, pickRulesTemplate.getSearchEncoding());
@@ -448,7 +450,7 @@ public class BookService {
                 bookBeanList.add(bookBean);
             }
         } catch (Exception e) {
-            logger.info("[获取搜索列表失败][pick]:" + e.getMessage() == null ? JSON.toJSONString(e) : e.getMessage());
+            logger.info("[获取搜索列表失败][pick]:" + (e.getMessage() == null ? JSON.toJSONString(e) : e.getMessage()));
             throw new RuntimeException("获取搜索列表失败");
         }
 

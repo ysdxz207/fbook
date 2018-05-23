@@ -171,7 +171,7 @@ public class BookController extends BaseController {
             responseBean.setData(model);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("[书]获取章节内容异常：" + e.getMessage() == null ? JSON.toJSONString(e.getMessage()) : e.getMessage());
+            logger.error("[书]获取章节内容异常：" + (e.getMessage() == null ? JSON.toJSONString(e.getMessage()) : e.getMessage()));
             responseBean.error(e);
         }
 

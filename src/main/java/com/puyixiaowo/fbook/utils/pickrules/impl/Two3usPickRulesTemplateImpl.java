@@ -16,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.puyixiaowo.fbook.utils.HtmlUtils.accessPage;
+import static com.puyixiaowo.fbook.utils.HtmlUtils.getPage;
 import static com.puyixiaowo.fbook.utils.StringUtils.isNotBlank;
 
 
@@ -26,6 +27,11 @@ import static com.puyixiaowo.fbook.utils.StringUtils.isNotBlank;
  */
 
 public class Two3usPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl implements PickRulesTemplate {
+
+    @Override
+    public String getSearchDevice() {
+        return "PHONE";
+    }
 
     @Override
     public String getSearchLink(String keywords) {
@@ -226,7 +232,7 @@ public class Two3usPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl im
 
         if (currentpagenum < maxpagenum) {
             String url = document.baseUri().replace(".html", "_" + (currentpagenum + 1) + ".html");
-            Connection.Response response = accessPage(url, null, Connection.Method.GET, "GBK");
+            Connection.Response response = getPage(url, "GBK");
             if (response != null) {
                 try {
                     return content + getChapterDetailContent(response.parse());

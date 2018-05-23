@@ -182,7 +182,7 @@ public class BookChapterService {
 
         } catch (Exception e) {
 
-            logger.info("[获取章节目录失败][pick]:" + e.getMessage() == null ? JSON.toJSONString(e) : e.getMessage());
+            logger.info("[获取章节目录失败][pick]:" + (e.getMessage() == null ? JSON.toJSONString(e) : e.getMessage()));
             throw new RuntimeException("获取章节目录失败");
         }
 

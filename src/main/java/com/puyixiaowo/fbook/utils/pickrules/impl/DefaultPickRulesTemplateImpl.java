@@ -11,6 +11,8 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -31,8 +33,18 @@ import static com.puyixiaowo.fbook.utils.HtmlUtils.*;
 public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
 
     @Override
+    public String getSearchDevice() {
+        return "PHONE";
+    }
+
+    @Override
     public String getSearchLink(String keywords) {
-        return "http://zhannei.baidu.com/cse/search?entry=1&s=6939410700241642371&srt=def&nsid=0&q=" + keywords;
+        try {
+            return "http://www.lwxsw.cc/modules/article/search.php?searchkey=" + URLEncoder.encode(keywords, getSearchEncoding());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -47,17 +59,18 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
 
     @Override
     public String getSearchEncoding() {
-        return "UTF-8";
+        return "GBK";
     }
 
     @Override
     public Elements getSearchItems(Document document) {
-        return document.select(".result-item");
+        document.select("tr").get(0).remove();
+        return document.select("tr");
     }
 
     @Override
     public String getSearchItemBookIdThird(Element element) {
-        Matcher matcherBookIdThird = Pattern.compile("http\\:\\/\\/.*\\/.*\\/(.*)\\/").matcher(element.select(".result-item-title a").attr("href"));
+        Matcher matcherBookIdThird = Pattern.compile("http\\:\\/\\/.*\\/.*\\/(.*)\\/").matcher(element.select("td").get(0).select("a").attr("href"));
         String bookIdThird = matcherBookIdThird.find() ? matcherBookIdThird.group(1) : "";
         return bookIdThird;
     }
@@ -212,7 +225,7 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
 
         if (currentpagenum < maxpagenum) {
             String url = document.baseUri().replace(".html", "_" + (currentpagenum + 1) + ".html");
-            Connection.Response response = accessPage(url, null, Connection.Method.GET, "GBK");
+            Connection.Response response = getPage(url, "GBK");
             if (response != null) {
                 try {
                     return content + getChapterDetailContent(response.parse());
