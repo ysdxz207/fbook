@@ -10,6 +10,8 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -34,12 +36,12 @@ public class Two3usPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl im
 
     @Override
     public String getSearchDevice() {
-        return "PHONE";
+        return "PC";
     }
 
     @Override
     public String getSearchLink(String keywords) {
-        return "http://m.23us.com.cn/home/search";
+        return "https://m.w23us.com/home/search";
     }
 
     @Override
@@ -81,42 +83,39 @@ public class Two3usPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl im
 
     @Override
     public String getSearchItemBookIdThird(Element element) {
-        Matcher matcherBookIdThird = Pattern.compile("http\\:\\/\\/.*\\/.*\\/(.*)\\/").matcher(element.select(".result-item-title a").attr("href"));
+        Matcher matcherBookIdThird = Pattern.compile(".*\\/.*\\/(.*)\\/").matcher(element.select("a").attr("href"));
         String bookIdThird = matcherBookIdThird.find() ? matcherBookIdThird.group(1) : "";
         return bookIdThird;
     }
 
     @Override
     public String getSearchItemTitle(Element element) {
-        return element.select(".result-item-title a").attr("title");
+        return element.select("a").attr("title");
     }
 
     @Override
     public String getSearchItemAuthor(Element element) {
-        List<String> listInfos = element.select(".result-game-item-info-tag").eachText();
-        return listInfos.get(0).split("：")[1];
+        return "未知";
     }
 
     @Override
     public String getSearchItemCategory(Element element) {
-        List<String> listInfos = element.select(".result-game-item-info-tag").eachText();
-        return listInfos.get(1).split("：")[1].trim();
+        return "未知";
     }
 
     @Override
     public String getSearchItemUpdateDate(Element element) {
-        List<String> listInfos = element.select(".result-game-item-info-tag").eachText();
-        return listInfos.get(2).split("：")[1];
+        return "未知";
     }
 
     @Override
     public String getSearchItemUpdateChapter(Element element) {
-        List<String> listInfos = element.select(".result-game-item-info-tag").eachText();
-        return listInfos.get(3).split("：")[1];
+        return "未知";
     }
 
     @Override
     public String getSearchItemFaceUrl(Element element) {
+
         return element.select("img").attr("src");
     }
 

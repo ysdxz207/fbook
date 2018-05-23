@@ -34,7 +34,7 @@ public class BookServiceTest23us {
 
     @Test
     public void test() throws IOException {
-        System.out.println(HtmlUtils.getPage("https://m.23us.com.cn/", "UTF-8").body());
+        System.out.println(HtmlUtils.getPage("https://m.w23us.com/", "UTF-8", "PHONE").body());
     }
 }
 
