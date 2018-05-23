@@ -2,8 +2,6 @@ package com.puyixiaowo.fbook.service.book;
 
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fbook.bean.book.BookBean;
-import com.puyixiaowo.fbook.bean.book.PickRulesBean;
-import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
 import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
 import org.junit.Test;
 

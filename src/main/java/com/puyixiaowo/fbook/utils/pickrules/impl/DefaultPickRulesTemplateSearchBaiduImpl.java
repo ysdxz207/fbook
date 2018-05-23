@@ -11,8 +11,6 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -30,21 +28,16 @@ import static com.puyixiaowo.fbook.utils.HtmlUtils.*;
  *
  */
 
-public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
+public class DefaultPickRulesTemplateSearchBaiduImpl implements PickRulesTemplate{
 
     @Override
     public String getSearchDevice() {
-        return "PHONE";
+        return "PC";
     }
 
     @Override
     public String getSearchLink(String keywords) {
-        try {
-            return "http://www.lwxsw.cc/modules/article/search.php?searchkey=" + URLEncoder.encode(keywords, getSearchEncoding());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return "http://zhannei.baidu.com/cse/search?entry=1&s=6939410700241642371&srt=def&nsid=0&q=" + keywords;
     }
 
     @Override
@@ -59,50 +52,53 @@ public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
 
     @Override
     public String getSearchEncoding() {
-        return "GBK";
+        return "UTF-8";
     }
 
     @Override
     public Elements getSearchItems(Document document) {
-        document.select("tr").get(0).remove();
-        return document.select("tr");
+        return document.select(".result-item");
     }
 
     @Override
     public String getSearchItemBookIdThird(Element element) {
-        Matcher matcherBookIdThird = Pattern.compile("http\\:\\/\\/.*\\/.*\\/(.*)\\/").matcher(element.select("td").get(0).select("a").attr("href"));
+        Matcher matcherBookIdThird = Pattern.compile("http\\:\\/\\/.*\\/.*\\/(.*)\\/").matcher(element.select(".result-item-title a").attr("href"));
         String bookIdThird = matcherBookIdThird.find() ? matcherBookIdThird.group(1) : "";
         return bookIdThird;
     }
 
     @Override
     public String getSearchItemTitle(Element element) {
-        return element.select("td").get(0).select("a").text();
+        return element.select(".result-item-title a").attr("title");
     }
 
     @Override
     public String getSearchItemAuthor(Element element) {
-        return element.select("td").get(2).text();
+        List<String> listInfos = element.select(".result-game-item-info-tag").eachText();
+        return listInfos.get(0).split("：")[1];
     }
 
     @Override
     public String getSearchItemCategory(Element element) {
-        return "未知";
+        List<String> listInfos = element.select(".result-game-item-info-tag").eachText();
+        return listInfos.get(1).split("：")[1].trim();
     }
 
     @Override
     public String getSearchItemUpdateDate(Element element) {
-        return element.select("td").get(4).text();
+        List<String> listInfos = element.select(".result-game-item-info-tag").eachText();
+        return listInfos.get(2).split("：")[1];
     }
 
     @Override
     public String getSearchItemUpdateChapter(Element element) {
-        return element.select("td").get(1).text();
+        List<String> listInfos = element.select(".result-game-item-info-tag").eachText();
+        return listInfos.get(3).split("：")[1];
     }
 
     @Override
     public String getSearchItemFaceUrl(Element element) {
-        return null;
+        return element.select("img").attr("src");
     }
 
     @Override

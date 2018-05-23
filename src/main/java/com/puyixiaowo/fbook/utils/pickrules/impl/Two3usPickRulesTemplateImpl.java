@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.puyixiaowo.fbook.utils.HtmlUtils.accessPage;
 import static com.puyixiaowo.fbook.utils.HtmlUtils.getPage;
 import static com.puyixiaowo.fbook.utils.StringUtils.isNotBlank;
 
