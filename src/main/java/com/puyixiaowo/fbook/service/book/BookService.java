@@ -275,12 +275,12 @@ public class BookService {
         if (bookReadSettingBean.getUseApi()) {
             return getBookSourceByApi(bookIdThird);
         } else {
-            return getBookSourceByPick(bookIdThird);
+            return getBookSourceByPick();
         }
 
     }
 
-    private static List<BookSource> getBookSourceByPick(String bookIdThird) {
+    private static List<BookSource> getBookSourceByPick() {
         List<BookSource> list = new ArrayList<>();
 
         Class [] classes = {
