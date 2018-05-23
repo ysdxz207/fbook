@@ -327,7 +327,7 @@ public class BookController extends BaseController {
         return responseBean;
     }
 
-    public static Object changeBookSource(Request request, Response response) {
+    public static ResponseBean changeBookSource(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
         String sourceId = request.queryParams("sourceId");
         String bookIdStr = request.queryParams("bookId");
@@ -346,7 +346,7 @@ public class BookController extends BaseController {
         }
 
 
-        return responseBean.serialize();
+        return responseBean;
     }
 
     public static Object saveBookRead(Request request,
