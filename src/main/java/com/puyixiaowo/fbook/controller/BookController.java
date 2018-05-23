@@ -329,46 +329,18 @@ public class BookController extends BaseController {
 
     public static Object changeBookSource(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
-        String bookIdThird = request.queryParams("bookIdThird");
         String sourceId = request.queryParams("sourceId");
         String bookIdStr = request.queryParams("bookId");
-
-        if (StringUtils.isBlank(bookIdThird)) {
-            responseBean.errorMessage("书源Id为空");
-            return responseBean.serialize();
-        }
 
         UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
 
         try {
             Long bookId = Long.valueOf(bookIdStr);
-            BookBean bookBean = BookService.selectBookBeanById(bookId);
             BookReadBean bookReadBean = BookReadService
                     .getUserBookRead(userBean.getId(), bookId);
 
             bookReadBean.setSource(sourceId);
             DBUtils.insertOrUpdate(bookReadBean, false);
-            //切换书源后需要查询出当前章Link
-            List<BookChapterBean> bookChapterBeanList = BookChapterService
-                    .requestBookChapters(userBean.getId(), bookId, bookBean.getBookIdThird(), true);
-
-            //获取当前章
-            BookChapterBean chapter = null;
-            for (BookChapterBean bookChapterBean : bookChapterBeanList) {
-                if (bookReadBean.getLastReadingChapter()
-                        .equals(bookChapterBean.getTitle())) {
-                    chapter = bookChapterBean;
-                }
-            }
-
-            if (chapter == null) {
-                //第一章
-                chapter = BookChapterService
-                        .getNextChapter(0, userBean.getId(),
-                                bookId, bookIdThird, bookReadBean);
-
-            }
-            responseBean.setData(chapter);
         } catch (Exception e) {
             responseBean.error(e);
         }
