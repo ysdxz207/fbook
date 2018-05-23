@@ -26,8 +26,8 @@ public class BookServiceTest23us {
     @Test
     public void testGetBookDetailByPick() {
         BookBean bookBean = new BookBean();
-        bookBean.setBookIdThird("12946");
-        String source = DefaultPickRulesTemplateImpl.class.getName();
+        bookBean.setBookIdThird("20845");
+        String source = Two3usPickRulesTemplateImpl.class.getName();
         bookBean = BookService.getBookDetailByPick(bookBean, source);
         System.out.println(JSON.toJSONString(bookBean));
     }

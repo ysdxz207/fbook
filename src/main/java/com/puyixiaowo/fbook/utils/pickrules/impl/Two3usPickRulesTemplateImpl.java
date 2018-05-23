@@ -121,22 +121,22 @@ public class Two3usPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl im
 
     @Override
     public String getBookEncoding() {
-        return "GBK";
+        return "UTF-8";
     }
 
     @Override
     public String getBookDetailLink(BookBean bookBean) {
-        return "http://www.lwxsw.cc/book/" + bookBean.getBookIdThird() + "/";
+        return "https://m.w23us.com/book/" + bookBean.getBookIdThird() + "/";
     }
 
     @Override
     public String getBookDetailTitle(Document document) {
-        return document.select(".bookTitle").text();
+        return document.select("h1.pt-name").text();
     }
 
     @Override
     public String getBookDetailAuthor(Document document) {
-        return document.select(".booktag").get(0).getAllElements().eachText().get(1);
+        return document.select(".pt-info").get(0).text().replace("作者：", "");
     }
 
     @Override
