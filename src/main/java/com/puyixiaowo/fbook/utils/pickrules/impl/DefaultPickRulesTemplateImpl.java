@@ -32,6 +32,12 @@ import static com.puyixiaowo.fbook.utils.HtmlUtils.*;
 
 public class DefaultPickRulesTemplateImpl implements PickRulesTemplate{
 
+
+    @Override
+    public String getName() {
+        return "乐文网";
+    }
+
     @Override
     public String getSearchDevice() {
         return "PHONE";

@@ -22,10 +22,15 @@ import static com.puyixiaowo.fbook.utils.StringUtils.isNotBlank;
 /**
  * @author Moses
  * @date 2018-05-17 17:38:11
- * 默认爬取规则模版实现
+ * 23us爬取规则模版实现
  */
 
 public class Two3usPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl implements PickRulesTemplate {
+
+    @Override
+    public String getName() {
+        return "23us";
+    }
 
     @Override
     public String getSearchDevice() {

@@ -10,11 +10,11 @@ import com.puyixiaowo.fbook.constants.BookConstants;
 import com.puyixiaowo.fbook.constants.Constants;
 import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.HtmlUtils;
-import com.puyixiaowo.fbook.utils.HttpUtils;
 import com.puyixiaowo.fbook.utils.StringUtils;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesTemplate;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
-import com.puyixiaowo.generator.Run;
+import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
+import com.puyixiaowo.fbook.utils.pickrules.impl.Two3usPickRulesTemplateImpl;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Connection;
@@ -24,7 +24,9 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.*;
@@ -266,7 +268,39 @@ public class BookService {
         return StringUtils.isBlank(updated) ? "" : updated;
     }
 
-    public static List<BookSource> getBookSource(String bookIdThird) {
+    public static List<BookSource> getBookSource(Long userId,
+                                                 String bookIdThird) {
+        BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userId);
+
+        if (bookReadSettingBean.getUseApi()) {
+            return getBookSourceByApi(bookIdThird);
+        } else {
+            return getBookSourceByPick(bookIdThird);
+        }
+
+    }
+
+    private static List<BookSource> getBookSourceByPick(String bookIdThird) {
+        List<BookSource> list = new ArrayList<>();
+
+        Class [] classes = {
+                DefaultPickRulesTemplateImpl.class,
+                Two3usPickRulesTemplateImpl.class
+        };
+
+        for (Class clazz : classes) {
+            BookSource bookSource = new BookSource();
+            PickRulesTemplate template = PickRulesUtils.getPickRulesTemplate(clazz);
+
+            bookSource.setName(template.getName());
+            bookSource.setSource(clazz.getName());
+            list.add(bookSource);
+        }
+
+        return list;
+    }
+
+    public static List<BookSource> getBookSourceByApi(String bookIdThird) {
         List<BookSource> list = new ArrayList<>();
 
         String url = BookConstants.URL_BOOK_SOURCE + bookIdThird;
@@ -290,7 +324,6 @@ public class BookService {
                 list.add(bookSource);
             }
         }
-
         return list;
     }
 
@@ -299,20 +332,23 @@ public class BookService {
         BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userId);
 
         if (bookReadSettingBean.getUseApi()) {
-            return getBookSourceByApi(bookIdThird);
+            return getDefaultBookSourceByApi(userId, bookIdThird);
         } else {
-            return getBookSourceByPick();
+            return getDefaultBookSourceByPick();
         }
     }
 
-    private static BookSource getBookSourceByPick() {
+    private static BookSource getDefaultBookSourceByPick() {
 
         BookSource bookSource = new BookSource();
+        bookSource.setName(new DefaultPickRulesTemplateImpl().getName());
+        bookSource.setSource(DefaultPickRulesTemplateImpl.class.getName());
         return bookSource;
     }
 
-    public static BookSource getBookSourceByApi(String bookIdThird) {
-        List<BookSource> bookSourceList = getBookSource(bookIdThird);
+    public static BookSource getDefaultBookSourceByApi(Long userId,
+                                                       String bookIdThird) {
+        List<BookSource> bookSourceList = getBookSource(userId, bookIdThird);
 
         if (bookSourceList.size() == 1) {
             return bookSourceList.get(0);

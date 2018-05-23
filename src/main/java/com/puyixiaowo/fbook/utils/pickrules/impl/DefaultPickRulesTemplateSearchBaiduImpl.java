@@ -31,6 +31,11 @@ import static com.puyixiaowo.fbook.utils.HtmlUtils.*;
 public class DefaultPickRulesTemplateSearchBaiduImpl implements PickRulesTemplate{
 
     @Override
+    public String getName() {
+        return "乐文网-百度站内搜索";
+    }
+
+    @Override
     public String getSearchDevice() {
         return "PC";
     }

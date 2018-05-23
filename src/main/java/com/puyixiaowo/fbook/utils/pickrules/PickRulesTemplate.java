@@ -8,6 +8,9 @@ import org.jsoup.select.Elements;
 
 public interface PickRulesTemplate {
 
+    String getName();
+
+
     //搜索
     public String getSearchDevice();
     public String getSearchLink(String keywords);

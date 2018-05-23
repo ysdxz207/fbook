@@ -303,7 +303,7 @@ public class BookController extends BaseController {
 
         UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
 
-        List<BookSource> list = BookService.getBookSource(bookIdThird);
+        List<BookSource> list = BookService.getBookSource(userBean.getId(), bookIdThird);
 
         //查询bookRead获取当前书源
         BookBean bookBean = BookService.selectBookBeanByBookIdThird(bookIdThird);
