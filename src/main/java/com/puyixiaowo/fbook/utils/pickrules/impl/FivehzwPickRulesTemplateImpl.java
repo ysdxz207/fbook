@@ -168,12 +168,12 @@ public class FivehzwPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl i
 
     @Override
     public String getBookDetailDescription(Document document) {
-        return document.select("#bookIntro").text();
+        return document.select("#intro").text();
     }
 
     @Override
     public String getBookDetailFaceUrl(Document document) {
-        return document.select("#bookIntro img").attr("src");
+        return "http://www.5hzw.com/" + document.select("#fmimg img").attr("src");
     }
 
     @Override
