@@ -81,11 +81,11 @@ public class FivehzwPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl i
         Elements es = new Elements();
         if (elsChapterList.size() > 0) {
             Element element = new Element("tr");
-            element.append("<td><a href=\"" + document.baseUri() + "\">" + document.select("#info h1").text() + "</a></td>");
-            element.append("<td><a>" + document.select("dd").get(0).text() + "</a></td>");
-            element.append("<td>" + document.select("#info p").get(0).text().replace("作 者：", "") + "</td>");
+            element.append("<td><a href=\"" + document.baseUri() + "\">" + getBookDetailTitle(document) + "</a></td>");
+            element.append("<td><a>" + getBookDetailUpdateChapter(document) + "</a></td>");
+            element.append("<td>" + getBookDetailAuthor(document) + "</td>");
             element.append("<td></td>");
-            element.append("<td>" + document.select("#info p").get(2).text().replace("最后更新：", "") + "</td>");
+            element.append("<td>" + getBookDetailUpdateDate(document) + "</td>");
             element.append("<td></td>");
             es.add(element);
             return es;
@@ -163,7 +163,7 @@ public class FivehzwPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl i
 
     @Override
     public String getBookDetailCategory(Document document) {
-        return document.select(".booktag").get(0).getAllElements().eachText().get(2);
+        return document.select(".con_top a").last().text();
     }
 
     @Override
@@ -173,7 +173,7 @@ public class FivehzwPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl i
 
     @Override
     public String getBookDetailFaceUrl(Document document) {
-        return "http://www.5hzw.com/" + document.select("#fmimg img").attr("src");
+        return "http://www.5hzw.com" + document.select("#fmimg img").attr("src");
     }
 
     @Override
@@ -183,7 +183,7 @@ public class FivehzwPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl i
 
     @Override
     public String getChapterListLink(BookBean bookBean) {
-        return "https://m.w23us.com/book/" + bookBean.getBookIdThird() + "/";
+        return "http://www.5hzw.com/" + bookBean.getBookIdThird() + "/";
     }
 
     @Override
