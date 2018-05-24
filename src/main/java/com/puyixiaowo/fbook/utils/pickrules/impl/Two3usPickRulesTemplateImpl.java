@@ -164,12 +164,12 @@ public class Two3usPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl im
 
     @Override
     public Elements getChapterListItems(Document document) {
-        return document.select("#list-chapterAll .panel-chapterlist dd a");
+        return document.select("#chapterlist li");
     }
 
     @Override
     public String getChapterListLink(BookBean bookBean) {
-        return "http://www.lwxsw.cc/book/" + bookBean.getBookIdThird() + "/";
+        return "https://m.w23us.com/book/" + bookBean.getBookIdThird() + "/";
     }
 
     @Override
@@ -179,7 +179,7 @@ public class Two3usPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl im
 
     @Override
     public String getChapterListDetailLink(Element element) {
-        return element.baseUri() + element.attr("href");
+        return "https://m.w23us.com" + element.select("a").attr("href");
     }
 
     @Override

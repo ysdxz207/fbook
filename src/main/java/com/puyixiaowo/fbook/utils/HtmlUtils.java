@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,5 +95,20 @@ public class HtmlUtils {
             e.printStackTrace();
         }
         return response;
+    }
+
+    public static void main(String[] args) throws IOException {
+
+
+        Connection connection = Jsoup.connect("https://m.w23us.com/book/20845/0.html")
+                .userAgent(USER_AGENT_PHONE)
+                .ignoreContentType(true)
+                .timeout(TIMEOUT)
+                .method(Connection.Method.GET);
+
+        Connection.Response res = connection.execute();
+        Document document = res.parse();
+        System.out.println(document);
+
     }
 }
