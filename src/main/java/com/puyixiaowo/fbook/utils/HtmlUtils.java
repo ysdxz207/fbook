@@ -100,7 +100,7 @@ public class HtmlUtils {
     public static void main(String[] args) throws IOException {
 
 
-        Connection connection = Jsoup.connect("https://m.w23us.com/book/20845/0.html")
+        Connection connection = Jsoup.connect("http://www.5hzw.com/8_8114/6150352.html")
                 .userAgent(USER_AGENT_PHONE)
                 .ignoreContentType(true)
                 .timeout(TIMEOUT)
