@@ -22,15 +22,15 @@ public class BookServiceTest5hzw {
         String source = FivehzwPickRulesTemplateImpl.class.getName();
         PickRulesUtils.updatePickRulesTemplate(source);
         PageBean pageBean = new PageBean();
-        BookService.searchByPick("地球上线", pageBean, source);
+        BookService.searchByPick("道君", pageBean, source);
         System.out.println(JSON.toJSONString(pageBean));
     }
 
     @Test
     public void testGetBookDetailByPick() {
         BookBean bookBean = new BookBean();
-        bookBean.setBookIdThird("20845");
-        String source = Two3usPickRulesTemplateImpl.class.getName();
+        bookBean.setBookIdThird("2_2390");
+        String source = FivehzwPickRulesTemplateImpl.class.getName();
         bookBean = BookService.getBookDetailByPick(bookBean, source);
         System.out.println(JSON.toJSONString(bookBean));
     }

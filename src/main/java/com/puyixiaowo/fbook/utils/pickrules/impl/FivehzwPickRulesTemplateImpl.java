@@ -82,12 +82,12 @@ public class FivehzwPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl i
         if (elsChapterList.size() > 0) {
             Element element = new Element("tr");
             element.append("<td><a href=\"" + document.baseUri() + "\">" + document.select("#info h1").text() + "</a></td>");
-            element.append("<td>" + "</td>");
-            element.append("<td>" + "</td>");
-            element.append("<td>" + "</td>");
-            element.append("<td>" + "</td>");
-            element.append("<td>" + "</td>");
-            es.add(document.select(".ptm-content a").first().appendChild(document.select(".ptm-content img").first()));
+            element.append("<td><a>" + document.select("dd").get(0).text() + "</a></td>");
+            element.append("<td>" + document.select("#info p").get(0).text().replace("作 者：", "") + "</td>");
+            element.append("<td></td>");
+            element.append("<td>" + document.select("#info p").get(2).text().replace("最后更新：", "") + "</td>");
+            element.append("<td></td>");
+            es.add(element);
             return es;
         }
         return es;
@@ -102,12 +102,12 @@ public class FivehzwPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl i
 
     @Override
     public String getSearchItemTitle(Element element) {
-        return element.select("a").text();
+        return element.select("td a").get(0).text();
     }
 
     @Override
     public String getSearchItemAuthor(Element element) {
-        return "未知";
+        return element.select("td").get(2).text();
     }
 
     @Override
@@ -117,48 +117,48 @@ public class FivehzwPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl i
 
     @Override
     public String getSearchItemUpdateDate(Element element) {
-        return "未知";
+        return element.select("td").get(4).text();
     }
 
     @Override
     public String getSearchItemUpdateChapter(Element element) {
-        return "未知";
+        return element.select("td").get(1).text();
     }
 
     @Override
     public String getSearchItemFaceUrl(Element element) {
 
-        return element.select("img").attr("src");
+        return null;
     }
 
     @Override
     public String getBookEncoding() {
-        return "UTF-8";
+        return "GBK";
     }
 
     @Override
     public String getBookDetailLink(BookBean bookBean) {
-        return "https://m.w23us.com/book/" + bookBean.getBookIdThird() + "/";
+        return "http://www.5hzw.com/" + bookBean.getBookIdThird() + "/";
     }
 
     @Override
     public String getBookDetailTitle(Document document) {
-        return document.select("h1.pt-name").text();
+        return document.select("#info h1").text();
     }
 
     @Override
     public String getBookDetailAuthor(Document document) {
-        return document.select(".pt-info").get(0).text().replace("作者：", "");
+        return document.select("#info p").get(0).text().replace("作 者：", "");
     }
 
     @Override
     public String getBookDetailUpdateDate(Document document) {
-        return document.select("p.visible-xs").text().split("：")[1];
+        return document.select("#info p").get(2).text().replace("最后更新：", "");
     }
 
     @Override
     public String getBookDetailUpdateChapter(Document document) {
-        return document.select("p").get(1).select("a").text().replace("正文 ", "");
+        return document.select("dd").get(0).text();
     }
 
     @Override
