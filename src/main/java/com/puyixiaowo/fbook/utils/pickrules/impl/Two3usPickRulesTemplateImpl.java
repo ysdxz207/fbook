@@ -10,8 +10,6 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
