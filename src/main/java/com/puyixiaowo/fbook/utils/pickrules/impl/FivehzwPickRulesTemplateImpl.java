@@ -80,6 +80,8 @@ public class FivehzwPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl i
 
         Elements es = new Elements();
         if (elsChapterList.size() > 0) {
+            Element element = new Element("tr");
+            element.append("");
             es.add(document.select(".ptm-content a").first().appendChild(document.select(".ptm-content img").first()));
             return es;
         }

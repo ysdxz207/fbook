@@ -22,7 +22,7 @@ public class BookServiceTest5hzw {
         String source = FivehzwPickRulesTemplateImpl.class.getName();
         PickRulesUtils.updatePickRulesTemplate(source);
         PageBean pageBean = new PageBean();
-        BookService.searchByPick("地球上线", pageBean, source);
+        BookService.searchByPick("道君", pageBean, source);
         System.out.println(JSON.toJSONString(pageBean));
     }
 
