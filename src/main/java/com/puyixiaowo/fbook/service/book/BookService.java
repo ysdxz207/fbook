@@ -17,16 +17,13 @@ import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
 import com.puyixiaowo.fbook.utils.pickrules.impl.Two3usPickRulesTemplateImpl;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.*;
@@ -160,8 +157,8 @@ public class BookService {
 
         JSONObject json = null;
         try {
-            Connection.Response response = HtmlUtils.getPage(url, "UTF-8");
-            json = JSON.parseObject(response.body());
+            Document document = HtmlUtils.getPage(url, "UTF-8");
+            json = JSON.parseObject(document.text());
         } catch (Exception e) {
         }
 
@@ -223,14 +220,13 @@ public class BookService {
             PickRulesTemplate pickRulesTemplate = PickRulesUtils.getPickRulesTemplate(source);
 
             String url = pickRulesTemplate.getBookDetailLink(bookBean);
-            Connection.Response response = HtmlUtils.getPage(url,
+            Document document = HtmlUtils.getPage(url,
                     pickRulesTemplate.getBookEncoding());
 
-            if (response == null) {
+            if (document == null) {
                 logger.info("[pick获取书籍信息失败]response为空");
                 throw new RuntimeException("[pick获取书籍信息失败]response为空");
             }
-            Document document = response.parse();
 
             String title = pickRulesTemplate.getBookDetailTitle(document);
             String author = pickRulesTemplate.getBookDetailAuthor(document);
@@ -306,8 +302,8 @@ public class BookService {
         String url = BookConstants.URL_BOOK_SOURCE + bookIdThird;
         JSONArray json = null;
         try {
-            Connection.Response response = HtmlUtils.getPage(url, "UTF-8");
-            json = JSON.parseArray(response.body());
+            Document document = HtmlUtils.getPage(url, "UTF-8");
+            json = JSON.parseArray(document.text());
         } catch (Exception e) {
         }
         if (json == null) {
@@ -373,8 +369,8 @@ public class BookService {
         params.put("limit", pageBean.getRowBounds().getLimit() + "");
         JSONObject json = null;
         try {
-            Connection.Response response = HtmlUtils.getPage(BookConstants.URL_SEARCH, params, "UTF-8", "PC");
-            json = JSON.parseObject(response.body());
+            Document document = HtmlUtils.getPage(BookConstants.URL_SEARCH, params, "UTF-8", "PC");
+            json = JSON.parseObject(document.text());
         } catch (Exception e) {
         }
         if (json == null) {
@@ -438,26 +434,24 @@ public class BookService {
             String url = pickRulesTemplate.getSearchLink(keywords);
             JSONObject params = pickRulesTemplate.getSearchParams(keywords);
             String method = pickRulesTemplate.getSearchMethod();
-            Connection.Response response;
+            Document document = null;
 
             switch (method) {
                 default:
                 case "GET":
-                    response = HtmlUtils.getPage(url,
+                    document = HtmlUtils.getPage(url,
                             params,
                             pickRulesTemplate.getSearchEncoding(),
                             pickRulesTemplate.getSearchDevice());
                     break;
                 case "POST":
-                    response = HtmlUtils.postPage(url, params, pickRulesTemplate.getSearchEncoding());
+                    document = HtmlUtils.postPage(url, params, pickRulesTemplate.getSearchEncoding());
                     break;
             }
 
-            if (response == null) {
+            if (document == null) {
                 throw new RuntimeException("搜索接口未响应");
             }
-            Document document = response.parse();
-
 
             Elements elements = pickRulesTemplate.getSearchItems(document);
             for (Element e :

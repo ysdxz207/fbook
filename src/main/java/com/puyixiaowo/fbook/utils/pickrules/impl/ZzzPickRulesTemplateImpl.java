@@ -3,15 +3,11 @@ package com.puyixiaowo.fbook.utils.pickrules.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fbook.bean.book.BookBean;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesTemplate;
-import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -238,13 +234,9 @@ public class ZzzPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl imple
 
         if (currentpagenum < maxpagenum) {
             String url = document.baseUri().replace(".html", "_" + (currentpagenum + 1) + ".html");
-            Connection.Response response = getPage(url, "GBK");
-            if (response != null) {
-                try {
-                    return content + getChapterDetailContent(response.parse());
-                } catch (IOException e) {
-                    return content;
-                }
+            Document document1 = getPage(url, "GBK");
+            if (document1 != null) {
+                return content + getChapterDetailContent(document1);
             }
         }
         return content;

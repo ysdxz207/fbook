@@ -29,78 +29,85 @@ public class HtmlUtils {
     private static int RETRY_TIMES = 5;
     private static int TIMEOUT = 5 * 1000;
 
-    public static Connection.Response getPage(String url,
+    public static Document getPage(String url,
                                               String encoding) {
         return accessPage(url, null, Connection.Method.GET, encoding, "PC");
     }
-    public static Connection.Response getPage(String url,
+    public static Document getPage(String url,
                                                String encoding,
                                                String device) {
         return accessPage(url, null, Connection.Method.GET, encoding, device);
     }
 
-    public static Connection.Response getPage(String url, JSONObject params, String encoding, String device) {
+    public static Document getPage(String url, JSONObject params, String encoding, String device) {
         return accessPage(url, params, Connection.Method.GET, encoding, device);
     }
 
-    public static Connection.Response postPage(String url, JSONObject params, String encoding) {
+    public static Document postPage(String url, JSONObject params, String encoding) {
         return accessPage(url, params, Connection.Method.POST, encoding, "PC");
     }
 
-    public static Connection.Response postPage(String url, JSONObject params, String encoding, String device) {
+    public static Document postPage(String url, JSONObject params, String encoding, String device) {
         return accessPage(url, params, Connection.Method.POST, encoding, device);
     }
 
-    public static Connection.Response accessPage(String url,
+    public static Document accessPage(String url,
                                                  JSONObject params,
                                                  Connection.Method method,
                                                  String encoding,
                                                  String device) {
 
-        Connection.Response response = null;
-        try {
-            switch (device) {
-                default:
-                case "PC":
-                    device = USER_AGENT_PC;
-                    break;
-                case "PHONE":
-                    device = USER_AGENT_PHONE;
-                    break;
-            }
 
-            Connection connection = Jsoup.connect(url)
-                    .userAgent(device)
-                    .ignoreContentType(true)
-                    .timeout(TIMEOUT)
-                    .method(method);
+        String str = HttpUtils.httpGet(url, null);
 
-            if (params != null
-                    && params.size() > 0) {
-                connection.data(JSON.toJavaObject(params, Map.class));
-            }
+        return Jsoup.parse(str);
 
-            response = connection.execute();
-            response.charset(encoding == null ? ENCODING : encoding);
-
-        } catch (SocketException | SocketTimeoutException e) {
-            //重试
-            if (RETRY_TIMES > 0) {
-                RETRY_TIMES --;
-                logger.info("[访问重试]:" + url);
-                return accessPage(url, params, method, encoding, device);
-            }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-        return response;
+//
+//        Connection.Response response = null;
+//        try {
+//            switch (device) {
+//                default:
+//                case "PC":
+//                    device = USER_AGENT_PC;
+//                    break;
+//                case "PHONE":
+//                    device = USER_AGENT_PHONE;
+//                    break;
+//            }
+//
+//            Connection connection = Jsoup.connect(url)
+//                    .userAgent(device)
+//                    .ignoreContentType(true)
+//                    .timeout(TIMEOUT)
+//                    .method(method);
+//
+//            if (params != null
+//                    && params.size() > 0) {
+//                connection.data(JSON.toJavaObject(params, Map.class));
+//            }
+//
+//            response = connection.execute();
+//            response.charset(encoding == null ? ENCODING : encoding);
+//
+//        } catch (SocketException | SocketTimeoutException e) {
+//            //重试
+//            if (RETRY_TIMES > 0) {
+//                RETRY_TIMES --;
+//                logger.info("[访问重试]:" + url);
+//                return accessPage(url, params, method, encoding, device);
+//            }
+//
+//        } catch (Exception e) {
+//
+//            e.printStackTrace();
+//        }
+//        return response;
     }
 
     public static void main(String[] args) throws IOException {
 
 
+        long start = System.currentTimeMillis();
         Connection connection = Jsoup.connect("http://www.5hzw.com/8_8114/6150352.html")
                 .userAgent(USER_AGENT_PHONE)
                 .ignoreContentType(true)
@@ -109,7 +116,13 @@ public class HtmlUtils {
 
         Connection.Response res = connection.execute();
         Document document = res.parse();
-        System.out.println(document);
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
 
+
+        long start1 = System.currentTimeMillis();
+        Document doc = getPage("http://www.5hzw.com/8_8114/6150352.html", "");
+        long end1 = System.currentTimeMillis();
+        System.out.println(end1 - start1);
     }
 }

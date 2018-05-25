@@ -17,10 +17,14 @@ import java.util.stream.Collectors;
 
 public class HttpUtils {
 
-    private static final String CHARSET = "UTF-8";
-    private static final int TIMEOUT_REQUEST = 5000;
-    private static final int TIMEOUT_CONNECTION = 5000;
-    private static final int TIMEOUT_READ_DATA = 12000;
+    private static int TIMEOUT_REQUEST = 5000;
+    private static int TIMEOUT_CONNECTION = 5000;
+    private static int TIMEOUT_READ_DATA = 12000;
+
+    public static HttpUtils readTimeout(int readTimeout) {
+        TIMEOUT_READ_DATA = readTimeout;
+        return HttpUtils.;
+    }
 
     /**
      * httpPost
@@ -29,20 +33,21 @@ public class HttpUtils {
      * @param params 参数
      * @return
      */
-    public static String httpPost(String url, Map<String, String> params) throws TimeoutException {
+    public String httpPost(String url, Map<String, String> params, int timeout) throws TimeoutException {
         PostMethod post = new PostMethod(url);
-        post.setRequestHeader("Content-Type",
-                "application/x-www-form-urlencoded;charset=UTF-8");
+//        post.setRequestHeader("Content-Type",
+//                "application/x-www-form-urlencoded;charset=UTF-8");
 
         if (params != null && params.size() > 0) {
             post.setRequestBody(getParams(params));
         }
 
-        return request(post);
+        return request(post, timeout);
     }
 
-    public static String httpPost(String url, Map<String, String> params,
-                                  Map<String, String> headers) throws TimeoutException {
+    public String httpPost(String url, Map<String, String> params,
+                                  Map<String, String> headers,
+                                  int timeout) throws TimeoutException {
         PostMethod post = new PostMethod(url);
 
         if (params != null && params.size() > 0) {
@@ -60,7 +65,7 @@ public class HttpUtils {
             }
         }
 
-        return request(post);
+        return request(post, timeout);
     }
 
     /**
@@ -69,18 +74,18 @@ public class HttpUtils {
      * @param url    路径
      * @return
      */
-    public static String httpGet(String url, Map<String, String> params) throws TimeoutException {
+    public String httpGet(String url, Map<String, String> params, int timeout) throws TimeoutException {
         GetMethod get = new GetMethod(url);
 
         if (params != null && params.size() > 0) {
 
             get.setQueryString(getParams(params));
         }
-        return request(get);
+        return request(get, timeout);
     }
 
 
-    private static NameValuePair [] getParams(Map<String, String> params) {
+    private NameValuePair [] getParams(Map<String, String> params) {
         List<NameValuePair> nvpList = new ArrayList<>();
         for (Map.Entry<String, String> entry : params.entrySet()) {
             nvpList.add(new NameValuePair(entry.getKey(), entry.getValue()));
@@ -89,15 +94,23 @@ public class HttpUtils {
         return nvpList.toArray(arr);
     }
 
-    private static String request(HttpMethod method) {
+    private String request(HttpMethod method,
+                                  int timeout) {
         method.getParams().setParameter(HttpMethodParams.SO_TIMEOUT,TIMEOUT_REQUEST);
         String str = null;
         HttpClient httpClient = new HttpClient();
-        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(TIMEOUT_CONNECTION);
+        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(timeout);
         httpClient.getHttpConnectionManager().getParams().setSoTimeout(TIMEOUT_READ_DATA);
         try {
             InputStream in = null;
             int statusCode = httpClient.executeMethod(method);
+
+            String charset;
+            if(method instanceof PostMethod){
+                charset = ((PostMethod)method).getResponseCharSet();
+            }else{
+                charset = ((GetMethod)method).getResponseCharSet();
+            }
 
             if (statusCode == HttpStatus.SC_MOVED_TEMPORARILY) {
 
@@ -110,7 +123,7 @@ public class HttpUtils {
                 return str;
             }
             in = method.getResponseBodyAsStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in, CHARSET));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in, charset));
             str = reader.lines().collect(Collectors.joining("\n"));
             if (StringUtils.isBlank(str)) {
                 return str;
@@ -120,6 +133,8 @@ public class HttpUtils {
             throw new TimeoutException("请求接口失败:" + e.getMessage());
         }
     }
+
+
 
 
 

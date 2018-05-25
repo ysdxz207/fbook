@@ -93,8 +93,8 @@ public class BookChapterService {
 
         JSONObject jsonObject = null;
         try {
-            Connection.Response response = HtmlUtils.getPage(url, "UTF-8");
-            jsonObject = JSON.parseObject(response.body());
+            Document document = HtmlUtils.getPage(url, "UTF-8");
+            jsonObject = JSON.parseObject(document.text());
         } catch (Exception e) {
         }
         if (jsonObject == null) {
@@ -154,13 +154,12 @@ public class BookChapterService {
             PickRulesTemplate pickRulesTemplate = PickRulesUtils.getPickRulesTemplate(source);
 
             String url = pickRulesTemplate.getChapterListLink(bookBean);
-            Connection.Response response = HtmlUtils.getPage(url,
+            Document document = HtmlUtils.getPage(url,
                     pickRulesTemplate.getBookEncoding());
 
-            if (response == null) {
+            if (document == null) {
                 return list;
             }
-            Document document = response.parse();
 
             Elements elements = pickRulesTemplate.getChapterListItems(document);
 
@@ -244,8 +243,8 @@ public class BookChapterService {
         String url = BookConstants.URL_CHAPTER_CONTENT + link;
         JSONObject json = null;
         try {
-            Connection.Response response = HtmlUtils.getPage(url, "UTF-8");
-            json = JSON.parseObject(response.body());
+            Document document = HtmlUtils.getPage(url, "UTF-8");
+            json = JSON.parseObject(document.text());
         } catch (Exception e) {
         }
         if (json == null) {
@@ -278,13 +277,12 @@ public class BookChapterService {
         try {
             PickRulesTemplate pickRulesTemplate = PickRulesUtils.getPickRulesTemplate(source);
 
-            Connection.Response response = HtmlUtils.getPage(link,
+            Document document = HtmlUtils.getPage(link,
                     pickRulesTemplate.getBookEncoding());
 
-            if (response == null) {
+            if (document == null) {
                 return bookChapterBean;
             }
-            Document document = response.parse();
 
             String title = pickRulesTemplate.getChapterDetailTitle(document);
             String content = pickRulesTemplate.getChapterDetailContent(document);
