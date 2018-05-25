@@ -25,8 +25,8 @@ public class Test {
         System.out.println("Loading page now-----------------------------------------------: " + url);
 
         // HtmlUnit 模拟浏览器
-        WebClient webClient = new WebClient(BrowserVersion.CHROME);
-        webClient.getOptions().setJavaScriptEnabled(true);              // 启用JS解释器，默认为true
+        WebClient webClient = new WebClient();
+        webClient.getOptions().setJavaScriptEnabled(false);              // 启用JS解释器，默认为true
         webClient.getOptions().setCssEnabled(false);                    // 禁用css支持
         webClient.getOptions().setThrowExceptionOnScriptError(false);   // js运行错误时，是否抛出异常
         webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
