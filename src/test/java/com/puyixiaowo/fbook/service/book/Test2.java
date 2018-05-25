@@ -2,10 +2,10 @@ package com.puyixiaowo.fbook.service.book;
 
 import org.jsoup.nodes.Document;
 import us.codecraft.webmagic.Page;
+import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.Html;
 
 public class Test2 implements PageProcessor {
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000);
@@ -13,7 +13,7 @@ public class Test2 implements PageProcessor {
 
     @Override
     public void process(Page page) {
-
+        page.putField("document", page.getHtml().getDocument());
     }
 
     @Override
@@ -22,12 +22,10 @@ public class Test2 implements PageProcessor {
     }
 
     public static Document getPage(String url) {
-        spider.addUrl(url).thread(5);
-        return spider.get(url);
+        ResultItems resultItems = spider.addUrl(url).thread(5).get(url);
+        Document document = (Document) resultItems.getAll().get("document");
+        spider.close();
+        return document;
     }
 
-    public static void main(String[] args) {
-        Document document = getPage("http://www.mxguan.com/book/840/8360558.html");
-        System.out.println(document.html());
-    }
 }
