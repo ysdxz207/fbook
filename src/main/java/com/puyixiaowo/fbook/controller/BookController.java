@@ -150,10 +150,6 @@ public class BookController extends BaseController {
 
 
             bookChapterBean.setBookId(bookId);
-            String content = bookChapterBean
-                    .getContent().replaceAll("\n", "</p>\n<p>&nbsp;&nbsp;&nbsp;&nbsp;");
-            bookChapterBean.setContent(content);
-
 
             //已读
             chapterBeanList = BookChapterService.getChapterHasReadList(chapterBeanList, bookReadBean);
@@ -297,30 +293,18 @@ public class BookController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
         String bookIdThird = request.queryParams("bookIdThird");
         String title = request.queryParams("title");
-        if (StringUtils.isBlank(bookIdThird)) {
-            return responseBean.error(SystemError.PARAMS_ERROR);
-        }
+//        if (StringUtils.isBlank(bookIdThird)) {
+//            return responseBean.error(SystemError.PARAMS_ERROR);
+//        }
 
         UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
 
-        List<BookSource> list = BookService.getBookSource(userBean.getId(), bookIdThird);
+        List<BookSource> list = BookService.getBookSourceByApi(userBean.getId(), bookIdThird);
 
-        //查询bookRead获取当前书源
-        BookBean bookBean = BookService.selectBookBeanByBookIdThird(bookIdThird);
-        for (BookSource bookSource : list) {
-            if (bookBean != null) {
-                BookReadBean bookReadBean = BookReadService.getUserBookRead(userBean.getId(), bookBean.getId());
-                if (bookReadBean != null
-                        && bookSource.getSource().equals(bookReadBean.getSource())) {
-                    bookSource.setCurrentSource(true);
-                }
-            }
-        }
+
         JSONObject model = new JSONObject();
         model.put("list", list);
-
         model.put("bookIdThird", bookIdThird);
-        model.put("bookId", bookBean.getId());
         model.put("title", title);
 
         responseBean.setData(model);

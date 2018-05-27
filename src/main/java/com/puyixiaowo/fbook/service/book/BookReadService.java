@@ -1,6 +1,7 @@
 package com.puyixiaowo.fbook.service.book;
 
 import com.puyixiaowo.fbook.bean.book.BookReadBean;
+import com.puyixiaowo.fbook.bean.book.BookReadSettingBean;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.bean.sys.ResponseBean;
 import com.puyixiaowo.fbook.utils.DBUtils;
@@ -41,10 +42,14 @@ public class BookReadService {
                 "user_id = :userId and book_id = :bookId", bookReadBean);
 
         if (bookReadBean == null) {
+            BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userId);
             bookReadBean = new BookReadBean();
             bookReadBean.setUserId(userId);
             bookReadBean.setBookId(bookId);
             bookReadBean.setLastReadingChapterNum(1);
+            if (!bookReadSettingBean.getUseApi()) {
+                bookReadBean.setSource(bookReadSettingBean.getSearchSource());
+            }
         }
         return bookReadBean;
     }

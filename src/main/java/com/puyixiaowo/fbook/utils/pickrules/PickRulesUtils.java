@@ -3,7 +3,7 @@ package com.puyixiaowo.fbook.utils.pickrules;
 import com.itranswarp.compiler.JavaStringCompiler;
 import com.puyixiaowo.fbook.bean.book.PickRulesBean;
 import com.puyixiaowo.fbook.utils.StringUtils;
-import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
+import com.puyixiaowo.fbook.utils.pickrules.impl.LwxswPickRulesTemplateImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,10 +23,10 @@ public class PickRulesUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(PickRulesUtils.class);
 
-    private static PickRulesTemplate pickRulesTemplate = new DefaultPickRulesTemplateImpl();
+    private static PickRulesTemplate pickRulesTemplate = new LwxswPickRulesTemplateImpl();
 
 
-    private static final String PACKAGE_NAME_IMPL = DefaultPickRulesTemplateImpl.class.getPackage().getName();
+    private static final String PACKAGE_NAME_IMPL = LwxswPickRulesTemplateImpl.class.getPackage().getName();
     private static final String PACKAGE_NAME_INTERFACE = PickRulesTemplate.class.getPackage().getName();
     private static final String CLASS_NAME_DEFAULT_TEMPLATE_IMPL = "DynamicPickRulesTemplateImpl";
     private static final String CLASS_DEFAULT_TEMPLATE_IMPL = PACKAGE_NAME_IMPL + ".DefaultPickRulesTemplateImpl";
@@ -97,7 +97,7 @@ public class PickRulesUtils {
         }
     }
 
-    public static PickRulesTemplate getPickRulesTemplate(Class<? extends DefaultPickRulesTemplateImpl> clazz) {
+    public static PickRulesTemplate getPickRulesTemplate(Class<? extends LwxswPickRulesTemplateImpl> clazz) {
 
         if (StringUtils.isBlank(clazz)) {
             return pickRulesTemplate;

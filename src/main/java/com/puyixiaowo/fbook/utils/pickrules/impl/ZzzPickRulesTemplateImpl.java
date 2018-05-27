@@ -23,7 +23,7 @@ import static com.puyixiaowo.fbook.utils.StringUtils.isNotBlank;
  * 3z中文网爬取规则模版实现
  */
 
-public class ZzzPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl implements PickRulesTemplate {
+public class ZzzPickRulesTemplateImpl extends LwxswPickRulesTemplateImpl implements PickRulesTemplate {
 
     @Override
     public String getName() {
@@ -48,11 +48,6 @@ public class ZzzPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl imple
     @Override
     public String getSearchMethod() {
         return "POST";
-    }
-
-    @Override
-    public String getSearchEncoding() {
-        return "GBK";
     }
 
     @Override
@@ -116,11 +111,6 @@ public class ZzzPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl imple
     public String getSearchItemFaceUrl(Element element) {
 
         return null;
-    }
-
-    @Override
-    public String getBookEncoding() {
-        return "GBK";
     }
 
     @Override

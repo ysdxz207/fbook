@@ -7,7 +7,6 @@ import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.HtmlUtils;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
-import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
 import com.puyixiaowo.fbook.utils.pickrules.impl.Two3usPickRulesTemplateImpl;
 import org.junit.Test;
 
@@ -54,7 +53,7 @@ public class BookServiceTest23us {
 
     @Test
     public void test() throws IOException {
-        System.out.println(HtmlUtils.getPage("http://www.mxguan.com/book/840/8360558.html", "GBK", "PHONE").body());
+        System.out.println(HtmlUtils.getPage("http://www.mxguan.com/book/840/8360558.html", "PHONE").body());
     }
 }
 

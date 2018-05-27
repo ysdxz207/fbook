@@ -7,8 +7,7 @@ import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.HtmlUtils;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesUtils;
-import com.puyixiaowo.fbook.utils.pickrules.impl.FivehzwPickRulesTemplateImpl;
-import com.puyixiaowo.fbook.utils.pickrules.impl.Two3usPickRulesTemplateImpl;
+import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class BookServiceTest5hzw {
     @Test
     public void testSearchByPick() throws Exception {
 
-        String source = FivehzwPickRulesTemplateImpl.class.getName();
+        String source = DefaultPickRulesTemplateImpl.class.getName();
         PickRulesUtils.updatePickRulesTemplate(source);
         PageBean pageBean = new PageBean();
         BookService.searchByPick("地球上线", pageBean, source);
@@ -30,7 +29,7 @@ public class BookServiceTest5hzw {
     public void testGetBookDetailByPick() {
         BookBean bookBean = new BookBean();
         bookBean.setBookIdThird("2_2390");
-        String source = FivehzwPickRulesTemplateImpl.class.getName();
+        String source = DefaultPickRulesTemplateImpl.class.getName();
         bookBean = BookService.getBookDetailByPick(bookBean, source);
         System.out.println(JSON.toJSONString(bookBean));
     }
@@ -38,16 +37,16 @@ public class BookServiceTest5hzw {
     @Test
     public void testGetBookChapterListByPick() throws Exception {
         DBUtils.initDB("jdbc.properties");
-        Long bookId = 43823644234433L;
-        String source = Two3usPickRulesTemplateImpl.class.getName();
+        Long bookId = 448993300779630592L;
+        String source = DefaultPickRulesTemplateImpl.class.getName();
         List<BookChapterBean> list = BookChapterService.getChapterListByPick(bookId, source);
         System.out.println(JSON.toJSONString(list));
     }
 
     @Test
     public void testGetBookChapterDetailByPick() throws Exception {
-        String link = "https://m.w23us.com/book/20845/0.html";
-        String source = Two3usPickRulesTemplateImpl.class.getName();
+        String link = "http://www.5hzw.com/2_2390/7946313.html";
+        String source = DefaultPickRulesTemplateImpl.class.getName();
         BookChapterBean bookChapterBean = BookChapterService.getBookContentByPick(link, source);
         System.out.println(JSON.toJSONString(bookChapterBean));
     }

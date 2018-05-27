@@ -3,13 +3,11 @@ package com.puyixiaowo.fbook.utils.pickrules.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fbook.bean.book.BookBean;
 import com.puyixiaowo.fbook.utils.pickrules.PickRulesTemplate;
-import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -22,10 +20,10 @@ import static com.puyixiaowo.fbook.utils.StringUtils.isNotBlank;
 /**
  * @author Moses
  * @date 2018-05-17 17:38:11
- * 23us爬取规则模版实现
+ * 23us爬取规则模版实现(无效)
  */
 
-public class Two3usPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl implements PickRulesTemplate {
+public class Two3usPickRulesTemplateImpl extends LwxswPickRulesTemplateImpl implements PickRulesTemplate {
 
     @Override
     public String getName() {
@@ -53,11 +51,6 @@ public class Two3usPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl im
     @Override
     public String getSearchMethod() {
         return "POST";
-    }
-
-    @Override
-    public String getSearchEncoding() {
-        return "UTF-8";
     }
 
     @Override
@@ -115,11 +108,6 @@ public class Two3usPickRulesTemplateImpl extends DefaultPickRulesTemplateImpl im
     public String getSearchItemFaceUrl(Element element) {
 
         return element.select("img").attr("src");
-    }
-
-    @Override
-    public String getBookEncoding() {
-        return "UTF-8";
     }
 
     @Override

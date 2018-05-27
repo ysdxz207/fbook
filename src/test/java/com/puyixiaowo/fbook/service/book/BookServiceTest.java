@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fbook.bean.book.BookBean;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.utils.HtmlUtils;
-import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
+import com.puyixiaowo.fbook.utils.pickrules.impl.LwxswPickRulesTemplateImpl;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ public class BookServiceTest {
     @Test
     public void testSearchByPick() throws Exception {
 
-        String source = DefaultPickRulesTemplateImpl.class.getName();
+        String source = LwxswPickRulesTemplateImpl.class.getName();
         PageBean pageBean = new PageBean();
         BookService.searchByPick("道君", pageBean, source);
         System.out.println(JSON.toJSONString(pageBean));
@@ -24,7 +24,7 @@ public class BookServiceTest {
     public void testGetBookDetailByPick() {
         BookBean bookBean = new BookBean();
         bookBean.setBookIdThird("12946");
-        String source = DefaultPickRulesTemplateImpl.class.getName();
+        String source = LwxswPickRulesTemplateImpl.class.getName();
         bookBean = BookService.getBookDetailByPick(bookBean, source);
         System.out.println(JSON.toJSONString(bookBean));
     }

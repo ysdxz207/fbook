@@ -16,7 +16,6 @@ public interface PickRulesTemplate {
     public String getSearchLink(String keywords);
     public JSONObject getSearchParams(String keywords);
     public String getSearchMethod();
-    public String getSearchEncoding();
     public Elements getSearchItems(Document document);
     public String getSearchItemBookIdThird(Element element);
     public String getSearchItemTitle(Element element);
@@ -27,7 +26,6 @@ public interface PickRulesTemplate {
     public String getSearchItemFaceUrl(Element element);
 
     //详情
-    public String getBookEncoding();
     public String getBookDetailLink(BookBean bookBean);
     public String getBookDetailTitle(Document document);
     public String getBookDetailAuthor(Document document);

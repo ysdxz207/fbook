@@ -45,7 +45,7 @@ public class BookChapterService {
                                                             String bookIdThird,
                                                             boolean keepSort) {
 
-        List<BookChapterBean> list = new ArrayList<>();
+        List<BookChapterBean> list;
 
         BookReadBean bookReadBean = BookReadService.getUserBookRead(userId, bookId);
 
@@ -154,8 +154,7 @@ public class BookChapterService {
             PickRulesTemplate pickRulesTemplate = PickRulesUtils.getPickRulesTemplate(source);
 
             String url = pickRulesTemplate.getChapterListLink(bookBean);
-            Document document = HtmlUtils.getPage(url,
-                    pickRulesTemplate.getBookEncoding());
+            Document document = HtmlUtils.getPage(url);
 
             if (document == null) {
                 return list;
@@ -259,11 +258,25 @@ public class BookChapterService {
             String content = chapter.getString("body");
             String cpContent = chapter.getString("cpContent");
 
-            if (StringUtils.isNotBlank(cpContent)) {
+            StringBuilder sb = new StringBuilder();
+            if (StringUtils.isBlank(content)
+                && StringUtils.isNotBlank(cpContent)) {
                 content = cpContent;
             }
+
+            content = content != null ? content.replace("<a href=\"", "") : cpContent;
+
+            String[] arr = content.split("\n");
+            for (String str :
+                    arr) {
+                sb.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                sb.append(str);
+                sb.append("<br/>");
+            }
+
             bookChapterBean.setTitle(title);
-            bookChapterBean.setContent(content != null ? content.replace("<a href=\"", "") : content);
+            bookChapterBean.setContent(sb.toString());
+
             bookChapterBean.setLink(link);
             return bookChapterBean;
         }
@@ -277,8 +290,7 @@ public class BookChapterService {
         try {
             PickRulesTemplate pickRulesTemplate = PickRulesUtils.getPickRulesTemplate(source);
 
-            Document document = HtmlUtils.getPage(link,
-                    pickRulesTemplate.getBookEncoding());
+            Document document = HtmlUtils.getPage(link);
 
             if (document == null) {
                 return bookChapterBean;

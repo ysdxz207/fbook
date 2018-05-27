@@ -1,5 +1,8 @@
 package com.puyixiaowo.fbook.constants;
 
+import com.puyixiaowo.fbook.utils.pickrules.impl.LwxswPickRulesTemplateImpl;
+import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
+
 public class Constants {
 
     public static final String ENCODING = "UTF-8";
@@ -41,4 +44,11 @@ public class Constants {
      */
     public static String [] ALLOWED_ORIGINS = new String[0];
 
+    /**
+     * 爬取书源
+     */
+    public static final Class [] BOOK_SOURCE_PICK = {
+        DefaultPickRulesTemplateImpl.class,
+        LwxswPickRulesTemplateImpl.class
+    };
 }

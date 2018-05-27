@@ -12,12 +12,13 @@ import com.puyixiaowo.fbook.exception.DBObjectExistsException;
 import com.puyixiaowo.fbook.service.LoginService;
 import com.puyixiaowo.fbook.service.UserService;
 import com.puyixiaowo.fbook.service.book.BookReadSettingService;
+import com.puyixiaowo.fbook.service.book.BookService;
 import com.puyixiaowo.fbook.utils.DBUtils;
 import com.puyixiaowo.fbook.utils.DesUtils;
 import com.puyixiaowo.fbook.utils.Md5Utils;
 import com.puyixiaowo.fbook.utils.StringUtils;
 import com.puyixiaowo.fbook.utils.captcha.CaptchaProducer;
-import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
+import com.puyixiaowo.fbook.utils.pickrules.impl.LwxswPickRulesTemplateImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -271,7 +272,7 @@ public class LoginController extends BaseController {
             //创建用户信息
             BookReadSettingBean bookReadSettingBean = new BookReadSettingBean();
             bookReadSettingBean.setUserId(userBean.getId());
-            bookReadSettingBean.setSearchSource(DefaultPickRulesTemplateImpl.class.getName());
+            bookReadSettingBean.setSearchSource(LwxswPickRulesTemplateImpl.class.getName());
             DBUtils.insertOrUpdate(bookReadSettingBean, false);
             //注册完直接登录
             request.session().attribute(Constants.SESSION_USER_KEY, userBean);
@@ -325,6 +326,7 @@ public class LoginController extends BaseController {
             userBean.setPassword(null);
             json.put("user", userBean);
             json.put("bookReadSetting", bookReadSettingBean);
+            json.put("bookSourceListPick", BookService.getBookSourceByPick(userBean.getId()));
             responseBean.setData(json);
         } catch (Exception e) {
             responseBean.error(e);
@@ -334,6 +336,6 @@ public class LoginController extends BaseController {
     }
 
     public static void main(String[] args) {
-        System.out.println(DefaultPickRulesTemplateImpl.class.getName());
+        System.out.println(LwxswPickRulesTemplateImpl.class.getName());
     }
 }

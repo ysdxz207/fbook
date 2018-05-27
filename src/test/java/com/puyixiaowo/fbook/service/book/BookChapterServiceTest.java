@@ -2,7 +2,7 @@ package com.puyixiaowo.fbook.service.book;
 
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fbook.bean.book.BookBean;
-import com.puyixiaowo.fbook.utils.pickrules.impl.DefaultPickRulesTemplateImpl;
+import com.puyixiaowo.fbook.utils.pickrules.impl.LwxswPickRulesTemplateImpl;
 import org.junit.Test;
 
 public class BookChapterServiceTest {
@@ -13,14 +13,14 @@ public class BookChapterServiceTest {
 
         BookBean bookBean = new BookBean();
         bookBean.setId(443514092943048154L);
-        String source = DefaultPickRulesTemplateImpl.class.getName();
+        String source = LwxswPickRulesTemplateImpl.class.getName();
         System.out.println(JSON.toJSONString(BookChapterService.getChapterListByPick(bookBean.getId(), source)));
     }
 
     @Test
     public void testGetBookContentByPick() {
         String link = "http://www.lwxsw.cc/book/12946/7554155.html";
-        String source = DefaultPickRulesTemplateImpl.class.getName();
+        String source = LwxswPickRulesTemplateImpl.class.getName();
 
         System.out.println(JSON.toJSONString(BookChapterService.getBookContentByPick(link, source)));
     }

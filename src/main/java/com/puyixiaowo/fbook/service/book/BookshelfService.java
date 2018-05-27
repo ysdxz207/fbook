@@ -2,6 +2,7 @@ package com.puyixiaowo.fbook.service.book;
 
 import com.puyixiaowo.fbook.bean.UserBean;
 import com.puyixiaowo.fbook.bean.book.BookBean;
+import com.puyixiaowo.fbook.bean.book.BookReadBean;
 import com.puyixiaowo.fbook.bean.book.BookshelfBean;
 import com.puyixiaowo.fbook.bean.sys.PageBean;
 import com.puyixiaowo.fbook.utils.DBUtils;
