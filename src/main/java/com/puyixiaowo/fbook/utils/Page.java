@@ -119,14 +119,15 @@ public class Page {
 
                 break;
             case "POST":
-                httpMethod = new HttpPost(url);
+                HttpPost post = new HttpPost(url);
                 StringEntity strEntity;
                 try {
                     strEntity = new StringEntity(params.toJSONString());
                 } catch (UnsupportedEncodingException e) {
                     throw new RuntimeException("[Page post parameters exception]:" + params.toJSONString());
                 }
-                new HttpPost(url).setEntity(strEntity);
+                post.setEntity(strEntity);
+                httpMethod = post;
                 break;
         }
 
@@ -232,17 +233,30 @@ public class Page {
     }
 
     public String getCharset(Document document) {
+        boolean deep = false;
         Elements eles = document.select("meta[http-equiv=Content-Type]");
+
+        if (eles.size() == 0) {
+            deep = true;
+            eles = document.select("meta");
+        }
         Iterator<Element> it = eles.iterator();
         while (it.hasNext()) {
             Element element = it.next();
-            Pattern p = Pattern.compile(".*charset=([^;]*).*");
-            Matcher m = p.matcher(element.attr("content"));
+            Matcher m;
+            if (!deep) {
+                Pattern p = Pattern.compile(".*charset=([^;]*).*");
+                m = p.matcher(element.attr("content"));
+            } else {
+                Pattern p = Pattern.compile(".*charset=\"(.*)\".*");
+                m = p.matcher(element.toString());
+            }
             if (m.find()) {
                 return m.group(1);
             }
         }
+
+
         return "UTF-8";
     }
-
 }

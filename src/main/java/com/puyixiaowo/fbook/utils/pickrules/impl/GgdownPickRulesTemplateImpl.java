@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,59 +17,62 @@ import java.util.regex.Pattern;
 /**
  * @author Moses
  * @date 2018-05-17 17:38:11
- * 耽美啦爬取规则模版实现
+ * 格格党爬取规则模版实现
  */
 
-public class DanmeilaPickRulesTemplateImpl extends LwxswPickRulesTemplateImpl implements PickRulesTemplate {
+public class GgdownPickRulesTemplateImpl extends LwxswPickRulesTemplateImpl implements PickRulesTemplate {
 
     @Override
     public String getName() {
-        return "耽美啦";
+        return "格格党";
     }
 
     @Override
     public String getSearchDevice() {
-        return "PC";
+        return "PHONE";
     }
 
     @Override
     public String getSearchLink(String keywords) {
-        return "http://www.danmeila.com/e/search/result/?searchid=58530";
+        try {
+            return "http://m.ggdown.com/modules/article/waps.php?searchkey=" + URLEncoder.encode(keywords, "GBK");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public JSONObject getSearchParams(String keywords) {
-        JSONObject params = new JSONObject();
-        params.put("keyboard", keywords);
-        return params;
+        return null;
     }
 
     @Override
     public String getSearchMethod() {
-        return "POST";
+        return "GET";
     }
 
 
     @Override
     public Elements getSearchItems(Document document) {
-        return document.select(".xsname a");
+        return document.select(".xsinfo tr");
     }
 
     @Override
     public String getSearchItemBookIdThird(Element element) {
-        Matcher matcherBookIdThird = Pattern.compile(".*\\/.*\\/(.*)\\/").matcher(element.select("a").attr("href"));
+        Matcher matcherBookIdThird = Pattern.compile(".*\\/.*\\/(.*).html").matcher(element.select("a").attr("href"));
         String bookIdThird = matcherBookIdThird.find() ? matcherBookIdThird.group(1) : "";
         return bookIdThird;
     }
 
     @Override
     public String getSearchItemTitle(Element element) {
-        return element.select("td a").get(0).text();
+        return element.select("a").text();
     }
 
     @Override
     public String getSearchItemAuthor(Element element) {
-        return element.select("td").get(2).text();
+        return "未知";
     }
 
     @Override
@@ -78,12 +82,12 @@ public class DanmeilaPickRulesTemplateImpl extends LwxswPickRulesTemplateImpl im
 
     @Override
     public String getSearchItemUpdateDate(Element element) {
-        return element.select("td").get(4).text();
+        return "";
     }
 
     @Override
     public String getSearchItemUpdateChapter(Element element) {
-        return element.select("td").get(1).text();
+        return "";
     }
 
     @Override
