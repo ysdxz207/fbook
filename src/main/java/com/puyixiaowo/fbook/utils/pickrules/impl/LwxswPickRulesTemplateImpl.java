@@ -65,8 +65,30 @@ public class LwxswPickRulesTemplateImpl implements PickRulesTemplate{
 
     @Override
     public Elements getSearchItems(Document document) {
-        document.select("tr").get(0).remove();
-        return document.select("tr");
+
+        Elements elsChapterList = document.select(".panel-chapterlist");
+        Elements elsUls = document.select("tr");
+
+        if (elsChapterList.size() == 0
+                && elsUls.size() > 1) {
+            document.select("tr").get(0).remove();
+            return elsUls;
+        }
+
+        Elements es = new Elements();
+        if (elsChapterList.size() > 0) {
+            Element element = new Element("tr");
+            element.append("<td><a href=\"" + document.baseUri() + "\">" + getBookDetailTitle(document) + "</a></td>");
+            element.append("<td><a>" + getBookDetailUpdateChapter(document) + "</a></td>");
+            element.append("<td>" + getBookDetailAuthor(document) + "</td>");
+            element.append("<td></td>");
+            element.append("<td>" + getBookDetailUpdateDate(document) + "</td>");
+            element.append("<td></td>");
+            es.add(element);
+            return es;
+        }
+        return es;
+
     }
 
     @Override
