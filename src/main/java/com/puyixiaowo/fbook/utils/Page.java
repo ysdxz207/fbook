@@ -53,6 +53,8 @@ public class Page {
     private static int RETRY_TIMES = 0;
     private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36";
 
+    private static final Pattern PATTERN_CHARSET = Pattern.compile(".*charset=([^;]*).*");
+    private static final Pattern PATTERN_CHARSET_DEEP = Pattern.compile(".*charset=\"(.*)\".*");
 
     public static Page getInstance() {
 
@@ -245,11 +247,9 @@ public class Page {
             Element element = it.next();
             Matcher m;
             if (!deep) {
-                Pattern p = Pattern.compile(".*charset=([^;]*).*");
-                m = p.matcher(element.attr("content"));
+                m = PATTERN_CHARSET.matcher(element.attr("content"));
             } else {
-                Pattern p = Pattern.compile(".*charset=\"(.*)\".*");
-                m = p.matcher(element.toString());
+                m = PATTERN_CHARSET_DEEP.matcher(element.toString());
             }
             if (m.find()) {
                 return m.group(1);
