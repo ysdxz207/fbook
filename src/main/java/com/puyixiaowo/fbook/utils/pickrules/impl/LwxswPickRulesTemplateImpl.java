@@ -239,7 +239,7 @@ public class LwxswPickRulesTemplateImpl implements PickRulesTemplate{
 
         if (currentpagenum < maxpagenum) {
             String url = document.baseUri().replace(".html", "_" + (currentpagenum + 1) + ".html");
-            Document document1 = getPage(url, "GBK");
+            Document document1 = getPage(url);
             if (document1 != null) {
                 return content + getChapterDetailContent(document1);
             }

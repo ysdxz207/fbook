@@ -72,7 +72,7 @@ public class HtmlUtils {
 
     public static void main(String[] args) throws IOException {
 
-        Document doc = getPage("http://www.mxguan.com/book/840/8360558.html", "");
+        Document doc = getPage("http://www.mxguan.com/book/840/8360558.html");
 
         System.out.println(doc.html());
     }

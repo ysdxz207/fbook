@@ -154,12 +154,8 @@ public class BookService {
 
         String url = BookConstants.URL_BOOK + bookBean.getBookIdThird();
 
-        JSONObject json = null;
-        try {
-            Document document = HtmlUtils.getPage(url, "UTF-8");
-            json = JSON.parseObject(document.text());
-        } catch (Exception e) {
-        }
+        Document document = HtmlUtils.getPage(url);
+        JSONObject json = JSON.parseObject(document.text());
 
         if (json == null) {
             logger.error("[" + bookBean.getName() + "][内容接口返回为空]bookId=" + bookBean.getId());
@@ -286,12 +282,8 @@ public class BookService {
         List<BookSource> list = new ArrayList<>();
 
         String url = BookConstants.URL_BOOK_SOURCE + bookIdThird;
-        JSONArray json = null;
-        try {
-            Document document = HtmlUtils.getPage(url, "UTF-8");
-            json = JSON.parseArray(document.text());
-        } catch (Exception e) {
-        }
+        Document document = HtmlUtils.getPage(url);
+        JSONArray json = JSON.parseArray(document.text());
         if (json == null) {
             return list;
         }

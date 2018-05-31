@@ -53,7 +53,7 @@ public class BookServiceTestGgdown {
 
     @Test
     public void test() throws IOException {
-        System.out.println(HtmlUtils.getPage("http://www.danmeila.com", "GBK").body());
+        System.out.println(HtmlUtils.getPage("http://www.danmeila.com").body());
     }
 }
 

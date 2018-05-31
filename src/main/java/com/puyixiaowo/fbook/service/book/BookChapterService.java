@@ -91,12 +91,8 @@ public class BookChapterService {
         List<BookChapterBean> list = new ArrayList<>();
         String url = BookConstants.URL_CHAPTERS + source + "?view=chapters";
 
-        JSONObject jsonObject = null;
-        try {
-            Document document = HtmlUtils.getPage(url, "UTF-8");
-            jsonObject = JSON.parseObject(document.text());
-        } catch (Exception e) {
-        }
+        Document document = HtmlUtils.getPage(url);
+        JSONObject jsonObject = JSON.parseObject(document.text());
         if (jsonObject == null) {
             logger.error("[book]api返回章节json为null,bookId=" + bookId);
             return list;
@@ -240,12 +236,8 @@ public class BookChapterService {
 
         BookChapterBean bookChapterBean = new BookChapterBean();
         String url = BookConstants.URL_CHAPTER_CONTENT + link;
-        JSONObject json = null;
-        try {
-            Document document = HtmlUtils.getPage(url, "UTF-8");
-            json = JSON.parseObject(document.text());
-        } catch (Exception e) {
-        }
+        Document document = HtmlUtils.getPage(url);
+        JSONObject json = JSON.parseObject(document.text());
         if (json == null) {
             logger.error("[book]api返回章节内容json为null");
             return null;
