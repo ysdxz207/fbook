@@ -1,10 +1,13 @@
 package com.puyixiaowo.fbook.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.jndi.toolkit.url.Uri;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -53,6 +56,8 @@ public class Page {
     private static int RETRY_TIMES = 0;
     private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36";
 
+    private static String CHARSET_POST = "UTF-8";
+
     private static final Pattern PATTERN_CHARSET = Pattern.compile(".*charset=([^;]*).*");
     private static final Pattern PATTERN_CHARSET_DEEP = Pattern.compile(".*charset=\"(.*)\".*");
 
@@ -98,6 +103,13 @@ public class Page {
         return this;
     }
 
+    public Page postCharset(String charset) {
+        if (StringUtils.isBlank(charset)) {
+            CHARSET_POST = charset;
+        }
+        return this;
+    }
+
     private HttpRequestBase getMethod(String url,
                                  String method,
                                  JSONObject params) {
@@ -112,7 +124,7 @@ public class Page {
                     builder = new URIBuilder(url);
                     if (params != null
                             && !params.isEmpty()) {
-                        builder.addParameters(Page.getInstance().getParams(params));
+                        builder.addParameters(getParams(params));
                     }
                     httpMethod = new HttpGet(builder.build());
                 } catch (URISyntaxException e) {
@@ -122,22 +134,21 @@ public class Page {
                 break;
             case "POST":
                 HttpPost post = new HttpPost(url);
-                StringEntity strEntity;
-                try {
-                    strEntity = new StringEntity(params.toJSONString());
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException("[Page post parameters exception]:" + params.toJSONString());
+                if (params != null
+                        && !params.isEmpty()) {
+
+                    UrlEncodedFormEntity paramsEntity;
+                    try {
+                        paramsEntity = new UrlEncodedFormEntity(getParams(params), CHARSET_POST);
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException("[Page post parameters exception]:" + params.toJSONString());
+                    }
+                    post.setEntity(paramsEntity);
                 }
-                post.setEntity(strEntity);
                 httpMethod = post;
                 break;
         }
 
-
-        if (params == null
-                || params.isEmpty()) {
-            return httpMethod;
-        }
 
         return httpMethod;
     }
@@ -258,5 +269,22 @@ public class Page {
 
 
         return "UTF-8";
+    }
+
+    public static void main(String[] args) {
+
+        JSONObject jsonObject = JSON.parseObject("{\"gmt_create\":[\"2018-06-01 14:00:18\"],\"charset\":[\"UTF-8\"],\"seller_email\":[\"18011453383\"],\"subject\":[\"镰刀-腾冲店-扫码付\"],\"sign\":[\"W9QzWWmyYQaLBMUZRyn6y5/IOQSJdpS+Mm2xueBGFcpRE2A1tjbhRG5rENUKL2zs+oxWkxqs75Uo2Q7Xq2bZDvgro4fz+rn/0B4gHY4uRZi1CSNiHKMASFmigCqbvt6Ccr6VK2Z+sImvjbVk4v0V0jPUFBHXJnOE+AknOyOqLzo=\"],\"buyer_id\":[\"2088502919031107\"],\"invoice_amount\":[\"0.00\"],\"notify_id\":[\"46e3f83dcf2ab2e0a141ac56de2a44dgrx\"],\"fund_bill_list\":[\"[{\\\"amount\\\":\\\"0.02\\\",\\\"fundChannel\\\":\\\"COUPON\\\"}]\"],\"notify_type\":[\"trade_status_sync\"],\"trade_status\":[\"TRADE_SUCCESS\"],\"receipt_amount\":[\"0.02\"],\"buyer_pay_amount\":[\"0.02\"],\"app_id\":[\"2016072901681821\"],\"sign_type\":[\"RSA\"],\"seller_id\":[\"2088522946013721\"],\"gmt_payment\":[\"2018-06-01 14:00:22\"],\"notify_time\":[\"2018-06-01 14:00:23\"],\"version\":[\"1.0\"],\"out_trade_no\":[\"18060114001341210225700\"],\"total_amount\":[\"0.02\"],\"trade_no\":[\"2018060121001004100542988229\"],\"auth_app_id\":[\"2015122501042113\"],\"buyer_logon_id\":[\"135***@qq.com\"],\"point_amount\":[\"0.02\"]}");
+
+        JSONObject params = new JSONObject();
+        for (Map.Entry entry:
+             jsonObject.entrySet()) {
+            String key = entry.getKey().toString();
+            Object value = ((JSONArray) entry.getValue()).get(0).toString();
+            params.put(key, value);
+        }
+        Document document = Page.getInstance().read("http://localhost:8003/test",
+                params, Connection.Method.POST);
+        System.out.println(document
+        .body());
     }
 }
