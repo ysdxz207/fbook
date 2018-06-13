@@ -70,24 +70,13 @@ public class Page {
     private static final Pattern PATTERN_CHARSET = Pattern.compile(".*charset=([^;]*).*");
     private static final Pattern PATTERN_CHARSET_DEEP = Pattern.compile(".*charset=\"(.*)\".*");
 
-    public static Page getInstance() {
-
-        return PageEnum.INSTANCE.singleton;
-    }
-
-    private enum PageEnum {
-        INSTANCE;
-
-        PageEnum() {
-            singleton = new Page();
-        }
-
-        private Page singleton;
+    public static Page create() {
+        return new Page();
     }
 
     public Page readTimeout(int readTimeout) {
         TIMEOUT_READ_DATA = readTimeout;
-        return getInstance();
+        return this;
     }
 
     public Page requestTimeout(int requestTimeout) {
@@ -298,7 +287,7 @@ public class Page {
             Object value = ((JSONArray) entry.getValue()).get(0).toString();
             params.put(key, value);
         }
-        Document document = Page.getInstance().read("http://localhost:8003/test",
+        Document document = Page.create().read("http://puyixiaowo.win/test",
                 params, Connection.Method.POST);
         System.out.println(document
         .body());

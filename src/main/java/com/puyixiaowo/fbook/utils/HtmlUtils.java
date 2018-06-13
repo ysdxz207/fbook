@@ -19,7 +19,7 @@ public class HtmlUtils {
     public static final String USER_AGENT_PC = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36";
     public static final String USER_AGENT_PHONE = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_0_1 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/14A403 Safari/602.1";
 
-    private static final Page page = Page.getInstance()
+    private static final Page page = Page.create()
             .retryTimes(3)
             .readTimeout(10 * 1000)
             .connectionTimeout(5 * 1000)
