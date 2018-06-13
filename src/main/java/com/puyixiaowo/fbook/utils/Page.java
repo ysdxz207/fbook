@@ -45,6 +45,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+/**
+ *
+ * @author Moses.wei
+ * @date 2018-06-13 17:44:35
+ *
+ *
+ */
 
 public class Page {
 
@@ -57,6 +64,8 @@ public class Page {
     private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36";
 
     private static String CHARSET_POST = "UTF-8";
+
+    private static boolean IGNORE_USER_AGENT = false;
 
     private static final Pattern PATTERN_CHARSET = Pattern.compile(".*charset=([^;]*).*");
     private static final Pattern PATTERN_CHARSET_DEEP = Pattern.compile(".*charset=\"(.*)\".*");
@@ -100,6 +109,11 @@ public class Page {
         if (StringUtils.isNotBlank(userAgent)) {
             USER_AGENT = userAgent;
         }
+        return this;
+    }
+
+    public Page ignoreUserAgent(boolean ignoreUserAgent) {
+        IGNORE_USER_AGENT = ignoreUserAgent;
         return this;
     }
 
@@ -190,7 +204,9 @@ public class Page {
 
         HttpRequestBase httpMethod = getMethod(url, method.name(), params);
         HttpClientContext context = HttpClientContext.create();
-        httpMethod.addHeader("User-Agent", USER_AGENT);
+        if (!IGNORE_USER_AGENT) {
+            httpMethod.addHeader("User-Agent", USER_AGENT);
+        }
         HttpClient httpClient = HttpClients.custom()
                 .setRedirectStrategy(new LaxRedirectStrategy())
                 .setDefaultRequestConfig(requestConfig).build();
