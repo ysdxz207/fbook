@@ -3,6 +3,7 @@ package com.puyixiaowo.fbook.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.puyixiaowo.generator.Run;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIUtils;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
@@ -24,7 +26,6 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,45 +109,73 @@ public class Page {
 
     private HttpRequestBase getMethod(String url,
                                  String method,
-                                 JSONObject params) {
+                                 Object params) {
 
         HttpRequestBase httpMethod;
 
         switch (method) {
             default:
             case "GET":
-                URIBuilder builder;
-                try {
-                    builder = new URIBuilder(url);
-                    if (params != null
-                            && !params.isEmpty()) {
-                        builder.addParameters(getParams(params));
-                    }
-                    httpMethod = new HttpGet(builder.build());
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException("[Page get parameters exception]:" + params.toJSONString());
-                }
 
+                httpMethod = buildGetMethod(url, params);
                 break;
             case "POST":
-                HttpPost post = new HttpPost(url);
-                if (params != null
-                        && !params.isEmpty()) {
 
-                    UrlEncodedFormEntity paramsEntity;
-                    try {
-                        paramsEntity = new UrlEncodedFormEntity(getParams(params), CHARSET);
-                    } catch (UnsupportedEncodingException e) {
-                        throw new RuntimeException("[Page post parameters exception]:" + params.toJSONString());
-                    }
-                    post.setEntity(paramsEntity);
-                }
-                httpMethod = post;
+                httpMethod = buildPostMethod(url, params);
                 break;
         }
 
 
         return httpMethod;
+    }
+
+    private HttpRequestBase buildGetMethod(String url, Object params) {
+        if (params == null) {
+            return new HttpGet(url);
+        }
+        if (!(params instanceof JSONObject)) {
+            throw new RuntimeException("Get method paramaters should be JSONObject.");
+        }
+        JSONObject paramsJSON = (JSONObject) params;
+        URIBuilder builder;
+        try {
+            builder = new URIBuilder(url);
+            if (!paramsJSON.isEmpty()) {
+                builder.addParameters(getParams(paramsJSON));
+            }
+            return new HttpGet(builder.build());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("[Page get parameters exception]:" + paramsJSON.toJSONString());
+        }
+    }
+
+    private HttpRequestBase buildPostMethod(String url,
+                                       Object params) {
+        HttpPost post = new HttpPost(url);
+
+        if (params == null) {
+            return post;
+        }
+
+        if (params instanceof JSONObject) {
+            JSONObject paramsJSON = (JSONObject) params;
+            if (!paramsJSON.isEmpty()) {
+
+                UrlEncodedFormEntity paramsEntity;
+                try {
+                    paramsEntity = new UrlEncodedFormEntity(getParams(paramsJSON), CHARSET);
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException("[Page post parameters exception]:" + paramsJSON.toJSONString());
+                }
+                post.setEntity(paramsEntity);
+            }
+        } else if (params instanceof String) {
+            StringEntity stringEntity = new StringEntity(params.toString(), CHARSET);
+            post.setEntity(stringEntity);
+        } else {
+            throw new RuntimeException("Unsupported paramaters type.");
+        }
+        return post;
     }
 
     private List<NameValuePair> getParams(JSONObject params) {
@@ -171,7 +200,7 @@ public class Page {
      * @return
      */
     public Response read(String url,
-                          JSONObject params,
+                          Object params,
                           Connection.Method method) {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(TIMEOUT_CONNECTION)
