@@ -374,6 +374,7 @@ public class Page {
     }
 
     private static class UnsupportedJsonFormatException extends RuntimeException {
+        private static final long serialVersionUID = 2515892027385048310L;
 
         public UnsupportedJsonFormatException(String message) {
             super(message);
