@@ -3,7 +3,6 @@ package com.puyixiaowo.fbook.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.puyixiaowo.generator.Run;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -44,7 +43,7 @@ import java.util.regex.Pattern;
  * @author Moses.wei
  * @date 2018-06-13 17:44:35
  *
- *
+ * 通用HTTP请求工具
  */
 
 public class Page {
@@ -196,6 +195,8 @@ public class Page {
      *
      * @param url
      * @param params
+     *      GET方式支持JSONObject类型
+     *      POST方式支持JSONObject和String类型
      * @param method
      * @return
      */
