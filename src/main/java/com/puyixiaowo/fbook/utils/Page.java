@@ -316,16 +316,63 @@ public class Page {
             this.document = document == null ? new Document("") : document;
         }
 
-        public Object bodyToJSON() throws NotJsonException{
+        public Object bodyToJSON() throws UnsupportedJsonFormatException {
             Object result = null;
+
+            /*
+             * json string to json
+             */
             try {
                 result = JSON.parse(document.text());
             } catch (Exception ignored) {
             }
+
+            /*
+             * xml string to json
+             */
+
             if (result == null) {
-                throw new NotJsonException("Body is not json.");
+                JSONObject json = new JSONObject();
+                JSONArray jsonArray = new JSONArray();
+                Element body = document.body();
+                int childSize = body.childNodeSize();
+                if (childSize == 1) {
+                    for (Element element : body.child(0).children()) {
+                        json.put(element.tagName(), element.html());
+                    }
+                } else if (childSize > 1) {
+
+                }
+            }
+
+            if (result == null) {
+                throw new UnsupportedJsonFormatException("Body can not convert to json.");
             }
             return result;
+        }
+
+        /**
+         * 支持的body类型：json 字符串，xml字符串
+         * @param element
+         * @return
+         */
+        public static Object convertToJson(Element element) {
+            JSONObject json = new JSONObject();
+            Elements children = element.children();
+            int childSize = children.size();
+
+            if (element.tagName().equals("result_code")) {
+                System.out.println();
+            }
+
+            if (childSize == 0) {
+                return element.html();
+            } else {
+                for (Element e : element.children()) {
+                    json.put(e.tagName(), convertToJson(e));
+                }
+                return json;
+            }
         }
 
         public Document getDocument() {
@@ -337,26 +384,10 @@ public class Page {
         }
     }
 
-    private static class NotJsonException extends RuntimeException {
+    private static class UnsupportedJsonFormatException extends RuntimeException {
 
-        public NotJsonException(String message) {
+        public UnsupportedJsonFormatException(String message) {
             super(message);
         }
-    }
-
-    public static void main(String[] args) {
-
-        JSONObject jsonObject = JSON.parseObject("{\"gmt_create\":[\"2018-06-01 14:00:18\"],\"charset\":[\"UTF-8\"],\"seller_email\":[\"18011453383\"],\"subject\":[\"镰刀-腾冲店-扫码付\"],\"sign\":[\"W9QzWWmyYQaLBMUZRyn6y5/IOQSJdpS+Mm2xueBGFcpRE2A1tjbhRG5rENUKL2zs+oxWkxqs75Uo2Q7Xq2bZDvgro4fz+rn/0B4gHY4uRZi1CSNiHKMASFmigCqbvt6Ccr6VK2Z+sImvjbVk4v0V0jPUFBHXJnOE+AknOyOqLzo=\"],\"buyer_id\":[\"2088502919031107\"],\"invoice_amount\":[\"0.00\"],\"notify_id\":[\"46e3f83dcf2ab2e0a141ac56de2a44dgrx\"],\"fund_bill_list\":[\"[{\\\"amount\\\":\\\"0.02\\\",\\\"fundChannel\\\":\\\"COUPON\\\"}]\"],\"notify_type\":[\"trade_status_sync\"],\"trade_status\":[\"TRADE_SUCCESS\"],\"receipt_amount\":[\"0.02\"],\"buyer_pay_amount\":[\"0.02\"],\"app_id\":[\"2016072901681821\"],\"sign_type\":[\"RSA\"],\"seller_id\":[\"2088522946013721\"],\"gmt_payment\":[\"2018-06-01 14:00:22\"],\"notify_time\":[\"2018-06-01 14:00:23\"],\"version\":[\"1.0\"],\"out_trade_no\":[\"18060114001341210225700\"],\"total_amount\":[\"0.02\"],\"trade_no\":[\"2018060121001004100542988229\"],\"auth_app_id\":[\"2015122501042113\"],\"buyer_logon_id\":[\"135***@qq.com\"],\"point_amount\":[\"0.02\"]}");
-
-        JSONObject params = new JSONObject();
-        for (Map.Entry entry:
-             jsonObject.entrySet()) {
-            String key = entry.getKey().toString();
-            Object value = ((JSONArray) entry.getValue()).get(0).toString();
-            params.put(key, value);
-        }
-        Response response = Page.create().read("http://puyixiaowo.win/test/json",
-                params, Connection.Method.POST);
-        System.out.println(JSON.toJSONString(response.bodyToJSON()));
     }
 }
