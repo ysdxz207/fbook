@@ -320,29 +320,19 @@ public class Page {
             Object result = null;
 
             /*
-             * json string to json
+             * body json string to json
              */
             try {
-                result = JSON.parse(document.text());
+                result = JSON.parse(document.body().text());
             } catch (Exception ignored) {
             }
 
             /*
-             * xml string to json
+             * body to json
              */
 
             if (result == null) {
-                JSONObject json = new JSONObject();
-                JSONArray jsonArray = new JSONArray();
-                Element body = document.body();
-                int childSize = body.childNodeSize();
-                if (childSize == 1) {
-                    for (Element element : body.child(0).children()) {
-                        json.put(element.tagName(), element.html());
-                    }
-                } else if (childSize > 1) {
-
-                }
+                result = convertToJson(document.body());
             }
 
             if (result == null) {
@@ -356,14 +346,10 @@ public class Page {
          * @param element
          * @return
          */
-        public static Object convertToJson(Element element) {
+        private Object convertToJson(Element element) {
             JSONObject json = new JSONObject();
             Elements children = element.children();
             int childSize = children.size();
-
-            if (element.tagName().equals("result_code")) {
-                System.out.println();
-            }
 
             if (childSize == 0) {
                 return element.html();
@@ -390,4 +376,5 @@ public class Page {
             super(message);
         }
     }
+
 }
