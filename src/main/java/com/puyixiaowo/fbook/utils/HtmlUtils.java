@@ -64,9 +64,9 @@ public class HtmlUtils {
         switch (method) {
             default:
             case GET:
-            return page.read(url, params, Connection.Method.GET);
+            return page.read(url, params, Connection.Method.GET).getDocument();
             case POST:
-            return page.read(url, params, Connection.Method.POST);
+            return page.read(url, params, Connection.Method.POST).getDocument();
         }
     }
 

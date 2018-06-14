@@ -3,48 +3,41 @@ package com.puyixiaowo.fbook.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.jndi.toolkit.url.Uri;
-import org.apache.http.*;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIUtils;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.ExecutionContext;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 /**
  *
  * @author Moses.wei
@@ -63,7 +56,7 @@ public class Page {
     private static int RETRY_TIMES = 0;
     private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36";
 
-    private static String CHARSET_POST = "UTF-8";
+    private static String CHARSET = "UTF-8";
 
     private static boolean IGNORE_USER_AGENT = false;
 
@@ -108,7 +101,7 @@ public class Page {
 
     public Page postCharset(String charset) {
         if (StringUtils.isBlank(charset)) {
-            CHARSET_POST = charset;
+            CHARSET = charset;
         }
         return this;
     }
@@ -142,7 +135,7 @@ public class Page {
 
                     UrlEncodedFormEntity paramsEntity;
                     try {
-                        paramsEntity = new UrlEncodedFormEntity(getParams(params), CHARSET_POST);
+                        paramsEntity = new UrlEncodedFormEntity(getParams(params), CHARSET);
                     } catch (UnsupportedEncodingException e) {
                         throw new RuntimeException("[Page post parameters exception]:" + params.toJSONString());
                     }
@@ -177,7 +170,7 @@ public class Page {
      * @param method
      * @return
      */
-    public Document read(String url,
+    public Response read(String url,
                           JSONObject params,
                           Connection.Method method) {
         RequestConfig requestConfig = RequestConfig.custom()
@@ -186,9 +179,9 @@ public class Page {
                 .setSocketTimeout(TIMEOUT_READ_DATA)
                 .build();
 
-        Document document = new Document("");
+        Response response = new Response();
         if (StringUtils.isBlank(url)) {
-            return document;
+            return response;
         }
 
         HttpRequestBase httpMethod = getMethod(url, method.name(), params);
@@ -213,12 +206,15 @@ public class Page {
                 }
             }
         }
-        return document;
+        return response;
     }
 
-    private Document requestAndParse(HttpClient httpClient,
+    private Response requestAndParse(HttpClient httpClient,
                                      HttpRequestBase method,
                                      HttpClientContext context) throws IOException {
+        Response response = new Response();
+        Document document = new Document("");
+        response.setDocument(document);
         HttpResponse httpResponse = httpClient.execute(method, context);
 
         int statusCode = httpResponse.getStatusLine().getStatusCode();
@@ -232,6 +228,7 @@ public class Page {
             e.printStackTrace();
         }
         String baseUri = location != null ? location.toASCIIString() : "";
+        document.setBaseUri(baseUri);
 
         byte[] bytes = EntityUtils.toByteArray(httpResponse.getEntity());
         String html = new String(bytes);
@@ -241,16 +238,19 @@ public class Page {
             String charset = getCharset(Jsoup.parse(html));
             html = new String(bytes, charset);
             if (StringUtils.isNotBlank(html)) {
-                Document document = Jsoup.parse(html);
-                document.setBaseUri(baseUri);
-                return document;
+                org.jsoup.nodes.Document doc = Jsoup.parse(html);
+                if (doc == null) {
+                    return response;
+                }
+                response.setDocument(doc);
+                return response;
             }
         }
 
-        return new Document(baseUri);
+        return response;
     }
 
-    public String getCharset(Document document) {
+    private String getCharset(org.jsoup.nodes.Document document) {
         boolean deep = false;
         Elements eles = document.select("meta[http-equiv=Content-Type]");
 
@@ -258,9 +258,7 @@ public class Page {
             deep = true;
             eles = document.select("meta");
         }
-        Iterator<Element> it = eles.iterator();
-        while (it.hasNext()) {
-            Element element = it.next();
+        for (Element element : eles) {
             Matcher m;
             if (!deep) {
                 m = PATTERN_CHARSET.matcher(element.attr("content"));
@@ -273,7 +271,47 @@ public class Page {
         }
 
 
-        return "UTF-8";
+        return CHARSET;
+    }
+
+    static class Response {
+
+        private Document document;
+
+        public Response() {
+            this.document = new Document("");
+        }
+
+        public Response(Document document) {
+            this.document = document == null ? new Document("") : document;
+        }
+
+        public Object bodyToJSON() throws NotJsonException{
+            Object result = null;
+            try {
+                result = JSON.parse(document.text());
+            } catch (Exception ignored) {
+            }
+            if (result == null) {
+                throw new NotJsonException("Body is not json.");
+            }
+            return result;
+        }
+
+        public Document getDocument() {
+            return document;
+        }
+
+        public void setDocument(Document document) {
+            this.document = document;
+        }
+    }
+
+    private static class NotJsonException extends RuntimeException {
+
+        public NotJsonException(String message) {
+            super(message);
+        }
     }
 
     public static void main(String[] args) {
@@ -287,9 +325,8 @@ public class Page {
             Object value = ((JSONArray) entry.getValue()).get(0).toString();
             params.put(key, value);
         }
-        Document document = Page.create().read("http://puyixiaowo.win/test",
+        Response response = Page.create().read("http://puyixiaowo.win/test/json",
                 params, Connection.Method.POST);
-        System.out.println(document
-        .body());
+        System.out.println(JSON.toJSONString(response.bodyToJSON()));
     }
 }
