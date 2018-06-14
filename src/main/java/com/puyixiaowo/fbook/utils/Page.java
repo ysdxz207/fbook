@@ -316,14 +316,14 @@ public class Page {
             this.document = document == null ? new Document("") : document;
         }
 
-        public Object bodyToJSON() throws UnsupportedJsonFormatException {
-            Object result = null;
+        public JSONObject bodyToJSONObject() throws UnsupportedJsonFormatException {
+            JSONObject result = null;
 
             /*
              * body json string to json
              */
             try {
-                result = JSON.parse(document.body().text());
+                result = JSON.parseObject(document.body().text());
             } catch (Exception ignored) {
             }
 
@@ -332,7 +332,10 @@ public class Page {
              */
 
             if (result == null) {
-                result = convertToJson(document.body());
+                Object o = convertToJson(document.body());
+                if (o instanceof JSONObject) {
+                    result = (JSONObject) o;
+                }
             }
 
             if (result == null) {
@@ -346,7 +349,7 @@ public class Page {
          * @param element
          * @return
          */
-        private Object convertToJson(Element element) {
+        public static Object convertToJson(Element element) {
             JSONObject json = new JSONObject();
             Elements children = element.children();
             int childSize = children.size();
@@ -376,5 +379,4 @@ public class Page {
             super(message);
         }
     }
-
 }
