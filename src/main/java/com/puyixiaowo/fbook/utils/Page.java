@@ -304,7 +304,7 @@ public class Page {
         return CHARSET;
     }
 
-    public static class Response {
+    public class Response {
 
         private Document document;
 
