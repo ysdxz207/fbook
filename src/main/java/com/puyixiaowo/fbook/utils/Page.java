@@ -349,7 +349,7 @@ public class Page {
          * @param element
          * @return
          */
-        public static Object convertToJson(Element element) {
+        private Object convertToJson(Element element) {
             JSONObject json = new JSONObject();
             Elements children = element.children();
             int childSize = children.size();
