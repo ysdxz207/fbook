@@ -364,6 +364,11 @@ public class Page {
             }
         }
 
+        @Override
+        public String toString() {
+            return document.toString();
+        }
+
         public Document getDocument() {
             return document;
         }
