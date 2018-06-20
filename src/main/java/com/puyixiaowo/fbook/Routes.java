@@ -23,6 +23,8 @@ public class Routes {
                     LoginController.captcha(request, response)));
             post("/login", ((request, response) ->
                     LoginController.login(request, response)));
+            get("/logout", ((request, response) ->
+                    LoginController.logout(request, response)));
             post("/logout", ((request, response) ->
                     LoginController.logout(request, response)));
             post("/register", ((request, response) ->
