@@ -1,8 +1,8 @@
 package com.puyixiaowo.fbook.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 /**
  *
  * @author Moses.wei
@@ -107,8 +108,8 @@ public class Page {
     }
 
     private HttpRequestBase getMethod(String url,
-                                 String method,
-                                 Object params) {
+                                      String method,
+                                      Object params) {
 
         HttpRequestBase httpMethod;
 
@@ -149,7 +150,7 @@ public class Page {
     }
 
     private HttpRequestBase buildPostMethod(String url,
-                                       Object params) {
+                                            Object params) {
         HttpPost post = new HttpPost(url);
 
         if (params == null) {
@@ -316,7 +317,14 @@ public class Page {
             this.document = document == null ? new Document("") : document;
         }
 
-        public JSONObject bodyToJSONObject() throws UnsupportedJsonFormatException {
+        /**
+         *
+         * @param extractXMLCDATA
+         *      是否提取CDATA值
+         * @return
+         * @throws UnsupportedJsonFormatException
+         */
+        public JSONObject bodyToJSONObject(boolean extractXMLCDATA) throws UnsupportedJsonFormatException {
             JSONObject result = null;
 
             /*
@@ -332,7 +340,7 @@ public class Page {
              */
 
             if (result == null) {
-                Object o = convertToJson(document.body());
+                Object o = convertToJson(document.body(), extractXMLCDATA);
                 if (o instanceof JSONObject) {
                     result = (JSONObject) o;
                 }
@@ -343,22 +351,26 @@ public class Page {
             }
             return result;
         }
+        public JSONObject bodyToJSONObject() throws UnsupportedJsonFormatException {
+            return bodyToJSONObject(false);
+        }
 
         /**
          * 支持的body类型：json 字符串，xml字符串
          * @param element
          * @return
          */
-        private Object convertToJson(Element element) {
+        private Object convertToJson(Element element,
+                                     boolean extractXMLCDATA) {
             JSONObject json = new JSONObject();
             Elements children = element.children();
             int childSize = children.size();
 
             if (childSize == 0) {
-                return element.html();
+                return extractXMLCDATA ? element.text() : element.html();
             } else {
                 for (Element e : element.children()) {
-                    json.put(e.tagName(), convertToJson(e));
+                    json.put(e.tagName(), convertToJson(e, extractXMLCDATA));
                 }
                 return json;
             }
@@ -379,10 +391,14 @@ public class Page {
     }
 
     private static class UnsupportedJsonFormatException extends RuntimeException {
+
         private static final long serialVersionUID = 2515892027385048310L;
 
         public UnsupportedJsonFormatException(String message) {
             super(message);
         }
     }
+
 }
+
+
