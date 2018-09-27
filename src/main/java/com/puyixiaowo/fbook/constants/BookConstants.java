@@ -41,4 +41,9 @@ public class BookConstants {
      */
     public static final String URL_CHAPTER_CONTENT = "http://chapter2.zhuishushenqi.com/chapter/";
 
+    /**
+     * 根据分类获取书籍列表
+     * http://api.zhuishushenqi.com/book/by-categories?gender=male&type=hot&major=玄幻&minor=东方玄幻&start=0&limit=20
+     */
+    public static final String URL_BY_CATEGORIES = HOST_API + "/book/by-categories";
 }

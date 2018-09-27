@@ -6,9 +6,14 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.puyixiaowo.fbook.Routes;
 import com.puyixiaowo.fbook.bean.sys.AppConfigBean;
 import com.puyixiaowo.fbook.error.ErrorHandler;
+import com.puyixiaowo.fbook.scheduler.CollectGoodBookScheduler;
 import com.puyixiaowo.fbook.utils.AppUtils;
 import com.puyixiaowo.fbook.utils.ConfigUtils;
 import com.puyixiaowo.generator.utils.CustomIdSerializer;
+import win.hupubao.common.scheduler.Scheduler;
+import win.hupubao.common.utils.DateUtils;
+
+import java.util.Date;
 
 import static spark.Spark.port;
 
@@ -38,5 +43,12 @@ public class Main {
         JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.DisableCircularReferenceDetect.getMask();
         //ID序列化为字符串类型
         SerializeConfig.getGlobalInstance().put(Long.class, new CustomIdSerializer());
+
+        //搜集好书
+        Long todayZeroMiliseconds = DateUtils.getZeroClockByDate(new Date()).getTime();
+        todayZeroMiliseconds += 20 * 60 * 60 * 1000L;
+        long delay = todayZeroMiliseconds - System.currentTimeMillis();
+        Scheduler.runTimer("good-book-timer",
+                0L, 1 * 60 * 1000L, CollectGoodBookScheduler::collect);
     }
 }
