@@ -5,6 +5,7 @@ import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import win.hupubao.common.http.Page;
 
 import java.io.IOException;
 
@@ -64,9 +65,9 @@ public class HtmlUtils {
         switch (method) {
             default:
             case GET:
-            return page.read(url, params, Connection.Method.GET).getDocument();
+            return page.request(url, params, Connection.Method.GET).parse();
             case POST:
-            return page.read(url, params, Connection.Method.POST).getDocument();
+            return page.request(url, params, Connection.Method.POST).parse();
         }
     }
 

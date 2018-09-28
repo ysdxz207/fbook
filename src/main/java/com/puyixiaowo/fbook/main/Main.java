@@ -49,6 +49,6 @@ public class Main {
         todayZeroMiliseconds += 20 * 60 * 60 * 1000L;
         long delay = todayZeroMiliseconds - System.currentTimeMillis();
         Scheduler.runTimer("good-book-timer",
-                0L, 1 * 60 * 1000L, CollectGoodBookScheduler::collect);
+                delay, 60 * 1000L, CollectGoodBookScheduler::collect);
     }
 }

@@ -5,10 +5,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fbook.constants.BookConstants;
 import com.puyixiaowo.fbook.utils.LoggerUtils;
-import com.puyixiaowo.fbook.utils.Page;
 import com.puyixiaowo.fbook.utils.RedisUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import win.hupubao.common.email.Email;
+import win.hupubao.common.http.Page;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,7 +18,7 @@ import static org.jsoup.Connection.Method.GET;
 
 public class CollectGoodBookScheduler {
 
-    private static final int PAGE_SIZE = 1000;
+    private static final int PAGE_SIZE = 50;
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final String [] TO = {"ysdxz207@qq.com"};
     private static final String KEY = "FBOOK_EXCLUDE_BOOKS";
@@ -31,6 +31,9 @@ public class CollectGoodBookScheduler {
     private static final Email.Config config = new Email.Config();
     private static final Email.SendTo sendTo = new Email.SendTo();
     private static Email email;
+
+    private static int total;
+    private static int pageCount;
 
     static {
         config.setHost("smtp.sina.com");
@@ -79,12 +82,12 @@ public class CollectGoodBookScheduler {
                                          String category,
                                          List<String> goodBooks,
                                          List<String> excludeBooks) {
-        System.out.println(page + "=" + JSON.toJSONString(goodBooks));
         JSONObject json = getBooksJson(category, (page - 1) * PAGE_SIZE);
-        int count = json.getIntValue("total");
+        if (page == 1) {
+            total = json.getIntValue("total");
+            pageCount = total / PAGE_SIZE + 1;
+        }
 
-        int pageCount = count / PAGE_SIZE + 1;
-        System.out.println("页数：" + pageCount);
         if (page >= pageCount) {
             return goodBooks;
         }
@@ -107,17 +110,25 @@ public class CollectGoodBookScheduler {
             }
         }
 
+        try {
+            Thread.sleep(5 * 1000L);
+        } catch (InterruptedException ignored) {
+        }
         return getGoodsBookList(page + 1, category, goodBooks, excludeBooks);
     }
 
     private static JSONObject getBooksJson(String major,
                                            int start) {
-        Page.Response response = Page.create().read(BookConstants.URL_BY_CATEGORIES + "?type=reputation&major={major}&start={start}&limit={limit}"
+        Page.Response response = Page.create()
+                        .loggerOff()
+                        .connectionTimeout(5000)
+                        .readTimeout(5000)
+                        .retryTimes(3).request(BookConstants.URL_BY_CATEGORIES + "?type=reputation&major={major}&start={start}&limit={limit}"
                         .replace("{major}", major)
                         .replace("{start}", start + "")
                         .replace("{limit}", PAGE_SIZE + ""),
                 null, GET);
-        return response.bodyToJSONObject();
+        return (JSONObject) response.toJson(false);
     }
 
 }
