@@ -4,11 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fbook.constants.BookConstants;
-import com.puyixiaowo.fbook.utils.LoggerUtils;
 import com.puyixiaowo.fbook.utils.RedisUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import win.hupubao.common.email.Email;
 import win.hupubao.common.http.Page;
+import win.hupubao.common.utils.LoggerUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,6 +48,7 @@ public class CollectGoodBookScheduler {
 
     @SuppressWarnings("unchecked")
     public static void collect() {
+        LoggerUtils.info("开始搜集好书");
         List<String> excludeBooks = RedisUtils.getDefault(KEY, List.class, new ArrayList());
         List<String> goodBooks = new ArrayList<>();
         int page = 1;
@@ -57,6 +58,7 @@ public class CollectGoodBookScheduler {
 
 
             goodBooks = getGoodsBookList(page, category, goodBooks, excludeBooks);
+            LoggerUtils.info("搜集[{}]结果：{}", category, JSON.toJSONString(goodBooks));
         }
 
         if (goodBooks.size() == 0) {
@@ -68,7 +70,7 @@ public class CollectGoodBookScheduler {
         goodBooks.stream().map((b) -> b + "</br>").forEach(sb::append);
         sendTo.setContent(sb.toString());
         try {
-            System.out.println("send" + sendTo.getContent());
+            LoggerUtils.info("搜集好书发送邮件：" + sendTo.getContent());
             email.send(sendTo);
             excludeBooks.addAll(goodBooks);
             RedisUtils.set(KEY, JSON.toJSONString(excludeBooks));
