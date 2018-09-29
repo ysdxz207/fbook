@@ -47,6 +47,7 @@ public class Main {
         //搜集好书
         Long todayZeroMiliseconds = DateUtils.getZeroClockByDate(new Date()).getTime();
         todayZeroMiliseconds += 20 * 60 * 60 * 1000L;
+//        todayZeroMiliseconds += 10 * 60 * 60 * 1000L + 20 * 60 * 1000;
         long delay = todayZeroMiliseconds - System.currentTimeMillis();
         Scheduler.runTimer("good-book-timer",
                 delay, 24 * 60 * 60 * 1000L, CollectGoodBookScheduler::collect);
