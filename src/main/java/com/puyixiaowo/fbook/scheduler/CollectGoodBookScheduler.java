@@ -85,13 +85,14 @@ public class CollectGoodBookScheduler {
                                          String category,
                                          List<String> goodBooks,
                                          List<String> excludeBooks) {
-        JSONObject json = getBooksJson(category, (page - 1) * PAGE_SIZE);
+        int start = (page - 1) * PAGE_SIZE;
+        JSONObject json = getBooksJson(category, start);
         if (page == 1) {
             total = json.getIntValue("total");
             pageCount = total / PAGE_SIZE + 1;
         }
 
-        if (page >= pageCount) {
+        if (page >= pageCount || start > 1000) {
             return goodBooks;
         }
 
