@@ -31,7 +31,7 @@ public class ExceptionEmailUtils {
     /**
      * 授权码或密码
      */
-    private static final String PASSWORD = "//hupubao207";
+    private static final String PASSWORD = "***";
     private static final String HOST = "smtp.sina.com";
     private static final String PORT = "465";
 

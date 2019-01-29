@@ -49,7 +49,7 @@ public class Main {
         todayZeroMiliseconds += 20 * 60 * 60 * 1000L;
 //        todayZeroMiliseconds += 17 * 60 * 60 * 1000L + 17 * 60 * 1000;
         long delay = todayZeroMiliseconds - System.currentTimeMillis();
-        Scheduler.runTimer("good-book-timer",
-                delay, 24 * 60 * 60 * 1000L, CollectGoodBookScheduler::collect);
+//        Scheduler.runTimer("good-book-timer",
+//                delay, 24 * 60 * 60 * 1000L, CollectGoodBookScheduler::collect);
     }
 }
